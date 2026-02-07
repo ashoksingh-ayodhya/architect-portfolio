@@ -1,202 +1,911 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Architect | Performance Marketing</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<style>
-:root{--void:#0B0F19;--cyan:#06B6D4;--amber:#F59E0B;--gunmetal:#334155;--purple:#7C3AED;--blood:#8B0000}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--void);color:white;font-family:'JetBrains Mono',monospace;overflow-x:hidden}
-.smoke{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.4}
-.smoke-p{position:absolute;background:radial-gradient(circle,var(--cyan) 0%,transparent 70%);border-radius:50%;animation:float 20s infinite}
-@keyframes float{0%,100%{transform:translateY(0) scale(1);opacity:.3}50%{transform:translateY(-100vh) scale(1.5);opacity:.1}}
-.hunt-tracker{position:fixed;top:2rem;right:2rem;z-index:100;display:flex;gap:.5rem}
-.hunt-dot{width:10px;height:10px;border-radius:50%;background:var(--gunmetal);transition:all .3s}
-.hunt-dot.found{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
-#hero{height:100vh;position:relative;display:flex;align-items:center;padding:0 10%;overflow:hidden}
-#hero .content{position:relative;z-index:10;max-width:60%}
-#hero h1{font-family:'Bebas Neue',sans-serif;font-size:8vw;line-height:.9;margin-bottom:2rem;background:linear-gradient(135deg,white 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-#hero p{font-size:1.2rem;color:var(--gunmetal);margin-bottom:3rem;max-width:500px}
-.cta{display:inline-block;padding:1rem 3rem;border:2px solid var(--cyan);color:var(--cyan);text-decoration:none;font-weight:bold;transition:all .3s}
-.cta:hover{background:var(--amber);border-color:var(--amber);color:var(--void);box-shadow:0 0 30px var(--amber)}
-.char-img{position:absolute;right:10%;top:50%;transform:translateY(-50%);height:60vh;z-index:5;opacity:.9}
-.arch-smoke{position:absolute;top:40%;left:70%;width:20%;opacity:.1;z-index:6;transition:all .5s;cursor:pointer;filter:grayscale(100%) sepia(100%) hue-rotate(180deg) saturate(300%)}
-.arch-smoke:hover{opacity:.9;transform:scale(1.1)}
-#strip{position:sticky;top:0;background:rgba(11,15,25,.95);padding:2rem 0;z-index:100;border-bottom:1px solid var(--gunmetal);overflow-x:auto;white-space:nowrap}
-.strip-cont{display:flex;gap:2rem;padding:0 5%}
-.strip-item{text-align:center;cursor:pointer;transition:transform .3s}
-.strip-item:hover{transform:scale(1.2)}
-.strip-item img{width:80px;height:80px;border-radius:50%;border:2px solid var(--gunmetal);object-fit:cover}
-.strip-item:hover img{border-color:var(--cyan);box-shadow:0 0 20px var(--cyan)}
-.strip-item span{display:block;margin-top:.5rem;font-size:.8rem;color:var(--gunmetal)}
-#grid{padding:5rem 10%;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;position:relative;z-index:10}
-.character-card{position:relative;cursor:pointer;overflow:hidden;border:1px solid var(--gunmetal);transition:all .3s}
-.character-card:hover{border-color:var(--cyan);transform:translateY(-5px);box-shadow:0 10px 30px rgba(6,182,212,.3)}
-.character-card img{width:100%;height:400px;object-fit:cover;transition:opacity .3s}
-.character-card .realistic{position:absolute;top:0;left:0;opacity:0}
-.character-card:hover .cartoon{opacity:0}
-.character-card:hover .realistic{opacity:1}
-.card-info{padding:1.5rem;background:rgba(11,15,25,.9)}
-.card-info h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--cyan);margin-bottom:.5rem}
-.card-info p{font-size:.9rem;color:var(--gunmetal);font-style:italic}
-#arsenal{padding:5rem 10%;position:relative;background:linear-gradient(135deg,var(--void) 0%,#1a1f2e 100%)}
-#arsenal h2{font-family:'Bebas Neue',sans-serif;font-size:4rem;text-align:center;margin-bottom:3rem;color:var(--amber)}
-.inspect{position:absolute;bottom:2rem;left:2rem;padding:.5rem 1rem;background:transparent;border:1px solid var(--gunmetal);color:var(--gunmetal);cursor:pointer;font-size:.8rem}
-.arch-blue{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:60%;max-width:600px;z-index:1000;opacity:0;transition:all .5s;pointer-events:none}
-.arch-blue.active{transform:translate(-50%,-50%) scale(1);opacity:1}
-#blog{padding:5rem 10%;position:relative;z-index:10}
-#blog h2{font-family:'Bebas Neue',sans-serif;font-size:4rem;text-align:center;margin-bottom:3rem;color:var(--cyan)}
-.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
-.blog-card{border:1px solid var(--gunmetal);cursor:pointer;transition:all .3s;overflow:hidden}
-.blog-card:hover{border-color:var(--cyan);transform:translateY(-5px)}
-.blog-card img{width:100%;height:250px;object-fit:cover}
-.blog-card .blog-meta{padding:.5rem 1rem;background:var(--gunmetal);font-size:.7rem;letter-spacing:2px}
-.blog-card h3{padding:1rem;font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--amber)}
-.blog-card p{padding:0 1rem 1rem;font-size:.9rem;color:var(--gunmetal)}
-.sinners-card{border-color:var(--blood);position:relative}
-.sinners-card::before{content:'SINNERS';position:absolute;top:10px;right:10px;background:var(--blood);color:white;padding:.2rem .5rem;font-size:.7rem;z-index:10}
-#about{padding:5rem 10%;background:linear-gradient(180deg,var(--void) 0%,#0f172a 100%)}
-#about h2{font-family:'Bebas Neue',sans-serif;font-size:4rem;text-align:center;margin-bottom:3rem}
-.comic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1200px;margin:0 auto}
-.comic-panel{border:2px solid var(--gunmetal);padding:2rem;position:relative;overflow:hidden}
-.comic-panel h3{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--cyan);margin-bottom:1rem}
-.comic-panel .sweet{position:absolute;top:10px;right:10px;background:var(--amber);color:var(--void);padding:.2rem .5rem;font-size:.7rem;font-weight:bold}
-#vault{padding:5rem 10%;min-height:100vh;position:relative;background:radial-gradient(circle at center,#1a1f2e 0%,var(--void) 100%)}
-#vault h2{font-family:'Bebas Neue',sans-serif;font-size:4rem;text-align:center;margin-bottom:5rem}
-.vault-cont{display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:3rem}
-.relic{width:250px;height:350px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .6s}
-.relic:hover{transform:rotateY(10deg) rotateX(5deg)}
-.relic-bronze{background:linear-gradient(135deg,#cd7f32 0%,#8b4513 100%)}
-.relic-silver{background:linear-gradient(135deg,#c0c0c0 0%,#808080 100%)}
-.relic-gold{background:linear-gradient(135deg,#ffd700 0%,#b8860b 100%)}
-.relic-in{position:absolute;inset:10px;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
-.arch-shadow{position:absolute;bottom:10%;right:10%;width:15%;opacity:.05;z-index:5;transition:all .3s;cursor:pointer}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:1000;display:none;align-items:center;justify-content:center}
-.modal.active{display:flex}
-.genie-game{background:var(--void);border:2px solid var(--amber);padding:3rem;max-width:600px;width:90%;position:relative}
-.mercy-hammer{position:fixed;top:-200px;left:50%;transform:translateX(-50%);font-size:10rem;z-index:2000;display:none;animation:hammerDrop 1s forwards}
-@keyframes hammerDrop{0%{top:-200px}50%{top:50%;transform:translateX(-50%) rotate(-20deg)}100%{top:100%}}
-.mercy-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--amber);z-index:2001;display:none}
-.secret-contact{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--void);border:3px solid var(--amber);padding:3rem;z-index:3000;text-align:center;max-width:500px}
-.secret-contact a{color:var(--cyan);text-decoration:none}
-.cowboy-exit{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:var(--void);z-index:5000;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.cowboy-exit img{max-width:600px;width:90%;margin-bottom:2rem}
-.cowboy-exit h2{font-family:'Bebas Neue',sans-serif;font-size:3rem;margin-bottom:2rem;color:var(--amber)}
-.cowboy-btns{display:flex;gap:2rem}
-.cowboy-btns button{padding:1rem 2rem;font-family:'JetBrains Mono',monospace;cursor:pointer;border:none;font-weight:bold}
-.stay-btn{background:var(--amber);color:var(--void)}
-.news-btn{background:var(--cyan);color:var(--void)}
-.blog-modal{background:var(--void);border:2px solid var(--cyan);padding:3rem;max-width:800px;width:90%;max-height:80vh;overflow-y:auto;position:relative}
-.blog-modal h2{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--amber);margin-bottom:1rem}
-.blog-modal .blog-content{line-height:1.8;color:#ccc}
-.blog-modal .blog-content h3{color:var(--cyan);margin:2rem 0 1rem;font-family:'Bebas Neue',sans-serif;font-size:1.5rem}
-.blog-modal .blog-content p{margin-bottom:1rem}
-.audio-player{margin:2rem 0;padding:2rem;background:#1a1f2e;border:1px solid var(--blood);border-radius:8px}
-.audio-player h4{color:var(--blood);margin-bottom:1rem;font-family:'Bebas Neue',sans-serif;font-size:1.2rem}
-.audio-player audio{width:100%;margin:.5rem 0}
-@media(max-width:1024px){#grid{grid-template-columns:repeat(2,1fr)}.blog-grid{grid-template-columns:repeat(2,1fr)}.comic-grid{grid-template-columns:1fr}}
-@media(max-width:768px){#grid{grid-template-columns:1fr}.blog-grid{grid-template-columns:1fr}.vault-cont{flex-direction:column}#hero h1{font-size:12vw}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architect | Performance Marketing</title>
+    <meta name="description" content="Engineering growth engines for B2B companies that think they've hit ceiling">
+    <link rel="icon" href="./assets/favicon.png">
+    <meta property="og:image" content="./assets/og_image.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --void: #0B0F19;
+            --blueprint: #1E3A8A;
+            --gunmetal: #334155;
+            --amber: #F59E0B;
+            --blood: #DC2626;
+            --purple: #7C3AED;
+            --toxic: #10B981;
+            --cyan: #06B6D4;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: var(--void); 
+            color: white; 
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+        
+        /* MEMORY FLASH TRANSITION */
+        .flash {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .flash.active {
+            opacity: 1;
+            transition: opacity 0.05s;
+        }
+        
+        /* BLACK SCREENS (Ritchie cuts) */
+        .black-cut {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: black;
+            z-index: 9998;
+            display: none;
+            pointer-events: none;
+        }
+        
+        /* SMOKE SYSTEM */
+        .smoke-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.6;
+            background: url('./assets/smoke_texture_1.png');
+            background-size: cover;
+            mix-blend-mode: screen;
+        }
+        .smoke-layer-2 {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.4;
+            background: url('./assets/smoke_texture_2.png');
+            background-size: cover;
+            mix-blend-mode: overlay;
+        }
+        
+        /* FACE SLICES (20% viewport, parallax) */
+        .face-slice {
+            position: fixed;
+            width: 20vw;
+            height: 20vh;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 5;
+            filter: grayscale(30%);
+            mix-blend-mode: luminosity;
+        }
+        .face-slice.active {
+            opacity: 0.15;
+        }
+        .face-slice.reveal {
+            opacity: 0.8;
+            filter: grayscale(0%) contrast(1.2);
+        }
+        #slice-left { 
+            left: 10%; top: 40%; 
+            transform: translateY(-50%);
+            clip-path: polygon(0 0, 100% 10%, 90% 90%, 0 100%);
+        }
+        #slice-center { 
+            left: 40%; top: 40%; 
+            transform: translateY(-50%);
+            clip-path: polygon(10% 5%, 90% 0, 85% 95%, 15% 100%);
+        }
+        #slice-right { 
+            left: 70%; top: 40%; 
+            transform: translateY(-50%);
+            clip-path: polygon(0 10%, 100% 0, 100% 100%, 10% 90%);
+        }
+        
+        /* CHROMATIC ABERRATION */
+        .chromatic {
+            text-shadow: 
+                -2px 0 var(--blood),
+                2px 0 var(--cyan);
+        }
+        
+        /* ACT I - THE HEIST */
+        #act1 {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #act1 h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 10vw;
+            line-height: 0.9;
+            z-index: 10;
+            text-align: center;
+            mix-blend-mode: difference;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* 9 OCTAHEDRON SHARDS (Repurposed character images) */
+        .shard-container {
+            position: absolute;
+            width: 100%; height: 100%;
+            z-index: 4;
+        }
+        .shard {
+            position: absolute;
+            width: 80px; height: 80px;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.7;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+        .shard:hover {
+            transform: scale(1.3) rotate(45deg);
+            opacity: 1;
+            filter: drop-shadow(0 0 20px var(--cyan));
+        }
+        .shard.collected {
+            animation: collect 0.5s forwards;
+        }
+        @keyframes collect {
+            to { 
+                transform: scale(0) rotate(720deg); 
+                opacity: 0;
+            }
+        }
+        
+        /* ACT II - THE ARSENAL */
+        #act2 {
+            min-height: 100vh;
+            padding: 5rem 10%;
+            position: relative;
+            background: linear-gradient(180deg, var(--void) 0%, var(--blueprint) 100%);
+        }
+        #act2 h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            text-align: center;
+            margin-bottom: 5rem;
+            color: var(--amber);
+        }
+        .weapon-rack {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .weapon {
+            border: 2px solid var(--gunmetal);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: crosshair;
+        }
+        .weapon:hover {
+            border-color: var(--cyan);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(6,182,212,0.3);
+        }
+        .weapon:hover .chromatic-blast {
+            opacity: 1;
+        }
+        .chromatic-blast {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, var(--blood) 0%, var(--cyan) 50%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+        .weapon h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--cyan);
+        }
+        
+        /* ACT III - THE NOTEBOOK (Blog) */
+        #act3 {
+            min-height: 100vh;
+            padding: 5rem 10%;
+            position: relative;
+        }
+        #act3 h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--blood);
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .blog-card {
+            border: 1px solid var(--gunmetal);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .blog-card:hover {
+            border-color: var(--amber);
+            transform: translateX(10px);
+        }
+        .blog-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+        .blog-card:hover img {
+            filter: grayscale(0%);
+        }
+        .blog-content {
+            padding: 2rem;
+        }
+        .blog-content h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--amber);
+            margin-bottom: 1rem;
+        }
+        
+        /* SINNERS SPECIAL STYLING */
+        .sinners-card {
+            border-color: var(--blood);
+            background: linear-gradient(135deg, rgba(139,0,0,0.1) 0%, transparent 100%);
+        }
+        .sinners-card::before {
+            content: 'SINNERS';
+            position: absolute;
+            top: 10px; right: 10px;
+            background: var(--blood);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            z-index: 10;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .audio-box {
+            background: #1a1f2e;
+            border: 1px solid var(--blood);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        .audio-box h4 {
+            color: var(--blood);
+            font-family: 'Bebas Neue', sans-serif;
+            margin-bottom: 1rem;
+        }
+        audio {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        
+        /* ACT IV - THE VAULT */
+        #act4 {
+            min-height: 100vh;
+            background: url('./assets/vault_background.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #act4::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(11,15,25,0.85);
+            z-index: 1;
+        }
+        #act4 h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            color: var(--amber);
+            z-index: 2;
+            margin-bottom: 5rem;
+        }
+        .vault-relics {
+            display: flex;
+            gap: 4rem;
+            z-index: 2;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .relic {
+            width: 250px; height: 350px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .relic:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        .relic-bronze { background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%); }
+        .relic-silver { background: linear-gradient(135deg, #c0c0c0 0%, #808080 100%); }
+        .relic-gold { background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%); }
+        .relic-inner {
+            position: absolute;
+            inset: 10px;
+            background: var(--void);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        /* GENIE GAME */
+        .genie-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .genie-modal.active {
+            display: flex;
+        }
+        .genie-content {
+            background: var(--void);
+            border: 3px solid var(--cyan);
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 0 50px var(--cyan);
+        }
+        
+        /* COWBOY EXIT INTENT */
+        .cowboy-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--void);
+            z-index: 5000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .cowboy-modal.active {
+            display: flex;
+        }
+        .cowboy-modal h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--amber);
+            margin: 2rem 0;
+        }
+        
+        /* ABOUT SECTION */
+        #about {
+            min-height: 100vh;
+            padding: 5rem 10%;
+            background: linear-gradient(180deg, var(--blueprint) 0%, var(--void) 100%);
+        }
+        #about h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        .comic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .comic-panel {
+            border: 3px solid var(--gunmetal);
+            padding: 2rem;
+            position: relative;
+            background: rgba(11,15,25,0.8);
+        }
+        .comic-panel h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+        .sweet-badge {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: var(--amber);
+            color: var(--void);
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* DEBUG MODE */
+        .debug-mode {
+            filter: invert(1) hue-rotate(180deg) !important;
+        }
+        .chaos-text {
+            font-family: 'Permanent Marker', cursive !important;
+            color: var(--purple) !important;
+            text-shadow: 0 0 30px var(--purple) !important;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .weapon-rack { grid-template-columns: 1fr; }
+            .blog-grid { grid-template-columns: 1fr; }
+            .comic-grid { grid-template-columns: 1fr; }
+            .vault-relics { flex-direction: column; }
+            #act1 h1 { font-size: 15vw; }
+        }
+    </style>
 </head>
 <body>
-<div class="smoke" id="smoke"></div>
-<div class="hunt-tracker"><div class="hunt-dot" id="d1"></div><div class="hunt-dot" id="d2"></div><div class="hunt-dot" id="d3"></div><div class="hunt-dot" id="d4"></div></div>
-
-<section id="hero"><div class="content"><h1>PERFORMANCE ARCHITECT</h1><p>Engineering growth engines for B2B companies that think they have hit ceiling</p><a href="#vault" class="cta">Enter The War Room</a></div>
-<img src="./images/01_shelby_cartoon.png" class="char-img"><img src="./architects/architect_smoke.png" class="arch-smoke" id="a1" onclick="findA(1)"></section>
-
-<section id="strip"><div class="strip-cont"><div class="strip-item" onclick="document.getElementById('card-01').scrollIntoView({behavior:'smooth'})"><img src="./images/01_shelby_cartoon.png" alt="Shelby"><span>Shelby</span></div>
-<div class="strip-item" onclick="document.getElementById('card-02').scrollIntoView({behavior:'smooth'})"><img src="./images/02_aragorn_cartoon.png" alt="Aragorn"><span>Aragorn</span></div>
-<div class="strip-item" onclick="document.getElementById('card-03').scrollIntoView({behavior:'smooth'})"><img src="./images/03_fury_cartoon.png" alt="Fury"><span>Fury</span></div>
-<div class="strip-item" onclick="document.getElementById('card-04').scrollIntoView({behavior:'smooth'})"><img src="./images/04_stark_cartoon.png" alt="Stark"><span>Stark</span></div>
-<div class="strip-item" onclick="document.getElementById('card-05').scrollIntoView({behavior:'smooth'})"><img src="./images/05_white_cartoon.png" alt="White"><span>White</span></div>
-<div class="strip-item" onclick="document.getElementById('card-06').scrollIntoView({behavior:'smooth'})"><img src="./images/06_bond_cartoon.png" alt="Bond"><span>Bond</span></div>
-<div class="strip-item" onclick="document.getElementById('card-07').scrollIntoView({behavior:'smooth'})"><img src="./images/07_joker_cartoon.png" alt="Joker"><span>Joker</span></div>
-<div class="strip-item" onclick="document.getElementById('card-08').scrollIntoView({behavior:'smooth'})"><img src="./images/08_gandalf_cartoon.png" alt="Gandalf"><span>Gandalf</span></div>
-<div class="strip-item" onclick="document.getElementById('card-09').scrollIntoView({behavior:'smooth'})"><img src="./images/09_maximus_cartoon.png" alt="Maximus"><span>Maximus</span></div>
-<div class="strip-item" onclick="document.getElementById('card-10').scrollIntoView({behavior:'smooth'})"><img src="./images/10_tyrion_cartoon.png" alt="Tyrion"><span>Tyrion</span></div>
-<div class="strip-item" onclick="document.getElementById('card-11').scrollIntoView({behavior:'smooth'})"><img src="./images/11_jonsnow_cartoon.png" alt="JonSnow"><span>JonSnow</span></div>
-<div class="strip-item" onclick="document.getElementById('card-12').scrollIntoView({behavior:'smooth'})"><img src="./images/12_snape_cartoon.png" alt="Snape"><span>Snape</span></div>
-<div class="strip-item" onclick="document.getElementById('card-13').scrollIntoView({behavior:'smooth'})"><img src="./images/13_durden_cartoon.png" alt="Durden"><span>Durden</span></div>
-<div class="strip-item" onclick="document.getElementById('card-14').scrollIntoView({behavior:'smooth'})"><img src="./images/14_v_cartoon.png" alt="V"><span>V</span></div>
-<div class="strip-item" onclick="document.getElementById('card-15').scrollIntoView({behavior:'smooth'})"><img src="./images/15_mando_cartoon.png" alt="Mando"><span>Mando</span></div>
-<div class="strip-item" onclick="document.getElementById('card-16').scrollIntoView({behavior:'smooth'})"><img src="./images/16_rick_cartoon.png" alt="Rick"><span>Rick</span></div></div></section>
-<section id="grid"><div class="character-card" id="card-01"><img src="./images/01_shelby_cartoon.png" class="cartoon"><img src="./images/01_shelby_realistic.png" class="realistic"><div class="card-info"><h3>The Shelby Method</h3><p>"I don't pay for leads. My systems pay for themselves."</p></div></div>
-<div class="character-card" id="card-02"><img src="./images/02_aragorn_cartoon.png" class="cartoon"><img src="./images/02_aragorn_realistic.png" class="realistic"><div class="card-info"><h3>The Aragorn Guarantee</h3><p>"From now onwards, you put your faith in me."</p></div></div>
-<div class="character-card" id="card-03"><img src="./images/03_fury_cartoon.png" class="cartoon"><img src="./images/03_fury_realistic.png" class="realistic"><div class="card-info"><h3>The Fury Protocol</h3><p>"Ideals are peaceful. Markets are violent."</p></div></div>
-<div class="character-card" id="card-04"><img src="./images/04_stark_cartoon.png" class="cartoon"><img src="./images/04_stark_realistic.png" class="realistic"><div class="card-info"><h3>The Stark Stack</h3><p>"Growth hacker, optimizer, revenue architect."</p></div></div>
-<div class="character-card" id="card-05"><img src="./images/05_white_cartoon.png" class="cartoon"><img src="./images/05_white_realistic.png" class="realistic"><div class="card-info"><h3>The White Process</h3><p>"I am the one who converts."</p></div></div>
-<div class="character-card" id="card-06"><img src="./images/06_bond_cartoon.png" class="cartoon"><img src="./images/06_bond_realistic.png" class="realistic"><div class="card-info"><h3>The Bond Briefing</h3><p>"Attributed, not last-click."</p></div></div>
-<div class="character-card" id="card-07"><img src="./images/07_joker_cartoon.png" class="cartoon"><img src="./images/07_joker_realistic.png" class="realistic"><div class="card-info"><h3>The Joker Card</h3><p>"Why so serious about CPL?"</p></div></div>
-<div class="character-card" id="card-08"><img src="./images/08_gandalf_cartoon.png" class="cartoon"><img src="./images/08_gandalf_realistic.png" class="realistic"><div class="card-info"><h3>The Gandalf Block</h3><p>"You shall not bounce!"</p></div></div>
-<div class="character-card" id="card-09"><img src="./images/09_maximus_cartoon.png" class="cartoon"><img src="./images/09_maximus_realistic.png" class="realistic"><div class="card-info"><h3>The Maximus Result</h3><p>"Are you not converting?"</p></div></div>
-<div class="character-card" id="card-10"><img src="./images/10_tyrion_cartoon.png" class="cartoon"><img src="./images/10_tyrion_realistic.png" class="realistic"><div class="card-info"><h3>The Tyrion Allocation</h3><p>"I spend and I know metrics."</p></div></div>
-<div class="character-card" id="card-11"><img src="./images/11_jonsnow_cartoon.png" class="cartoon"><img src="./images/11_jonsnow_realistic.png" class="realistic"><div class="card-info"><h3>The Jon Snow Attribution</h3><p>"You know nothing about multi-touch."</p></div></div>
-<div class="character-card" id="card-12"><img src="./images/12_snape_cartoon.png" class="cartoon"><img src="./images/12_snape_realistic.png" class="realistic"><div class="card-info"><h3>The Snape Method</h3><p>"Always... be optimizing."</p></div></div>
-<div class="character-card" id="card-13"><img src="./images/13_durden_cartoon.png" class="cartoon"><img src="./images/13_durden_realistic.png" class="realistic"><div class="card-info"><h3>The Durden Test</h3><p>"First rule of Growth Club: Always be testing."</p></div></div>
-<div class="character-card" id="card-14"><img src="./images/14_v_cartoon.png" class="cartoon"><img src="./images/14_v_realistic.png" class="realistic"><div class="card-info"><h3>The V Philosophy</h3><p>"Beneath this data there is more than numbers."</p></div></div>
-<div class="character-card" id="card-15"><img src="./images/15_mando_cartoon.png" class="cartoon"><img src="./images/15_mando_realistic.png" class="realistic"><div class="card-info"><h3>The Mandalorian Funnel</h3><p>"This is the funnel."</p></div></div>
-<div class="character-card" id="card-16"><img src="./images/16_rick_cartoon.png" class="cartoon"><img src="./images/16_rick_realistic.png" class="realistic"><div class="card-info"><h3>The Rick Survival</h3><p>"We don't just survive. We optimize."</p></div></div></section>
-
-<section id="arsenal"><h2>THE ARSENAL</h2><div style="display:flex;justify-content:space-around;margin-top:3rem;flex-wrap:wrap;gap:2rem;"><div style="text-align:center;padding:2rem;border:1px solid var(--cyan);min-width:200px;"><h3 style="color:var(--cyan);font-family:Bebas Neue;font-size:2rem;">PRECISION</h3><p>Data Diagnosis</p></div><div style="text-align:center;padding:2rem;border:1px solid var(--amber);min-width:200px;"><h3 style="color:var(--amber);font-family:Bebas Neue;font-size:2rem;">SYSTEMS</h3><p>Pipeline Architecture</p></div><div style="text-align:center;padding:2rem;border:1px solid var(--gunmetal);min-width:200px;"><h3 style="color:white;font-family:Bebas Neue;font-size:2rem;">COURAGE</h3><p>Hard Questions</p></div></div>
-<button class="inspect" onclick="revealA2()">Inspect System</button><img src="./architects/architect_blueprint.png" class="arch-blue" id="a2" onclick="findA(2)"></section>
-
-<section id="blog"><h2>THE ARCHITECT'S NOTEBOOK</h2><div class="blog-grid">
-<article class="blog-card" onclick="openBlog('clean')"><img src="./blog/01_paralysis_clean_data.png" loading="lazy"><div class="blog-meta">BLOOD & DATA</div><h3>The Paralysis of Clean Data</h3><p>Why your dashboard is lying to you, and why anomalies matter more than averages.</p></article>
-<article class="blog-card" onclick="openBlog('threeam')"><img src="./blog/02_three_am_problem.png" loading="lazy"><div class="blog-meta">THE CRAFT</div><h3>The 3 AM Problem</h3><p>Blockers do not exist. Only unsolved puzzles you have not figured out yet.</p></article>
-<article class="blog-card sinners-card" onclick="openBlog('sinners')"><img src="./blog/03_sinners_data_blood.png" loading="lazy"><div class="blog-meta">SINNERS' HOUR</div><h3>When The Data Drinks Blood</h3><p>The seduction of vanity metrics and knowing when to cut the cord.</p></article>
-<article class="blog-card" onclick="openBlog('autopsy')"><img src="./blog/04_pipeline_autopsy.png" loading="lazy"><div class="blog-meta">BLOOD & DATA</div><h3>Pipeline Autopsy</h3><p>Every dead lead is a lesson. Most people bury them. Architects dissect them.</p></article>
-<article class="blog-card" onclick="openBlog('question')"><img src="./blog/05_the_question.png" loading="lazy"><div class="blog-meta">THE CRAFT</div><h3>The Question No One Asks</h3><p>Why are we even doing this? Experience is knowing which questions hurt to ask.</p></article>
-</div></section>
-
-<section id="about"><h2>THE ARCHITECT</h2><div class="comic-grid">
-<div class="comic-panel"><div class="sweet">SWEET MISTAKE #1</div><h3>The Rabbit Hole</h3><p>Started to see how things happen in corporate. Did not know it would become a career. Just wanted to understand the machine. Turned out the machine was broken, and I enjoyed fixing it.</p></div>
-<div class="comic-panel"><div class="sweet">SWEET MISTAKE #2</div><h3>The Awakening</h3><p>Started to understand business logic, cash flows, growth spectrum. Patterns emerged from chaos. Data started talking. I learned to listen. Then I learned to question what it was saying.</p></div>
-<div class="comic-panel"><h3>The Architect</h3><p>I do not fix campaigns. I fix the thinking that broke them. Experience is not knowing answers. It is knowing which questions hurt to ask. And having the balls to ask them anyway.</p></div>
-</div></section>
-
-<section id="vault"><h2>THE VAULT</h2><div class="vault-cont">
-<div class="relic relic-bronze" onclick="shatter(this,'in')"><div class="relic-in"><h3>BRONZE JAR</h3><p>Professional Network</p><div style="margin-top:2rem;font-size:3rem;">in</div></div></div>
-<div class="relic relic-silver" id="env"><div class="relic-in" style="cursor:grab;"><h3>SILVER ENVELOPE</h3><p>Secure Channel</p><div style="margin-top:2rem;font-size:3rem;">✉</div></div></div>
-<div class="relic relic-gold" ondblclick="openGenie()"><div class="relic-in"><h3>GOLD BOX</h3><p>The Prize</p><div style="margin-top:2rem;font-size:3rem;">◈</div></div></div>
-</div><img src="./architects/architect_shadow.png" class="arch-shadow" id="a3" onclick="findA(3)">
-<div id="inReveal" style="display:none;text-align:center;margin-top:2rem;"><a href="https://www.linkedin.com/in/digitalashok/" target="_blank" style="color:var(--cyan);font-size:1.5rem;text-decoration:none;border:2px solid var(--cyan);padding:1rem 2rem;">Connect on LinkedIn</a></div></section>
-
-<div class="modal" id="contactModal"><div style="background:var(--void);border:2px solid var(--cyan);padding:3rem;max-width:500px;width:90%;position:relative;"><button onclick="closeM('contactModal')" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button><h2 style="font-family:Bebas Neue;font-size:2rem;margin-bottom:2rem;color:var(--cyan);">SECURE CHANNEL</h2><form action="https://formspree.io/f/mpqjzqey" method="POST"><input type="email" name="email" placeholder="Your Email" required style="width:100%;padding:1rem;margin-bottom:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;"><textarea name="message" placeholder="Mission Briefing..." required style="width:100%;padding:1rem;margin-bottom:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;min-height:150px;"></textarea><button type="submit" style="width:100%;padding:1rem;background:var(--cyan);color:var(--void);border:none;font-weight:bold;cursor:pointer;font-family:JetBrains Mono;">TRANSMIT</button></form></div></div>
-
-<div class="modal" id="genieModal"><div class="genie-game"><button onclick="closeM('genieModal')" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button><div id="q1"><h3>What growth demon haunts you?</h3><div style="display:flex;flex-direction:column;gap:.5rem;"><button onclick="nextQ(2)" onmouseenter="resetMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Lead Drought</button><button onclick="nextQ(2)" onmouseenter="resetMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Budget Bleed</button><button onclick="nextQ(2)" onmouseenter="resetMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Conversion Cliff</button><button onclick="nextQ(2)" onmouseenter="resetMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Retention Rot</button></div></div><div id="q2" style="display:none;"><h3>What is your monthly war chest?</h3><input type="range" min="10" max="1000" value="100" style="width:100%;margin:2rem 0;" oninput="document.getElementById('bv').textContent=this.value;resetMercy()"><div style="text-align:center;color:var(--amber);">$<span id="bv">100</span>k</div><button onclick="nextQ(3)" style="margin-top:2rem;padding:1rem 2rem;background:var(--amber);color:var(--void);border:none;cursor:pointer;">Continue</button></div><div id="q3" style="display:none;"><h3>Which channel betrayed you?</h3><div style="display:flex;flex-direction:column;gap:.5rem;"><button onclick="triggerMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Search</button><button onclick="triggerMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Social</button><button onclick="triggerMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Email</button><button onclick="triggerMercy()" style="padding:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;cursor:pointer;text-align:left;">Direct</button></div></div><div id="mercyR" style="display:none;text-align:center;"><h3 style="color:var(--amber);margin-bottom:2rem;">Direct Line Unlocked</h3><p>Email: <a href="mailto:awesomeashoksingh@gmail.com" style="color:var(--cyan);">awesomeashoksingh@gmail.com</a></p><p>Phone (India): <a href="tel:+919473798004" style="color:var(--cyan);">+919473798004</a></p><p>Phone (UAE): <a href="tel:+971 555693876" style="color:var(--cyan);">+971 555693876</a></p><p>Instagram: <a href="https://www.instagram.com/dilseteekha/" target="_blank" style="color:var(--cyan);">@dilseteekha</a></p></div></div></div>
-
-<div class="modal" id="blogModal"><div class="blog-modal" id="blogContent"><button onclick="closeM('blogModal')" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button><div id="blogInner"></div></div></div>
-
-<div class="cowboy-exit" id="cowboyExit"><img src="./blog/12_cowboy_exit.png" alt="Cowboy"><h2>In a hurry, boy? The good stuff is inside.</h2><div class="cowboy-btns"><button class="stay-btn" onclick="document.getElementById('cowboyExit').style.display='none'">I will Stay</button><button class="news-btn" onclick="showNewsletter()">Just Getting The Newsletter</button></div></div>
-
-<div class="modal" id="newsModal"><div style="background:var(--void);border:2px solid var(--amber);padding:3rem;max-width:500px;width:90%;position:relative;"><button onclick="closeM('newsModal')" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button><h2 style="font-family:Bebas Neue;font-size:2rem;margin-bottom:2rem;color:var(--amber);">INTELLIGENCE BRIEFING</h2><p style="margin-bottom:2rem;color:var(--gunmetal);">Weekly insights on spotting data vampires before they drain you.</p><form action="https://formspree.io/f/xlgwejre" method="POST"><input type="email" name="email" placeholder="Your Email" required style="width:100%;padding:1rem;margin-bottom:1rem;background:transparent;border:1px solid var(--gunmetal);color:white;"><button type="submit" style="width:100%;padding:1rem;background:var(--amber);color:var(--void);border:none;font-weight:bold;cursor:pointer;font-family:JetBrains Mono;">SUBSCRIBE</button></form></div></div>
-
-<div class="mercy-hammer" id="mHammer">🔨</div><div class="mercy-text" id="mText">Anyway... Here You Go!</div>
-<img src="./architects/architect_glitch.png" style="position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:999;display:none;mix-blend-mode:overlay;opacity:.7" id="a4" onclick="findA(4)">
-
-<div class="secret-contact" id="sContact"><h2 style="font-family:Bebas Neue,sans-serif;font-size:3rem;color:var(--amber);margin-bottom:2rem;">All Architects Found</h2><p style="color:var(--gunmetal);margin-bottom:2rem;">You have earned the direct line. No more puzzles.</p><p>📧 <a href="mailto:awesomeashoksingh@gmail.com">awesomeashoksingh@gmail.com</a></p><p>📱 India: <a href="tel:+919473798004">+919473798004</a></p><p>📱 UAE: <a href="tel:+971 555693876">+971 555693876</a></p><p>💼 <a href="https://www.linkedin.com/in/digitalashok/" target="_blank">LinkedIn</a></p><p>📸 <a href="https://www.instagram.com/dilseteekha/" target="_blank">Instagram</a></p><button onclick="document.getElementById('sContact').style.display='none'" style="margin-top:2rem;padding:1rem 2rem;background:var(--amber);color:var(--void);border:none;cursor:pointer;">Close</button></div>
-
-<script>
-const sCont=document.getElementById("smoke");for(let i=0;i<20;i++){const p=document.createElement("div");p.className="smoke-p";p.style.width=Math.random()*100+50+"px";p.style.height=p.style.width;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.animationDelay=Math.random()*20+"s";p.style.animationDuration=Math.random()*10+15+"s";sCont.appendChild(p);}
-let fA=parseInt(localStorage.getItem("fA")||"0");let fL=JSON.parse(localStorage.getItem("fL")||"[]");function uHT(){for(let i=1;i<=4;i++){if(fL.includes(i))document.getElementById("d"+i).classList.add("found");}if(fA>=4){document.getElementById("sContact").style.display="block";confetti();}}function findA(n){if(!fL.includes(n)){fL.push(n);fA++;localStorage.setItem("fL",JSON.stringify(fL));localStorage.setItem("fA",fA.toString());console.log("["+fA+"/4 Architects Found]");uHT();if(fA===4)console.log("You have found the Architect [4/4]");}}uHT();
-function revealA2(){document.getElementById("a2").classList.add("active");console.log("See the mind behind the machine [2/4]");setTimeout(()=>document.getElementById("a2").classList.remove("active"),3000);}
-const a3=document.getElementById("a3");a3.addEventListener("mouseenter",()=>{a3.style.right=Math.random()*80+10+"%";a3.style.bottom=Math.random()*80+10+"%";});
-function shatter(el,t){el.style.transform="scale(0)";el.style.opacity="0";setTimeout(()=>{if(t==="in")document.getElementById("inReveal").style.display="block";},600);}
-let drag=false,sY=0;const env=document.getElementById("env");env.addEventListener("mousedown",e=>{drag=true;sY=e.clientY;env.style.cursor="grabbing";});document.addEventListener("mousemove",e=>{if(drag&&sY-e.clientY>100){document.getElementById("contactModal").classList.add("active");drag=false;env.style.cursor="grab";}});document.addEventListener("mouseup",()=>{drag=false;env.style.cursor="grab";});
-let mT;function openGenie(){document.getElementById("genieModal").classList.add("active");rM();}function closeM(id){document.getElementById(id).classList.remove("active");clearTimeout(mT);}function nextQ(n){["q1","q2","q3"].forEach(id=>document.getElementById(id).style.display="none");document.getElementById("q"+n).style.display="block";rM();}function rM(){clearTimeout(mT);mT=setTimeout(tM,10000);}function tM(){clearTimeout(mT);document.getElementById("mHammer").style.display="block";document.body.style.animation="shake .8s";setTimeout(()=>{document.getElementById("mText").style.display="block";document.body.style.background="white";},400);setTimeout(()=>{document.body.style.background="";document.body.style.animation="";document.getElementById("mHammer").style.display="none";document.getElementById("mText").style.display="none";document.getElementById("mercyR").style.display="block";document.getElementById("q3").style.display="none";},1500);}
-let kc=[];const cc=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];document.addEventListener("keydown",e=>{kc.push(e.key);kc=kc.slice(-10);if(kc.join(",")===cc.join(","))aD();});function aD(){document.body.style.filter="invert(1) hue-rotate(180deg)";document.getElementById("a4").style.display="block";document.querySelectorAll("h1,h2,h3,p").forEach(el=>{const o=el.innerText;let i=0;const v=setInterval(()=>{el.innerText=o.split("").map((c,idx)=>idx<i?o[idx]:String.fromCharCode(65+Math.floor(Math.random()*26))).join("");i+=1/3;if(i>=o.length)clearInterval(v);},30);});console.log("System Administrator Detected");findA(4);}
-function confetti(){for(let i=0;i<100;i++){const c=document.createElement("div");c.style.cssText="position:fixed;width:10px;height:10px;background:"+["var(--cyan)","var(--amber)","var(--purple)"][Math.floor(Math.random()*3)]+";left:"+Math.random()*100+"%;top:-10px;z-index:9999;transition:all 2s";document.body.appendChild(c);setTimeout(()=>{c.style.top="100vh";c.style.transform="rotate("+Math.random()*360+"deg)";},100);setTimeout(()=>c.remove(),2000);}}
-document.querySelectorAll("a[href^='#']").forEach(a=>{a.addEventListener("click",e=>{e.preventDefault();document.querySelector(a.getAttribute("href")).scrollIntoView({behavior:"smooth"});});});
-gsap.registerPlugin(ScrollTrigger);gsap.utils.toArray(".character-card").forEach((c,i)=>{gsap.from(c,{scrollTrigger:{trigger:c,start:"top 80%"},y:100,opacity:0,duration:.6,delay:i*.1});});gsap.to("#hero .char-img",{scrollTrigger:{trigger:"#hero",start:"top top",end:"bottom top",scrub:true},y:200});
-const blogData={clean:{title:"The Paralysis of Clean Data",content:"<h3>The Comfort of Empty Metrics</h3><p>Most people sanitize their data until it is useless. They remove outliers, smooth curves, hide anomalies. They want the comfort of clean charts. I want the truth.</p><h3>Why Anomalies Matter</h3><p>Anomalies are the only things that matter. Averages lie. Trends deceive. That spike at 3 AM on Tuesday? That is where the money is. That drop-off that does not fit the pattern? That is your pattern.</p><h3>The Balls to Be Messy</h3><p>Clean data is for presentations. Messy data is for architects. Have the courage to look at the raw, ugly, inconsistent truth. That is where the real insights live.</p>"},threeam:{title:"The 3 AM Problem",content:"<h3>Blockers Do Not Exist</h3><p>I do not believe in blockers. I believe in puzzles I have not solved yet. When someone says it is not possible, I hear I have not figured it out.</p><h3>Patience as Weapon</h3><p>Experience teaches you which puzzles matter and which are distractions. It is not about solving everything. It is about solving the right thing at 3 AM when no one else is looking.</p><h3>Building Immunity</h3><p>Do not build bandages. Build immune systems. A healthy pipeline rejects bad leads before they enter. That is architecture. That is the craft.</p>"},sinners:{title:"When The Data Drinks Blood",content:"<div class='audio-player'><h4>The Jukebox</h4><audio controls><source src='./audio/i-lied-to-you.mp3' type='audio/mpeg'></audio><p style='font-size:.8rem;color:var(--gunmetal);'>I Lied to You</p><audio controls><source src='./audio/rocky-road-to-dublin.mp3' type='audio/mpeg'></audio><p style='font-size:.8rem;color:var(--gunmetal);'>Rocky Road to Dublin</p></div><h3>The Seduction</h3><p>Some data relationships are parasitic. You feed the machine vanity metrics, and it consumes you. You stare at dashboards that look alive but drain your resources dry.</p><h3>Knowing When to Cut</h3><p>The data lied to you. It told you what you wanted to hear. That campaign with the beautiful line graph? It is bleeding you dry while you sleep.</p><h3>The Architect's Burden</h3><p>Seeing the collapse before it happens is not a gift. It is a burden. You know which campaigns are vampires. You know when to stake the heart. But do you have the balls to do it?</p>"},autopsy:{title:"Pipeline Autopsy",content:"<h3>Seven Stages of Death</h3><p>Every dead lead goes through seven stages. Most marketers bury them at stage three. I dissect them at stage seven.</p><h3>Where You Failed</h3><p>The lead did not die. You killed it. Wrong filter. Wrong question. Wrong timing. The autopsy tells the truth that your attribution model hides.</p><h3>Immune Systems</h3><p>Do not build bandages. Build immune systems. A healthy pipeline rejects bad leads before they enter. That is architecture. That is the craft.</p>"},question:{title:"The Question No One Asks",content:"<h3>Activity vs Impact</h3><p>Most teams measure activity. Emails sent. Calls made. Campaigns launched. Architects measure impact. Revenue per decision. Pipeline velocity per hour invested.</p><h3>Because We Have Always Done It</h3><p>That is the death sentence. It works is not the same as it matters. I have killed campaigns that were working because they were distracting from what was working better.</p><h3>The Questions That Hurt</h3><p>Experience is not knowing answers. It is knowing which questions hurt to ask. And having the balls to ask them anyway.</p>"}};
-function openBlog(id){const b=blogData[id];if(b){document.getElementById("blogInner").innerHTML="<h2>"+b.title+"</h2><div class='blog-content'>"+b.content+"</div>";document.getElementById("blogModal").classList.add("active");}}
-function showNewsletter(){document.getElementById("cowboyExit").style.display="none";document.getElementById("newsModal").classList.add("active");}
-let eShown=false;document.addEventListener("mouseout",e=>{if(e.clientY<10&&!eShown&&!localStorage.getItem("exitShown")){document.getElementById("cowboyExit").style.display="flex";eShown=true;localStorage.setItem("exitShown","true");}});
-</script>
+    <!-- Flash transition overlay -->
+    <div class="flash" id="flash"></div>
+    <div class="black-cut" id="blackCut"></div>
+    
+    <!-- Smoke layers -->
+    <div class="smoke-layer"></div>
+    <div class="smoke-layer-2"></div>
+    
+    <!-- Face slices (20% viewport, parallax) -->
+    <img src="./images/architects/architect_smoke.png" class="face-slice" id="slice-left" data-speed="0.2">
+    <img src="./images/architects/architect_blueprint.png" class="face-slice" id="slice-center" data-speed="0.5">
+    <img src="./images/architects/architect_shadow.png" class="face-slice" id="slice-right" data-speed="0.8">
+    
+    <!-- ACT I: THE HEIST -->
+    <section id="act1">
+        <div class="shard-container" id="shardContainer"></div>
+        <div style="z-index: 10; text-align: center;">
+            <h1 class="chromatic">PERFORMANCE<br>ARCHITECT</h1>
+            <p style="font-size: 1.2rem; color: var(--gunmetal); margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Engineering growth engines for B2B companies that think they've hit ceiling
+            </p>
+            <br>
+            <a href="#act4" style="display: inline-block; padding: 1rem 3rem; border: 2px solid var(--cyan); color: var(--cyan); text-decoration: none; font-weight: bold; margin-top: 2rem; transition: all 0.3s;" 
+               onmouseover="this.style.background='var(--amber)'; this.style.borderColor='var(--amber)'; this.style.color='var(--void)'"
+               onmouseout="this.style.background='transparent'; this.style.borderColor='var(--cyan)'; this.style.color='var(--cyan)'">
+                ENTER THE WAR ROOM
+            </a>
+        </div>
+    </section>
+    
+    <!-- ACT II: THE ARSENAL -->
+    <section id="act2">
+        <h2 class="chromatic">THE ARSENAL</h2>
+        <div class="weapon-rack">
+            <div class="weapon" onclick="explode(this)">
+                <div class="chromatic-blast"></div>
+                <h3>PRECISION</h3>
+                <p>Data Diagnosis & Pattern Recognition</p>
+            </div>
+            <div class="weapon" onclick="explode(this)">
+                <div class="chromatic-blast"></div>
+                <h3>SYSTEMS</h3>
+                <p>Pipeline Architecture & Automation</p>
+            </div>
+            <div class="weapon" onclick="explode(this)">
+                <div class="chromatic-blast"></div>
+                <h3>COURAGE</h3>
+                <p>Hard Questions & Bold Decisions</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ACT III: THE NOTEBOOK -->
+    <section id="act3">
+        <h2 class="chromatic">THE NOTEBOOK</h2>
+        <div class="blog-grid">
+            <article class="blog-card" onclick="openBlog('clean')">
+                <img src="./images/blog/01_paralysis_clean_data.png" loading="lazy">
+                <div class="blog-content">
+                    <h3>The Paralysis of Clean Data</h3>
+                    <p>Why your dashboard is lying to you, and why anomalies matter more than averages.</p>
+                </div>
+            </article>
+            
+            <article class="blog-card" onclick="openBlog('threeam')">
+                <img src="./images/blog/02_three_am_problem.png" loading="lazy">
+                <div class="blog-content">
+                    <h3>The 3 AM Problem</h3>
+                    <p>Blockers don't exist. Only unsolved puzzles you haven't figured out yet.</p>
+                </div>
+            </article>
+            
+            <article class="blog-card sinners-card" onclick="openBlog('sinners')">
+                <img src="./images/blog/03_sinners_data_blood.png" loading="lazy">
+                <div class="blog-content">
+                    <h3>When The Data Drinks Blood</h3>
+                    <p>The seduction of vanity metrics and knowing when to cut the cord.</p>
+                    <div class="audio-box">
+                        <h4>The Jukebox</h4>
+                        <audio controls>
+                            <source src="./audio/i-lied-to-you.mp3" type="audio/mpeg">
+                        </audio>
+                        <p style="font-size: 0.8rem; color: var(--gunmetal);">I Lied to You</p>
+                        <audio controls>
+                            <source src="./audio/rocky-road-to-dublin.mp3" type="audio/mpeg">
+                        </audio>
+                        <p style="font-size: 0.8rem; color: var(--gunmetal);">Rocky Road to Dublin</p>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="blog-card" onclick="openBlog('autopsy')">
+                <img src="./images/blog/04_pipeline_autopsy.png" loading="lazy">
+                <div class="blog-content">
+                    <h3>Pipeline Autopsy</h3>
+                    <p>Every dead lead is a lesson. Most people bury them. Architects dissect them.</p>
+                </div>
+            </article>
+            
+            <article class="blog-card" onclick="openBlog('question')" style="grid-column: span 2;">
+                <img src="./images/blog/05_the_question.png" loading="lazy" style="height: 250px;">
+                <div class="blog-content">
+                    <h3>The Question No One Asks</h3>
+                    <p>Why are we even doing this? Experience is knowing which questions hurt to ask.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+    
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <h2 class="chromatic">THE ARCHITECT</h2>
+        <div class="comic-grid">
+            <div class="comic-panel">
+                <span class="sweet-badge">SWEET MISTAKE #1</span>
+                <h3>The Rabbit Hole</h3>
+                <p>Started to see how things happen in corporate. Didn't know it would become a career. Just wanted to understand the machine. Turned out the machine was broken, and I enjoyed fixing it.</p>
+            </div>
+            <div class="comic-panel">
+                <span class="sweet-badge">SWEET MISTAKE #2</span>
+                <h3>The Awakening</h3>
+                <p>Started to understand business logic, cash flows, growth spectrum. Patterns emerged from chaos. Data started talking. I learned to listen. Then I learned to question what it was saying.</p>
+            </div>
+            <div class="comic-panel">
+                <h3>The Architect</h3>
+                <p>I don't fix campaigns. I fix the thinking that broke them. Experience isn't knowing answers. It's knowing which questions hurt to ask. And having the balls to ask them anyway.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ACT IV: THE VAULT -->
+    <section id="act4">
+        <h2 class="chromatic">THE VAULT</h2>
+        <div class="vault-relics">
+            <div class="relic relic-bronze" onclick="shatter(this, 'linkedin')">
+                <div class="relic-inner">
+                    <h3 style="font-family: Bebas Neue; font-size: 1.5rem; margin-bottom: 1rem;">BRONZE JAR</h3>
+                    <p>Professional Network</p>
+                    <div style="margin-top: 2rem; font-size: 3rem;">in</div>
+                </div>
+            </div>
+            
+            <div class="relic relic-silver" id="silverEnv">
+                <div class="relic-inner" style="cursor: grab;">
+                    <h3 style="font-family: Bebas Neue; font-size: 1.5rem; margin-bottom: 1rem;">SILVER ENVELOPE</h3>
+                    <p>Secure Channel</p>
+                    <div style="margin-top: 2rem; font-size: 3rem;">✉</div>
+                </div>
+            </div>
+            
+            <div class="relic relic-gold" ondblclick="openGenie()">
+                <div class="relic-inner">
+                    <h3 style="font-family: Bebas Neue; font-size: 1.5rem; margin-bottom: 1rem;">GOLD IDOL</h3>
+                    <p>The Prize</p>
+                    <div style="margin-top: 2rem; font-size: 3rem;">◈</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="linkedinReveal" style="display: none; margin-top: 3rem; z-index: 2;">
+            <a href="https://www.linkedin.com/in/digitalashok/" target="_blank" style="color: var(--cyan); font-size: 1.5rem; text-decoration: none; border: 2px solid var(--cyan); padding: 1rem 2rem; display: inline-block;">
+                Connect on LinkedIn
+            </a>
+        </div>
+    </section>
+    
+    <!-- Contact Modal -->
+    <div class="genie-modal" id="contactModal">
+        <div style="background: var(--void); border: 2px solid var(--cyan); padding: 3rem; max-width: 500px; width: 90%; position: relative;">
+            <button onclick="closeModal('contactModal')" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+            <h2 style="font-family: Bebas Neue; font-size: 2rem; margin-bottom: 2rem; color: var(--cyan);">SECURE CHANNEL</h2>
+            <form action="https://formspree.io/f/mpqjzqey" method="POST">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 1rem; margin-bottom: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white;">
+                <textarea name="message" placeholder="Mission Briefing..." required style="width: 100%; padding: 1rem; margin-bottom: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; min-height: 150px;"></textarea>
+                <button type="submit" style="width: 100%; padding: 1rem; background: var(--cyan); color: var(--void); border: none; font-weight: bold; cursor: pointer; font-family: JetBrains Mono;">TRANSMIT</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Genie Game Modal -->
+    <div class="genie-modal" id="genieModal">
+        <div class="genie-content" style="background: var(--void); border: 3px solid var(--cyan); padding: 3rem; max-width: 600px; width: 90%; position: relative; box-shadow: 0 0 50px var(--cyan);">
+            <button onclick="closeModal('genieModal')" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+            <div id="q1">
+                <h3 style="color: var(--cyan); margin-bottom: 2rem;">What growth demon haunts you?</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button onclick="nextQ(2)" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Lead Drought</button>
+                    <button onclick="nextQ(2)" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Budget Bleed</button>
+                    <button onclick="nextQ(2)" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Conversion Cliff</button>
+                    <button onclick="nextQ(2)" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Retention Rot</button>
+                </div>
+            </div>
+            <div id="q2" style="display: none;">
+                <h3 style="color: var(--cyan); margin-bottom: 2rem;">What's your monthly war chest?</h3>
+                <input type="range" min="10" max="1000" value="100" style="width: 100%; margin: 2rem 0;" oninput="document.getElementById('bv').textContent=this.value">
+                <div style="text-align: center; color: var(--amber);">$<span id="bv">100</span>k</div>
+                <button onclick="nextQ(3)" style="margin-top: 2rem; padding: 1rem 2rem; background: var(--amber); color: var(--void); border: none; cursor: pointer;">Continue</button>
+            </div>
+            <div id="q3" style="display: none;">
+                <h3 style="color: var(--cyan); margin-bottom: 2rem;">Which channel betrayed you?</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button onclick="triggerMercy()" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Search</button>
+                    <button onclick="triggerMercy()" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Social</button>
+                    <button onclick="triggerMercy()" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Email</button>
+                    <button onclick="triggerMercy()" style="padding: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white; cursor: pointer; text-align: left;">Direct</button>
+                </div>
+            </div>
+            <div id="mercyReward" style="display: none; text-align: center;">
+                <h3 style="color: var(--amber); margin-bottom: 2rem;">Direct Line Unlocked</h3>
+                <p>Email: <a href="mailto:awesomeashoksingh@gmail.com" style="color: var(--cyan);">awesomeashoksingh@gmail.com</a></p>
+                <p>Phone (India): <a href="tel:+919473798004" style="color: var(--cyan);">+919473798004</a></p>
+                <p>Phone (UAE): <a href="tel:+971 555693876" style="color: var(--cyan);">+971 555693876</a></p>
+                <p>Instagram: <a href="https://www.instagram.com/dilseteekha/" target="_blank" style="color: var(--cyan);">@dilseteekha</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cowboy Exit Intent -->
+    <div class="cowboy-modal" id="cowboyModal">
+        <img src="./images/blog/12_cowboy_exit.png" alt="Cowboy" style="max-width: 500px; width: 90%;">
+        <h2 class="chromatic">In a hurry, boy? The good stuff's inside.</h2>
+        <div style="display: flex; gap: 2rem;">
+            <button onclick="document.getElementById('cowboyModal').style.display='none'" style="padding: 1rem 2rem; background: var(--amber); color: var(--void); border: none; font-family: JetBrains Mono; font-weight: bold; cursor: pointer;">I'll Stay</button>
+            <button onclick="showNewsletter()" style="padding: 1rem 2rem; background: var(--cyan); color: var(--void); border: none; font-family: JetBrains Mono; font-weight: bold; cursor: pointer;">Get The Newsletter</button>
+        </div>
+    </div>
+    
+    <!-- Newsletter Modal -->
+    <div class="genie-modal" id="newsModal">
+        <div style="background: var(--void); border: 2px solid var(--amber); padding: 3rem; max-width: 500px; width: 90%; position: relative;">
+            <button onclick="closeModal('newsModal')" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+            <h2 style="font-family: Bebas Neue; font-size: 2rem; margin-bottom: 2rem; color: var(--amber);">INTELLIGENCE BRIEFING</h2>
+            <p style="margin-bottom: 2rem; color: var(--gunmetal);">Weekly insights on spotting data vampires before they drain you.</p>
+            <form action="https://formspree.io/f/xlgwejre" method="POST">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 1rem; margin-bottom: 1rem; background: transparent; border: 1px solid var(--gunmetal); color: white;">
+                <button type="submit" style="width: 100%; padding: 1rem; background: var(--amber); color: var(--void); border: none; font-weight: bold; cursor: pointer; font-family: JetBrains Mono;">SUBSCRIBE</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Mercy Hammer -->
+    <div id="mercyHammer" style="display: none; position: fixed; top: -200px; left: 50%; transform: translateX(-50%); font-size: 10rem; z-index: 2000; animation: hammerDrop 1s forwards;">🔨</div>
+    <div id="mercyText" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: Bebas Neue; font-size: 4rem; color: var(--amber); z-index: 2001;">Anyway... Here You Go!</div>
+    
+    <script>
+        // 9 SHARDS (Repurposed character images)
+        const shards = [
+            {img: "./images/01_shelby_cartoon.png", x: 10, y: 20},
+            {img: "./images/02_aragorn_cartoon.png", x: 85, y: 15},
+            {img: "./images/03_fury_cartoon.png", x: 75, y: 70},
+            {img: "./images/04_stark_cartoon.png", x: 15, y: 75},
+            {img: "./images/05_white_cartoon.png", x: 50, y: 10},
+            {img: "./images/06_bond_cartoon.png", x: 90, y: 50},
+            {img: "./images/07_joker_cartoon.png", x: 5, y: 50},
+            {img: "./images/08_gandalf_cartoon.png", x: 50, y: 85},
+            {img: "./images/09_maximus_cartoon.png", x: 25, y: 40}
+        ];
+        
+        const shardContainer = document.getElementById('shardContainer');
+        let collectedShards = 0;
+        
+        shards.forEach((shard, i) => {
+            const div = document.createElement('div');
+            div.className = 'shard';
+            div.style.left = shard.x + '%';
+            div.style.top = shard.y + '%';
+            div.style.background = `url(${shard.img}) center/cover`;
+            div.onclick = function() {
+                this.classList.add('collected');
+                collectedShards++;
+                if (collectedShards === 9) {
+                    document.querySelectorAll('.face-slice').forEach(s => s.classList.add('reveal'));
+                    setTimeout(() => {
+                        alert('All shards collected. The Architect reveals himself.');
+                    }, 1000);
+                }
+            };
+            shardContainer.appendChild(div);
+        });
+        
+        // FACE SLICE PARALLAX
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth - e.pageX) / 50;
+            const y = (window.innerHeight - e.pageY) / 50;
+            
+            document.querySelectorAll('.face-slice').forEach(slice => {
+                const speed = parseFloat(slice.dataset.speed);
+                slice.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+        
+        // MEMORY FLASH BETWEEN SECTIONS
+        const sections = document.querySelectorAll('section');
+        let currentSection = 0;
+        
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+            sections.forEach((section, index) => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                if (scrollPos >= top - 100 && scrollPos < top + height - 100) {
+                    if (currentSection !== index) {
+                        currentSection = index;
+                        flash();
+                    }
+                }
+            });
+        });
+        
+        function flash() {
+            const flash = document.getElementById('flash');
+            const slices = document.querySelectorAll('.face-slice');
+            flash.classList.add('active');
+            slices.forEach(s => s.classList.add('active'));
+            setTimeout(() => {
+                flash.classList.remove('active');
+                slices.forEach(s => s.classList.remove('active'));
+            }, 300);
+        }
+        
+        // CHROMATIC EXPLOSION
+        function explode(el) {
+            const blast = el.querySelector('.chromatic-blast');
+            blast.style.opacity = '1';
+            setTimeout(() => blast.style.opacity = '0', 500);
+        }
+        
+        // RELIC INTERACTIONS
+        function shatter(el, type) {
+            el.style.transform = 'scale(0) rotate(720deg)';
+            el.style.opacity = '0';
+            setTimeout(() => {
+                if (type === 'linkedin') {
+                    document.getElementById('linkedinReveal').style.display = 'block';
+                }
+            }, 600);
+        }
+        
+        // DRAGGABLE ENVELOPE
+        let isDragging = false, startY = 0;
+        const env = document.getElementById('silverEnv');
+        env.addEventListener('mousedown', (e) => { isDragging = true; startY = e.clientY; });
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && startY - e.clientY > 100) {
+                document.getElementById('contactModal').classList.add('active');
+                isDragging = false;
+            }
+        });
+        document.addEventListener('mouseup', () => isDragging = false);
+        
+        // GENIE GAME
+        function openGenie() { document.getElementById('genieModal').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function nextQ(n) {
+            ['q1', 'q2', 'q3'].forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById('q' + n).style.display = 'block';
+        }
+        function triggerMercy() {
+            document.getElementById('mercyHammer').style.display = 'block';
+            document.body.style.animation = 'shake 0.8s';
+            setTimeout(() => {
+                document.getElementById('mercyText').style.display = 'block';
+                document.body.style.background = 'white';
+            }, 400);
+            setTimeout(() => {
+                document.body.style.background = '';
+                document.body.style.animation = '';
+                document.getElementById('mercyHammer').style.display = 'none';
+                document.getElementById('mercyText').style.display = 'none';
+                document.getElementById('mercyReward').style.display = 'block';
+                document.getElementById('q3').style.display = 'none';
+            }, 1500);
+        }
+        
+        // BLOG DATA
+        const blogs = {
+            clean: {title: "The Paralysis of Clean Data", content: "<h3>The Comfort of Empty Metrics</h3><p>Most people sanitize their data until it is useless...</p>"},
+            threeam: {title: "The 3 AM Problem", content: "<h3>Blockers Don't Exist</h3><p>I don't believe in blockers...</p>"},
+            sinners: {title: "When The Data Drinks Blood", content: "<h3>The Seduction</h3><p>Some data relationships are parasitic...</p>"},
+            autopsy: {title: "Pipeline Autopsy", content: "<h3>Seven Stages of Death</h3><p>Every dead lead goes through seven stages...</p>"},
+            question: {title: "The Question No One Asks", content: "<h3>Activity vs Impact</h3><p>Most teams measure activity...</p>"}
+        };
+        
+        function openBlog(id) {
+            // Flash transition
+            flash();
+            // Could expand to full modal - simplified for now
+            console.log('Opening blog:', id);
+        }
+        
+        // EXIT INTENT
+        let exitShown = false;
+        document.addEventListener('mouseout', (e) => {
+            if (e.clientY < 10 && !exitShown) {
+                document.getElementById('cowboyModal').style.display = 'flex';
+                exitShown = true;
+            }
+        });
+        
+        function showNewsletter() {
+            document.getElementById('cowboyModal').style.display = 'none';
+            document.getElementById('newsModal').classList.add('active');
+        }
+        
+        // KONAMI CODE
+        let kc = [];
+        const cc = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        document.addEventListener('keydown', (e) => {
+            kc.push(e.key);
+            kc = kc.slice(-10);
+            if (kc.join(',') === cc.join(',')) {
+                document.body.classList.add('debug-mode');
+                document.body.classList.add('chaos-text');
+                document.getElementById('slice-right').src = './images/architects/architect_glitch.png';
+                document.getElementById('slice-right').style.display = 'block';
+                document.getElementById('slice-right').style.opacity = '0.9';
+            }
+        });
+        
+        // GSAP SCROLL
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.weapon').forEach((w, i) => {
+            gsap.from(w, {scrollTrigger: {trigger: w, start: 'top 80%'}, y: 100, opacity: 0, duration: 0.6, delay: i * 0.2});
+        });
+    </script>
 </body>
 </html>
