@@ -2008,16 +2008,17 @@
             markers.forEach((marker, i) => {
                 marker.after(sections[i]);
             });
-            // Update section number labels
-            const LABELS = [
-                'Acquisition Dynamics', 'Quantum Conversion',
-                'Network Attribution', 'Fractal Growth', 'System Automation'
-            ];
+            // Update section number labels (use section's own id, not array position)
+            const LABEL_MAP = {
+                acquisition: 'Acquisition Dynamics',
+                conversion:  'Quantum Conversion',
+                attribution: 'Network Attribution',
+                growth:      'Fractal Growth',
+                automation:  'System Automation'
+            };
             sections.forEach((section, i) => {
                 const label = section.querySelector('.label');
-                if (label) {
-                    label.textContent = `0${i+1} / ${LABELS[i]}`;
-                }
+                if (label) label.textContent = `0${i+1} / ${LABEL_MAP[section.id]}`;
             });
         })();
 
@@ -2217,7 +2218,7 @@
                         if (dc||dr) n+=grid[(c+dc+cols)%cols][(r+dr+rows)%rows];
                     }
                     if (grid[c][r]) { next[c][r]=(n>=2&&n<=3)?1:0; if(next[c][r])ages[c][r]++; }
-                    else { next[c][r]=(n===3||n===2)?1:0; if(next[c][r])ages[c][r]=0; }
+                    else { next[c][r]=(n===3)?1:0; if(next[c][r])ages[c][r]=0; }
                 }
                 grid=next;
             }
@@ -2284,6 +2285,13 @@
         function quizNav(dir) {
             const newIdx = quizCurrent + dir;
             if (newIdx < 0) return;
+            // Require current question to be answered before advancing
+            if (dir > 0 && !quizAnswers[quizCurrent]) {
+                const q = document.querySelectorAll('.quiz-q')[quizCurrent];
+                q.style.outline = '1px solid var(--accent-purple)';
+                setTimeout(() => { q.style.outline = ''; }, 800);
+                return;
+            }
             if (newIdx >= TOTAL_Q) { submitQuiz(); return; }
 
             document.querySelectorAll('.quiz-q').forEach(q => q.classList.remove('active'));
@@ -2352,7 +2360,10 @@
             document.getElementById('quizNext').textContent = 'Next →';
         }
     </script>
-            const dot = document.getElementById('cursorDot');
+    <script>
+        // ─── Custom Cursor ────────────────────────────────────────
+        (function () {
+            const dot  = document.getElementById('cursorDot');
             const ring = document.getElementById('cursorRing');
             if (!dot || !ring) return;
             let mx = 0, my = 0, rx = 0, ry = 0;
