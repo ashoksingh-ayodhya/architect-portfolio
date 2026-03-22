@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    </script>
     <style> @media (max-width: 768px) {.technical { display: none !important; }} </style>
     <style>
         :root {
@@ -451,6 +450,118 @@
             background: var(--border);
             border-radius: 4px;
         }
+
+        /* ─── Dynamic Tab System ─────────────────────────────── */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(0,212,255,0.03) 0%, transparent 100%);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-nav::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            flex: 1;
+            min-width: 110px;
+            padding: 14px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-tertiary);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            color: var(--accent-cyan);
+            border-bottom-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+        .tab-btn:hover:not(.active) { color: var(--text-secondary); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ─── Custom Cursor (pointer-fine devices only) ──────── */
+        .cursor-dot, .cursor-ring { display: none; }
+        @media (pointer: fine) {
+            body { cursor: none; }
+            .cursor-dot {
+                display: block;
+                position: fixed;
+                width: 8px; height: 8px;
+                background: var(--accent-cyan);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 10px var(--accent-cyan);
+                transition: width 0.2s, height 0.2s, background 0.2s, transform 0.15s;
+            }
+            .cursor-ring {
+                display: block;
+                position: fixed;
+                width: 36px; height: 36px;
+                border: 1px solid rgba(0, 212, 255, 0.4);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99998;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, border-color 0.3s;
+            }
+        }
+
+        /* ─── Metric Animations ──────────────────────────────── */
+        section.in-focus .metric-item:nth-child(1) { animation: metricReveal 0.6s 0.05s ease both; }
+        section.in-focus .metric-item:nth-child(2) { animation: metricReveal 0.6s 0.2s  ease both; }
+        section.in-focus .metric-item:nth-child(3) { animation: metricReveal 0.6s 0.35s ease both; }
+        @keyframes metricReveal {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        section.in-focus .metric-number {
+            animation: glowPulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes glowPulse {
+            from { text-shadow: 0 0 30px rgba(0, 212, 255, 0.3); }
+            to   { text-shadow: 0 0 60px rgba(0, 212, 255, 0.7), 0 0 100px rgba(0, 212, 255, 0.3); }
+        }
+
+        /* ─── Stack Pills ────────────────────────────────────── */
+        .stack-pill {
+            display: block;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 12px;
+            font-family: 'Space Mono', monospace;
+            color: var(--text-secondary);
+            transition: all 0.25s;
+        }
+        .stack-pill:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .stack-pill.highlight {
+            border-color: rgba(0,212,255,0.4);
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        /* ─── Timeline ───────────────────────────────────────── */
+        .timeline-item {
+            padding: 0 0 24px 0;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px; top: 6px;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
     </style>
     <!-- Primary SEO: Optimized for "Growth Marketing" and "B2B Acquisition" -->
 <meta name="description" content="Ashok Singh | Growth Dynamics. Deterministic systems for B2B acquisition and revenue optimization. Specializing in growth marketing automation, Salesforce architecture, and conversion rate optimization with mathematical precision.">
@@ -658,6 +769,8 @@
 <meta name="twitter:creator" content="@ashoksingh">
 </head>
 <body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
 
     <!-- Background Equations -->
     <div class="equation-float" style="left: 5%; animation-delay: 0s;">L = λ·W</div>
@@ -680,6 +793,7 @@
                 <li><a href="#conversion">Conversion</a></li>
                 <li><a href="#attribution">Attribution</a></li>
                 <li><a href="#growth">Growth</a></li>
+                <li><a href="#automation">System</a></li>
             </ul>
         </div>
     </nav>
@@ -718,11 +832,72 @@
 
             <div class="col-12" style="margin-top: 64px;">
                 <div class="theory-card">
-                    <div class="visual-container" style="height: 500px;">
-                        <canvas id="heroCanvas"></canvas>
-                        <div style="position: absolute; bottom: 24px; left: 24px; z-index: 10;">
-                            <div class="label" style="margin-bottom: 8px;">Lorenz Attractor</div>
-                            <div class="technical">Chaotic Determinism • Sensitive Dependence</div>
+                    <div class="tab-nav">
+                        <button class="tab-btn active" onclick="switchTab(this, 'hero-attractor')">System View</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'hero-profile')">The Architect</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'hero-philosophy')">Core Axioms</button>
+                    </div>
+                    <div class="tab-panel active" id="hero-attractor">
+                        <div class="visual-container" style="height: 460px;">
+                            <canvas id="heroCanvas"></canvas>
+                            <div style="position: absolute; bottom: 24px; left: 24px; z-index: 10;">
+                                <div class="label" style="margin-bottom: 8px;">Lorenz Attractor</div>
+                                <div class="technical">Chaotic Determinism • Sensitive Dependence</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="hero-profile">
+                        <div style="height: 460px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; overflow: hidden;">
+                            <div>
+                                <div class="label" style="margin-bottom: 20px;">The Architect</div>
+                                <h3 style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; color: #fff;">Ashok Singh</h3>
+                                <p style="font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.65); margin-bottom: 20px;">
+                                    B2B Growth Marketing Strategist operating from Dubai, UAE. A decade spent engineering acquisition systems that convert mathematical precision into predictable revenue.
+                                </p>
+                                <p style="font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.65);">
+                                    Specialist in behavioral psychology, Salesforce architecture, and paid media optimization — where human irrationality meets system design.
+                                </p>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div style="padding: 24px; border: 1px solid var(--border); background: var(--void);">
+                                    <div style="font-size: 28px; font-weight: 800; color: var(--accent-cyan); font-family: 'Space Mono', monospace;">10+</div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-top: 8px;">Years in Growth</div>
+                                </div>
+                                <div style="padding: 24px; border: 1px solid var(--border); background: var(--void);">
+                                    <div style="font-size: 28px; font-weight: 800; color: var(--accent-cyan); font-family: 'Space Mono', monospace;">$50M+</div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-top: 8px;">Ad Spend Managed</div>
+                                </div>
+                                <div style="padding: 24px; border: 1px solid var(--border); background: var(--void);">
+                                    <div style="font-size: 28px; font-weight: 800; color: var(--accent-purple); font-family: 'Space Mono', monospace;">B2B</div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-top: 8px;">Exclusive Focus</div>
+                                </div>
+                                <div style="padding: 24px; border: 1px solid var(--border); background: var(--void);">
+                                    <div style="font-size: 28px; font-weight: 800; color: var(--accent-purple); font-family: 'Space Mono', monospace;">🇦🇪</div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-top: 8px;">Dubai — Global</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="hero-philosophy">
+                        <div style="height: 460px; padding: 48px; overflow: hidden; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="label" style="margin-bottom: 32px;">Core Axioms</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                                <div style="padding: 28px; border-left: 2px solid var(--accent-cyan); background: rgba(0,212,255,0.03);">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--accent-cyan); font-family: 'Space Mono', monospace; margin-bottom: 16px;">I</div>
+                                    <div style="font-weight: 600; margin-bottom: 12px; font-size: 15px;">Determinism Over Intuition</div>
+                                    <p style="font-size: 13px; line-height: 1.8; color: var(--text-secondary);">Every growth lever is measurable. Intuition is a prior — data updates it with Bayesian precision.</p>
+                                </div>
+                                <div style="padding: 28px; border-left: 2px solid var(--accent-purple); background: rgba(191,90,242,0.03);">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--accent-purple); font-family: 'Space Mono', monospace; margin-bottom: 16px;">II</div>
+                                    <div style="font-weight: 600; margin-bottom: 12px; font-size: 15px;">Systems Over Campaigns</div>
+                                    <p style="font-size: 13px; line-height: 1.8; color: var(--text-secondary);">Campaigns decay. Systems compound. A Salesforce flow at midnight generates leads without headcount.</p>
+                                </div>
+                                <div style="padding: 28px; border-left: 2px solid var(--accent-blue); background: rgba(41,151,255,0.03);">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--accent-blue); font-family: 'Space Mono', monospace; margin-bottom: 16px;">III</div>
+                                    <div style="font-weight: 600; margin-bottom: 12px; font-size: 15px;">Precision Over Volume</div>
+                                    <p style="font-size: 13px; line-height: 1.8; color: var(--text-secondary);">One precisely targeted ICP beats 1000 spray-and-pray impressions. Resonance, not reach, drives velocity.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="theory-card-header">
@@ -749,11 +924,11 @@
             <div class="col-12">
                 <div class="metric-row">
                     <div class="metric-item">
-                        <div class="metric-number">80%</div>
+                        <div class="metric-number" data-target="80" data-suffix="%" data-decimals="0">80%</div>
                         <div class="metric-label">Impression Share<br>Maintained</div>
                     </div>
                     <div class="metric-item">
-                        <div class="metric-number">3.2×</div>
+                        <div class="metric-number" data-target="3.2" data-suffix="×" data-decimals="1">3.2×</div>
                         <div class="metric-label">Conversion<br>Velocity</div>
                     </div>
                     <div class="metric-item">
@@ -1042,8 +1217,85 @@
 
             <div class="col-12">
                 <div class="theory-card">
-                    <div class="visual-container" style="height: 400px;">
-                        <canvas id="autoCanvas"></canvas>
+                    <div class="tab-nav">
+                        <button class="tab-btn active" onclick="switchTab(this, 'auto-machine')">Lead Machine</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'auto-stack')">Tech Arsenal</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'auto-timeline')">Career Arc</button>
+                    </div>
+                    <div class="tab-panel active" id="auto-machine">
+                        <div class="visual-container" style="height: 400px;">
+                            <canvas id="autoCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="auto-stack">
+                        <div style="height: 400px; padding: 40px; overflow: hidden;">
+                            <div class="label" style="margin-bottom: 28px;">Tech Arsenal</div>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+                                <div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-cyan); margin-bottom: 14px; font-family: 'Space Mono', monospace;">CRM</div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div class="stack-pill highlight">Salesforce</div>
+                                        <div class="stack-pill">HubSpot</div>
+                                        <div class="stack-pill">Pipedrive</div>
+                                        <div class="stack-pill">Zoho CRM</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-purple); margin-bottom: 14px; font-family: 'Space Mono', monospace;">Analytics</div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div class="stack-pill highlight">GA4 / GTM</div>
+                                        <div class="stack-pill">Mixpanel</div>
+                                        <div class="stack-pill">Looker Studio</div>
+                                        <div class="stack-pill">Hotjar</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-blue); margin-bottom: 14px; font-family: 'Space Mono', monospace;">Paid Media</div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div class="stack-pill highlight">Google Ads</div>
+                                        <div class="stack-pill highlight">LinkedIn Ads</div>
+                                        <div class="stack-pill">Meta Ads</div>
+                                        <div class="stack-pill">Programmatic</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-tertiary); margin-bottom: 14px; font-family: 'Space Mono', monospace;">Automation</div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div class="stack-pill">Marketo</div>
+                                        <div class="stack-pill">Apollo.io</div>
+                                        <div class="stack-pill">Zapier / Make</div>
+                                        <div class="stack-pill">n8n</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="auto-timeline">
+                        <div style="height: 400px; padding: 40px; overflow-y: auto;">
+                            <div class="label" style="margin-bottom: 24px;">Career Arc</div>
+                            <div style="position: relative; padding-left: 28px; border-left: 1px solid var(--border);">
+                                <div class="timeline-item">
+                                    <div style="font-size: 11px; color: var(--accent-cyan); font-family: 'Space Mono', monospace; margin-bottom: 6px;">2024 — Present</div>
+                                    <div style="font-weight: 600; margin-bottom: 6px; color: #fff;">Independent Growth Consultant</div>
+                                    <p style="font-size: 13px; line-height: 1.7; color: var(--text-secondary);">B2B acquisition systems for SaaS &amp; tech companies. Dubai &amp; GCC market entry strategies.</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <div style="font-size: 11px; color: var(--accent-cyan); font-family: 'Space Mono', monospace; margin-bottom: 6px;">2021 — 2024</div>
+                                    <div style="font-weight: 600; margin-bottom: 6px; color: #fff;">Head of Growth — B2B Tech</div>
+                                    <p style="font-size: 13px; line-height: 1.7; color: var(--text-secondary);">Led acquisition from 0 → 80% impression share. Architected Salesforce automation achieving zero-touch lead routing.</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <div style="font-size: 11px; color: var(--accent-cyan); font-family: 'Space Mono', monospace; margin-bottom: 6px;">2018 — 2021</div>
+                                    <div style="font-weight: 600; margin-bottom: 6px; color: #fff;">Senior Performance Marketing Manager</div>
+                                    <p style="font-size: 13px; line-height: 1.7; color: var(--text-secondary);">Scaled paid channels across LinkedIn &amp; Google Ads. Managed $20M+ annual budget with 3.2× conversion velocity improvement.</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <div style="font-size: 11px; color: var(--accent-cyan); font-family: 'Space Mono', monospace; margin-bottom: 6px;">2014 — 2018</div>
+                                    <div style="font-weight: 600; margin-bottom: 6px; color: #fff;">Digital Marketing Specialist</div>
+                                    <p style="font-size: 13px; line-height: 1.7; color: var(--text-secondary);">Built foundational expertise in search, social, and marketing analytics. Earned first Salesforce Administrator certification.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="theory-card-header">
                         <span class="technical">Conway's Game of Life • Lead State Machine</span>
@@ -1120,11 +1372,10 @@
         });
 
         function toggleTheory(btn) {
+            if (!btn.getAttribute('data-original')) btn.setAttribute('data-original', btn.textContent);
             const content = btn.parentElement.nextElementSibling;
             content.classList.toggle('active');
-            btn.textContent = content.classList.contains('active') ? 'Collapse' : 
-                             btn.getAttribute('data-original') || btn.textContent;
-            if (!btn.getAttribute('data-original')) btn.setAttribute('data-original', btn.textContent);
+            btn.textContent = content.classList.contains('active') ? 'Collapse' : btn.getAttribute('data-original');
         }
 
         // FOCUS STATES - Intersection Observer
@@ -1611,6 +1862,80 @@
                 c.height = c.offsetHeight;
             });
         });
+
+        // ─── Tab Switcher ─────────────────────────────────────────
+        function switchTab(btn, panelId) {
+            const card = btn.closest('.theory-card');
+            card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            card.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        // ─── Custom Cursor ────────────────────────────────────────
+        (function () {
+            const dot = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            if (!dot || !ring) return;
+            let mx = 0, my = 0, rx = 0, ry = 0;
+            document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+            // Use event delegation — one listener on document instead of per-element
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest('a, button')) {
+                    dot.style.transform = 'translate(-50%,-50%) scale(2)';
+                    ring.style.width = '56px'; ring.style.height = '56px';
+                    ring.style.borderColor = 'rgba(0,212,255,0.7)';
+                }
+            });
+            document.addEventListener('mouseout', e => {
+                if (e.target.closest('a, button')) {
+                    dot.style.transform = 'translate(-50%,-50%) scale(1)';
+                    ring.style.width = '36px'; ring.style.height = '36px';
+                    ring.style.borderColor = 'rgba(0,212,255,0.4)';
+                }
+            });
+            function tick() {
+                rx += (mx - rx) * 0.12;
+                ry += (my - ry) * 0.12;
+                dot.style.left = mx + 'px';
+                dot.style.top  = my + 'px';
+                ring.style.left = rx + 'px';
+                ring.style.top  = ry + 'px';
+                requestAnimationFrame(tick);
+            }
+            tick();
+        })();
+
+        // ─── Animated Metric Counters ─────────────────────────────
+        let countersAnimated = false;
+        function animateCounters(observer) {
+            if (countersAnimated) return;
+            countersAnimated = true;
+            if (observer) observer.disconnect();
+            document.querySelectorAll('.metric-number[data-target]').forEach(el => {
+                const target   = parseFloat(el.getAttribute('data-target'));
+                const suffix   = el.getAttribute('data-suffix') || '';
+                const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+                const duration = 1800;
+                let start = null;
+                function step(ts) {
+                    if (!start) start = ts;
+                    const progress = Math.min((ts - start) / duration, 1);
+                    const eased    = 1 - Math.pow(1 - progress, 3);
+                    const val      = target * eased;
+                    el.textContent = (decimals > 0 ? val.toFixed(decimals) : Math.floor(val)) + suffix;
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        }
+        const metricsEl = document.getElementById('metrics');
+        if (metricsEl) {
+            const metricsObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) animateCounters(metricsObserver);
+            }, { threshold: 0.5 });
+            metricsObserver.observe(metricsEl);
+        }
     </script>
 </body>
 </html>
