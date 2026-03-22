@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    </script>
     <style> @media (max-width: 768px) {.technical { display: none !important; }} </style>
     <style>
         :root {
@@ -451,6 +450,235 @@
             background: var(--border);
             border-radius: 4px;
         }
+
+        /* ─── Dynamic Tab System ─────────────────────────────── */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(0,212,255,0.03) 0%, transparent 100%);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-nav::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            flex: 1;
+            min-width: 110px;
+            padding: 14px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-tertiary);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            color: var(--accent-cyan);
+            border-bottom-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+        .tab-btn:hover:not(.active) { color: var(--text-secondary); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ─── Custom Cursor (pointer-fine devices only) ──────── */
+        .cursor-dot, .cursor-ring { display: none; }
+        @media (pointer: fine) {
+            body { cursor: none; }
+            .cursor-dot {
+                display: block;
+                position: fixed;
+                width: 8px; height: 8px;
+                background: var(--accent-cyan);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 10px var(--accent-cyan);
+                transition: width 0.2s, height 0.2s, background 0.2s, transform 0.15s;
+            }
+            .cursor-ring {
+                display: block;
+                position: fixed;
+                width: 36px; height: 36px;
+                border: 1px solid rgba(0, 212, 255, 0.4);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99998;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, border-color 0.3s;
+            }
+        }
+
+        /* ─── Metric Animations ──────────────────────────────── */
+        section.in-focus .metric-item:nth-child(1) { animation: metricReveal 0.6s 0.05s ease both; }
+        section.in-focus .metric-item:nth-child(2) { animation: metricReveal 0.6s 0.2s  ease both; }
+        section.in-focus .metric-item:nth-child(3) { animation: metricReveal 0.6s 0.35s ease both; }
+        @keyframes metricReveal {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        section.in-focus .metric-number {
+            animation: glowPulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes glowPulse {
+            from { text-shadow: 0 0 30px rgba(0, 212, 255, 0.3); }
+            to   { text-shadow: 0 0 60px rgba(0, 212, 255, 0.7), 0 0 100px rgba(0, 212, 255, 0.3); }
+        }
+
+        /* ─── Card Entry Overlay ─────────────────────────────────── */
+        .card-entry-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            transition: opacity 0.9s ease;
+        }
+        .card-entry-overlay canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ─── Theory Extension (scroll-depth progressive reveal) ── */
+        .theory-extension {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--void);
+            border-top: 0px solid var(--border);
+        }
+        .theory-extension.revealed {
+            max-height: 240px;
+            border-top-width: 1px;
+        }
+        .theory-ext-inner {
+            padding: 28px 32px;
+            font-size: 13px;
+            line-height: 1.9;
+            color: var(--text-secondary);
+        }
+        .theory-ext-inner .eq {
+            font-family: 'Space Mono', monospace;
+            font-size: 20px;
+            color: var(--accent-cyan);
+            margin: 14px 0;
+        }
+        .theory-ext-inner strong { color: var(--text-primary); }
+
+        /* ─── Quiz / Gateway ──────────────────────────────────────── */
+        .quiz-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--accent-purple) 50%, transparent 100%);
+            opacity: 0.6;
+        }
+        .quiz-header {
+            padding: 32px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(191,90,242,0.05) 0%, transparent 100%);
+        }
+        .quiz-lock-icon { font-size: 32px; margin-bottom: 12px; }
+        .quiz-progress-bar { height: 2px; background: var(--border); margin: 24px 32px; }
+        .quiz-progress-fill {
+            height: 100%;
+            background: var(--accent-purple);
+            box-shadow: 0 0 10px var(--accent-purple);
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .quiz-body { padding: 0 32px 32px; }
+        .quiz-q { display: none; }
+        .quiz-q.active { display: block; }
+        .quiz-q-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            padding-top: 28px;
+        }
+        .quiz-q-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .quiz-options { display: grid; gap: 8px; }
+        .quiz-option {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            background: var(--void);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .quiz-option:hover { border-color: var(--accent-purple); color: var(--text-primary); background: rgba(191,90,242,0.05); }
+        .quiz-option.selected { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0,212,255,0.05); }
+        .quiz-option.correct { border-color: #30d158; color: #30d158; background: rgba(48,209,88,0.05); }
+        .quiz-option.wrong   { border-color: #ff453a; color: #ff453a; background: rgba(255,69,58,0.05); }
+        .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+        .quiz-btn {
+            padding: 12px 32px;
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .quiz-btn:hover { background: var(--accent-purple); color: #000; }
+        .quiz-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .quiz-result-panel { padding: 48px 32px; text-align: center; display: none; }
+        .quiz-result-panel.visible { display: block; }
+        .contact-gate-locked {
+            filter: blur(6px);
+            opacity: 0.15;
+            pointer-events: none;
+            user-select: none;
+            transition: all 0.9s ease;
+        }
+        .contact-gate-unlocked {
+            filter: none;
+            opacity: 1;
+            pointer-events: all;
+            transition: all 0.9s ease;
+        }
+        .unlock-banner {
+            margin-bottom: 32px;
+            padding: 16px 24px;
+            border-left: 2px solid #30d158;
+            background: rgba(48,209,88,0.05);
+            font-size: 13px;
+            color: #30d158;
+            font-family: 'Space Mono', monospace;
+            text-align: left;
+            display: none;
+        }
+        .unlock-banner.visible { display: block; }
     </style>
     <!-- Primary SEO: Optimized for "Growth Marketing" and "B2B Acquisition" -->
 <meta name="description" content="Ashok Singh | Growth Dynamics. Deterministic systems for B2B acquisition and revenue optimization. Specializing in growth marketing automation, Salesforce architecture, and conversion rate optimization with mathematical precision.">
@@ -658,6 +886,8 @@
 <meta name="twitter:creator" content="@ashoksingh">
 </head>
 <body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
 
     <!-- Background Equations -->
     <div class="equation-float" style="left: 5%; animation-delay: 0s;">L = λ·W</div>
@@ -680,6 +910,7 @@
                 <li><a href="#conversion">Conversion</a></li>
                 <li><a href="#attribution">Attribution</a></li>
                 <li><a href="#growth">Growth</a></li>
+                <li><a href="#automation">System</a></li>
             </ul>
         </div>
     </nav>
@@ -687,7 +918,7 @@
     <main style="margin-top: 160px;">
         
         <!-- Hero -->
-        <section class="container" id="hero">
+        <section class="container" id="hero" data-section="hero">
             <div class="col-12" style="text-align: center; margin-bottom: 64px;">
                 <div class="label" style="margin-bottom: 16px;">Performance Growth Analytics</div>
             </div>
@@ -718,6 +949,7 @@
 
             <div class="col-12" style="margin-top: 64px;">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 500px;">
                         <canvas id="heroCanvas"></canvas>
                         <div style="position: absolute; bottom: 24px; left: 24px; z-index: 10;">
@@ -738,6 +970,14 @@
                             for rigorous A/B testing and controlled experimentation.
                         </div>
                     </div>
+                    <div class="theory-extension" id="ext-hero">
+                        <div class="theory-ext-inner">
+                            <strong>Butterfly Effect in Acquisition:</strong> The Lorenz system of equations —
+                            <div class="eq">dx/dt = σ(y-x)   dy/dt = x(ρ-z)-y   dz/dt = xy-βz</div>
+                            — shows that σ (brand presence), ρ (market demand), and β (churn) are the three parameters 
+                            determining whether your funnel achieves a stable attractor or chaotic divergence.
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -749,11 +989,11 @@
             <div class="col-12">
                 <div class="metric-row">
                     <div class="metric-item">
-                        <div class="metric-number">80%</div>
+                        <div class="metric-number" data-target="80" data-suffix="%" data-decimals="0">80%</div>
                         <div class="metric-label">Impression Share<br>Maintained</div>
                     </div>
                     <div class="metric-item">
-                        <div class="metric-number">3.2×</div>
+                        <div class="metric-number" data-target="3.2" data-suffix="×" data-decimals="1">3.2×</div>
                         <div class="metric-label">Conversion<br>Velocity</div>
                     </div>
                     <div class="metric-item">
@@ -767,7 +1007,7 @@
         <div class="section-marker"></div>
 
         <!-- Acquisition -->
-        <section class="container" id="acquisition">
+        <section class="container" id="acquisition" data-section="acquisition">
             <div class="col-12" style="margin-bottom: 64px;">
                 <div class="label" style="margin-bottom: 16px;">01 / Acquisition Dynamics</div>
                 <h2 class="heading-lg">Gravitational<br>Funnel Mechanics</h2>
@@ -775,6 +1015,7 @@
 
             <div class="col-7">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 600px;">
                         <canvas id="funnelCanvas"></canvas>
                     </div>
@@ -789,6 +1030,15 @@
                             The conversion event (central mass) exerts gravitational pull proportional to 
                             value proposition density. Escape velocity (churn) is overcome through 
                             centripetal acceleration (nurture sequences).
+                        </div>
+                    </div>
+                    <div class="theory-extension" id="ext-acquisition">
+                        <div class="theory-ext-inner">
+                            <strong>Newton's Law of Universal Gravitation applied:</strong>
+                            <div class="eq">F = G·(m₁·m₂) / r²</div>
+                            Where G = brand equity constant, m₁ = ICP fit score, m₂ = value proposition density, 
+                            r = awareness radius. As r → 0 (retargeting), force → ∞ — this is why retargeting 
+                            consistently outperforms cold acquisition at 3-7× ROAS.
                         </div>
                     </div>
                 </div>
@@ -816,6 +1066,7 @@
                 </div>
                 
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 250px;">
                         <canvas id="orbitCanvas"></canvas>
                     </div>
@@ -829,7 +1080,7 @@
         <div class="section-marker"></div>
 
         <!-- Conversion -->
-        <section class="container" id="conversion">
+        <section class="container" id="conversion" data-section="conversion">
             <div class="col-12" style="margin-bottom: 64px;">
                 <div class="label" style="margin-bottom: 16px;">02 / Quantum Conversion</div>
                 <h2 class="heading-lg">Wave Function<br>Collapse</h2>
@@ -837,6 +1088,7 @@
 
             <div class="col-4">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 400px;">
                         <canvas id="waveCanvas"></canvas>
                     </div>
@@ -852,11 +1104,21 @@
                             Optimization increases the coefficient of conversion before wave function collapse.
                         </div>
                     </div>
+                    <div class="theory-extension" id="ext-conversion">
+                        <div class="theory-ext-inner">
+                            <strong>Schrödinger's Conversion equation:</strong>
+                            <div class="eq">|ψ⟩ = α|Convert⟩ + β|Bounce⟩</div>
+                            Where |α|² is your conversion probability. CRO optimizes α by collapsing the 
+                            waveform earlier (faster page load, clearer CTA) and increasing its amplitude 
+                            (compelling offer, social proof). The act of A/B testing is wave function measurement.
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="col-4">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 400px;">
                         <canvas id="barrierCanvas"></canvas>
                     </div>
@@ -878,6 +1140,7 @@
 
             <div class="col-4">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 400px;">
                         <canvas id="entropyCanvas"></canvas>
                     </div>
@@ -900,7 +1163,7 @@
         <div class="section-marker"></div>
 
         <!-- Attribution -->
-        <section class="container" id="attribution">
+        <section class="container" id="attribution" data-section="attribution">
             <div class="col-12" style="margin-bottom: 64px;">
                 <div class="label" style="margin-bottom: 16px;">03 / Network Attribution</div>
                 <h2 class="heading-lg">Graph Topology &<br>Markov Chains</h2>
@@ -908,6 +1171,7 @@
 
             <div class="col-8">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 600px;">
                         <canvas id="networkCanvas"></canvas>
                     </div>
@@ -921,6 +1185,15 @@
                             The customer journey is a Markov process—memoryless transitions between channel-states. 
                             This visualization maps the network topology of touchpoints: nodes represent states, 
                             edges represent transition probabilities. Edge thickness correlates to influence weight.
+                        </div>
+                    </div>
+                    <div class="theory-extension" id="ext-attribution">
+                        <div class="theory-ext-inner">
+                            <strong>Markov Chain Removal Effect:</strong> The channel removal value is calculated as:
+                            <div class="eq">Δ(C) = P(conv) − P(conv | C removed)</div>
+                            This gives each channel a counterfactual attribution weight. Email Nurture removal 
+                            increases average path length by 220%, explaining its outsized attribution share 
+                            despite lower direct conversion rates.
                         </div>
                     </div>
                 </div>
@@ -983,7 +1256,7 @@
         <div class="section-marker"></div>
 
         <!-- Growth -->
-        <section class="container" id="growth">
+        <section class="container" id="growth" data-section="growth">
             <div class="col-12" style="margin-bottom: 64px;">
                 <div class="label" style="margin-bottom: 16px;">04 / Fractal Growth</div>
                 <h2 class="heading-lg">Scaling<br>Boundaries</h2>
@@ -991,6 +1264,7 @@
 
             <div class="col-6">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 500px;">
                         <canvas id="mandelCanvas"></canvas>
                     </div>
@@ -1007,11 +1281,21 @@
                             precision—micro-optimizations at the edge of chaos determine survival.
                         </div>
                     </div>
+                    <div class="theory-extension" id="ext-growth">
+                        <div class="theory-ext-inner">
+                            <strong>CAC Sustainability Rule:</strong> A company is "inside the Mandelbrot set" if:
+                            <div class="eq">LTV / CAC ≥ 3   AND   Payback Period ≤ 18mo</div>
+                            Near the boundary, infinitesimal changes in acquisition strategy produce wildly 
+                            different outcomes — this is where precision channel attribution and micro-bid 
+                            optimization create competitive moats.
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 500px;">
                         <canvas id="fibCanvas"></canvas>
                     </div>
@@ -1034,7 +1318,7 @@
         <div class="section-marker"></div>
 
         <!-- Automation -->
-        <section class="container" id="automation">
+        <section class="container" id="automation" data-section="automation">
             <div class="col-12" style="margin-bottom: 64px;">
                 <div class="label" style="margin-bottom: 16px;">05 / System Automation</div>
                 <h2 class="heading-lg">Cellular<br>Automata</h2>
@@ -1042,6 +1326,7 @@
 
             <div class="col-12">
                 <div class="theory-card">
+                    <div class="card-entry-overlay"><canvas></canvas></div>
                     <div class="visual-container" style="height: 400px;">
                         <canvas id="autoCanvas"></canvas>
                     </div>
@@ -1058,53 +1343,147 @@
                             The simulation predicts database entropy rates and calculates optimal contact frequency.
                         </div>
                     </div>
+                    <div class="theory-extension" id="ext-automation">
+                        <div class="theory-ext-inner">
+                            <strong>Conway's Rules applied to CRM states:</strong>
+                            <div class="eq">B3 / S23 → B(ICP+reach) / S(nurture+value)</div>
+                            A lead is "born warm" with exactly 3 quality touchpoints. A lead "survives" 
+                            with 2-3 sustained engagements per cycle. Zero-touch automation replicates 
+                            this at scale — the system self-organizes into stable conversion patterns 
+                            without manual intervention.
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Footer with Icons -->
-        <section class="container" style="margin-top: 160px; margin-bottom: 80px;">
-            <div class="col-12" style="text-align: center; padding: 64px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-                <div class="technical" style="margin-bottom: 24px; color: var(--text-tertiary);">SYSTEM READY FOR INTEGRATION</div>
-                <h2 class="heading-md" style="margin-bottom: 48px;">Initialize Collaboration</h2>
-                
-                <!-- Icon Grid Footer -->
-                <div class="footer-grid">
-                    <div>
-                        <a href="mailto:awesomeashoksingh@gmail.com" class="icon-link" aria-label="Email">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                            </svg>
-                        </a>
-                        <div class="icon-label">Email</div>
+        <!-- Quiz Gateway + Locked Contact -->
+        <section class="container" style="margin-top: 160px; margin-bottom: 80px;" id="gateway">
+            <div class="col-12">
+                <!-- Quiz -->
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-header">
+                        <div class="quiz-lock-icon">⚡</div>
+                        <div class="label" style="margin-bottom: 12px; color: var(--accent-purple);">Theory Verification Protocol</div>
+                        <h2 class="heading-md" style="margin-bottom: 12px;">Prove You Understand the System</h2>
+                        <p class="body-text" style="font-size: 14px; max-width: 500px; margin: 0 auto;">
+                            Answer 4 of 5 questions correctly to unlock the connection protocol. 
+                            Questions are drawn from the theories above.
+                        </p>
                     </div>
-                    
-                    <div>
-                        <a href="https://www.linkedin.com/in/digitalashok/" target="_blank" class="icon-link" aria-label="LinkedIn">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75a3 3 0 013 3v10.5a3 3 0 01-3 3h-10.5a3 3 0 01-3-3V6.75a3 3 0 013-3h10.5z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 11.25v4.5M8.25 8.25v.03M12 11.25v4.5m0-7.5v.03M15.75 11.25v4.5m0-7.5v.03" />
-                                <circle cx="12" cy="12" r="9" stroke-opacity="0" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 11.25v4.5M7.5 8.25v.03M10.5 11.25v4.5M10.5 8.25v.03M13.5 11.25v4.5M13.5 8.25v.03M16.5 11.25v4.5M16.5 8.25v.03" stroke-opacity="0"/>
-                                <rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                                <path d="M8 11v5M8 9v.01M12 11v5M12 8v.01M16 11v5M16 8v.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            </svg>
-                        </a>
-                        <div class="icon-label">LinkedIn</div>
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" id="quizProgress"></div>
                     </div>
-                    
-                    <div>
-                        <a href="https://formspree.io/f/mpqjzqey" target="_blank" class="icon-link" aria-label="Form">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
-                            </svg>
-                        </a>
-                        <div class="icon-label">Secure Form</div>
+                    <div class="quiz-body">
+                        <!-- Q1 -->
+                        <div class="quiz-q active" data-q="0">
+                            <div class="quiz-q-number">Question 01 / 05 — Lorenz Attractor</div>
+                            <div class="quiz-q-text">In the Lorenz attractor, why do two nearly-identical campaigns diverge wildly over time?</div>
+                            <div class="quiz-options">
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>A</span>Because the algorithm adds random noise to each impression</button>
+                                <button class="quiz-option" data-correct="true"  onclick="selectOption(this)"><span>B</span>Extreme sensitivity to initial conditions — infinitesimal input differences amplify exponentially through non-linear feedback</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>C</span>Market saturation resets the funnel state on each iteration</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>D</span>The attractor equation contains a random variable σ</button>
+                            </div>
+                        </div>
+                        <!-- Q2 -->
+                        <div class="quiz-q" data-q="1">
+                            <div class="quiz-q-number">Question 02 / 05 — Gravitational Mechanics</div>
+                            <div class="quiz-q-text">Kepler's Third Law states T² ∝ R³. In the lead-orbit model, what does "perigee" represent?</div>
+                            <div class="quiz-options">
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>A</span>The moment a lead is added to a nurture sequence</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>B</span>The highest point of brand awareness in the funnel</button>
+                                <button class="quiz-option" data-correct="true"  onclick="selectOption(this)"><span>C</span>The point of closest approach where conversion probability is maximum and retargeting ROI peaks</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>D</span>The beginning of the outbound sequence</button>
+                            </div>
+                        </div>
+                        <!-- Q3 -->
+                        <div class="quiz-q" data-q="2">
+                            <div class="quiz-q-number">Question 03 / 05 — Quantum Conversion</div>
+                            <div class="quiz-q-text">Before a visitor clicks, they exist in quantum superposition. What does this mean for CRO?</div>
+                            <div class="quiz-options">
+                                <button class="quiz-option" data-correct="true"  onclick="selectOption(this)"><span>A</span>The visitor is simultaneously in bounce AND convert states — optimization shifts the probability amplitude toward |Convert⟩ before the wave function collapses</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>B</span>Quantum effects make conversion fundamentally unpredictable</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>C</span>Users browse multiple tabs simultaneously so attribution is impossible</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>D</span>The page exists in two states until the server renders it</button>
+                            </div>
+                        </div>
+                        <!-- Q4 -->
+                        <div class="quiz-q" data-q="3">
+                            <div class="quiz-q-number">Question 04 / 05 — Markov Attribution</div>
+                            <div class="quiz-q-text">The Markov chain model has the "memoryless property". In attribution modelling, this means:</div>
+                            <div class="quiz-options">
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>A</span>Customers forget all previous ads once they convert</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>B</span>Multi-touch attribution is theoretically impossible</button>
+                                <button class="quiz-option" data-correct="true"  onclick="selectOption(this)"><span>C</span>The transition probability from any channel state depends only on the current channel, not the full prior journey — enabling counterfactual removal analysis</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>D</span>Email nurture has zero long-term attribution effect</button>
+                            </div>
+                        </div>
+                        <!-- Q5 -->
+                        <div class="quiz-q" data-q="4">
+                            <div class="quiz-q-number">Question 05 / 05 — Mandelbrot Unit Economics</div>
+                            <div class="quiz-q-text">The Mandelbrot set boundary is the "event horizon of unit economics." Points outside the set represent:</div>
+                            <div class="quiz-options">
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>A</span>Channels with the highest ROAS and fastest payback periods</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>B</span>CAC strategies that produce exponential LTV compounding</button>
+                                <button class="quiz-option" data-correct="true"  onclick="selectOption(this)"><span>C</span>CAC trajectories that diverge to infinity — unprofitable at any scale, regardless of volume</button>
+                                <button class="quiz-option" data-correct="false" onclick="selectOption(this)"><span>D</span>The optimal budget allocation zone for maximum market share</button>
+                            </div>
+                        </div>
+
+                        <div class="quiz-nav">
+                            <button class="quiz-btn" id="quizPrev" onclick="quizNav(-1)" disabled>← Prev</button>
+                            <span class="technical" id="quizCounter">1 / 5</span>
+                            <button class="quiz-btn" id="quizNext" onclick="quizNav(1)">Next →</button>
+                        </div>
+                    </div>
+                    <!-- Result panel -->
+                    <div class="quiz-result-panel" id="quizResult">
+                        <div id="quizResultIcon" style="font-size: 48px; margin-bottom: 16px;"></div>
+                        <div class="label" style="margin-bottom: 12px;" id="quizResultLabel"></div>
+                        <h3 class="heading-md" id="quizResultTitle" style="margin-bottom: 16px;"></h3>
+                        <p class="body-text" style="font-size: 14px; margin-bottom: 32px;" id="quizResultText"></p>
+                        <button class="quiz-btn" onclick="retryQuiz()" id="quizRetryBtn">Retry Protocol</button>
                     </div>
                 </div>
 
-                <div class="technical" style="margin-top: 64px; opacity: 0.5;">
-                    Dubai • Available Globally • +971 555 693 876
+                <!-- Locked Contact (blurred until quiz passed) -->
+                <div style="text-align: center; padding: 80px 0 40px; border-top: 1px solid var(--border); margin-top: 64px; border-bottom: 1px solid var(--border);">
+                    <div class="unlock-banner" id="unlockBanner">
+                        ✓ VERIFICATION PASSED — CONNECTION PROTOCOL UNLOCKED
+                    </div>
+                    <div class="technical" style="margin-bottom: 24px; color: var(--text-tertiary);">SYSTEM READY FOR INTEGRATION</div>
+                    <h2 class="heading-md" style="margin-bottom: 48px;">Initialize Collaboration</h2>
+                    <div class="footer-grid contact-gate-locked" id="contactGate">
+                        <div>
+                            <a href="mailto:awesomeashoksingh@gmail.com" class="icon-link" aria-label="Email">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                            </a>
+                            <div class="icon-label">Email</div>
+                        </div>
+                        <div>
+                            <a href="https://www.linkedin.com/in/digitalashok/" target="_blank" class="icon-link" aria-label="LinkedIn">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                                    <path d="M8 11v5M8 9v.01M12 11v5M12 8v.01M16 11v5M16 8v.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                            </a>
+                            <div class="icon-label">LinkedIn</div>
+                        </div>
+                        <div>
+                            <a href="https://formspree.io/f/mpqjzqey" target="_blank" class="icon-link" aria-label="Form">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                                </svg>
+                            </a>
+                            <div class="icon-label">Secure Form</div>
+                        </div>
+                    </div>
+                    <div class="technical" style="margin-top: 64px; opacity: 0.5;">
+                        Dubai • Available Globally • +971 555 693 876
+                    </div>
                 </div>
             </div>
         </section>
@@ -1120,11 +1499,10 @@
         });
 
         function toggleTheory(btn) {
+            if (!btn.getAttribute('data-original')) btn.setAttribute('data-original', btn.textContent);
             const content = btn.parentElement.nextElementSibling;
             content.classList.toggle('active');
-            btn.textContent = content.classList.contains('active') ? 'Collapse' : 
-                             btn.getAttribute('data-original') || btn.textContent;
-            if (!btn.getAttribute('data-original')) btn.setAttribute('data-original', btn.textContent);
+            btn.textContent = content.classList.contains('active') ? 'Collapse' : btn.getAttribute('data-original');
         }
 
         // FOCUS STATES - Intersection Observer
@@ -1611,6 +1989,442 @@
                 c.height = c.offsetHeight;
             });
         });
+
+        // ─── Section Randomization ────────────────────────────────
+        (function randomizeSections() {
+            const THEORY_IDS = ['acquisition', 'conversion', 'attribution', 'growth', 'automation'];
+            const sections = THEORY_IDS.map(id => document.getElementById(id));
+            const markers  = [];
+            sections.forEach(s => {
+                const prev = s.previousElementSibling;
+                if (prev && prev.classList.contains('section-marker')) markers.push(prev);
+            });
+            // Fisher-Yates shuffle
+            for (let i = sections.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [sections[i], sections[j]] = [sections[j], sections[i]];
+            }
+            // Reinsert shuffled sections after their markers (markers stay in place)
+            markers.forEach((marker, i) => {
+                marker.after(sections[i]);
+            });
+            // Update section number labels (use section's own id, not array position)
+            const LABEL_MAP = {
+                acquisition: 'Acquisition Dynamics',
+                conversion:  'Quantum Conversion',
+                attribution: 'Network Attribution',
+                growth:      'Fractal Growth',
+                automation:  'System Automation'
+            };
+            sections.forEach((section, i) => {
+                const label = section.querySelector('.label');
+                if (label) label.textContent = `0${i+1} / ${LABEL_MAP[section.id]}`;
+            });
+        })();
+
+        // ─── Physics-Based Card Entry Animations ──────────────────
+        const ANIM_POOL = ['plasma', 'gravity', 'quantum', 'network', 'fractal', 'cellular'];
+        const usedAnims = new Set();
+        const sectionAnimMap = new WeakMap();
+
+        function getSectionAnim(section) {
+            if (sectionAnimMap.has(section)) return sectionAnimMap.get(section);
+            const available = ANIM_POOL.filter(a => !usedAnims.has(a));
+            const pool = available.length ? available : ANIM_POOL;
+            const type = pool[Math.floor(Math.random() * pool.length)];
+            usedAnims.add(type);
+            sectionAnimMap.set(section, type);
+            return type;
+        }
+
+        function playCardEntry(overlay, animType, onDone) {
+            const canvas = overlay.querySelector('canvas');
+            canvas.width  = overlay.parentElement.offsetWidth  || 400;
+            canvas.height = overlay.parentElement.offsetHeight || 300;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const fns = { plasma: animPlasma, gravity: animGravity, quantum: animQuantum,
+                          network: animNetwork, fractal: animFractal, cellular: animCellular };
+            (fns[animType] || animGravity)(ctx, canvas.width, canvas.height, () => {
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.style.pointerEvents = 'none'; onDone && onDone(); }, 950);
+            });
+        }
+
+        // ── 1. Plasma / Lorenz chaos ────────────────────────────────
+        function animPlasma(ctx, w, h, done) {
+            const N = 90, t0 = performance.now(), DUR = 2600;
+            const pts = Array.from({length: N}, (_, i) => ({
+                x: Math.random() * w, y: Math.random() * h,
+                vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6,
+                tx: (i % 10) * (w/10) + w/20,
+                ty: Math.floor(i/10) * (h/9) + h/18
+            }));
+            let t = 0;
+            function frame() {
+                const p = Math.min((performance.now()-t0)/DUR, 1);
+                ctx.fillStyle = 'rgba(10,10,15,0.18)';
+                ctx.fillRect(0,0,w,h);
+                const conv = Math.max(0,(p-0.4)/0.6);
+                pts.forEach((pt, i) => {
+                    pt.vx = pt.vx*0.9 + (pt.tx-pt.x)*0.025*conv + Math.sin(t*2.1+i*0.7)*4*(1-conv);
+                    pt.vy = pt.vy*0.9 + (pt.ty-pt.y)*0.025*conv + Math.cos(t*1.7+i*0.9)*4*(1-conv);
+                    pt.x += pt.vx; pt.y += pt.vy;
+                    ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(0,212,255,${0.3+p*0.6})`; ctx.fill();
+                });
+                t += 0.04;
+                if (p < 1) requestAnimationFrame(frame); else done();
+            }
+            frame();
+        }
+
+        // ── 2. Gravity / orbital fall ───────────────────────────────
+        function animGravity(ctx, w, h, done) {
+            const N = 80, t0 = performance.now(), DUR = 2500;
+            const pts = Array.from({length: N}, (_, i) => ({
+                x: Math.random()*w, y: -Math.random()*200,
+                vx: (Math.random()-0.5)*3, vy: Math.random()*2+1,
+                tx: (i%10)*(w/10)+w/20,
+                ty: Math.floor(i/10)*(h/8)+h/16
+            }));
+            function frame() {
+                const p = Math.min((performance.now()-t0)/DUR, 1);
+                ctx.fillStyle = 'rgba(10,10,15,0.2)'; ctx.fillRect(0,0,w,h);
+                const settle = Math.max(0,(p-0.5)/0.5);
+                pts.forEach(pt => {
+                    pt.vy += 0.4*(1-settle);
+                    pt.x += pt.vx; pt.y += pt.vy;
+                    if (pt.y > h) { pt.y = h; pt.vy *= -0.35; pt.vx *= 0.8; }
+                    pt.x += (pt.tx-pt.x)*0.08*settle;
+                    pt.y += (pt.ty-pt.y)*0.08*settle;
+                    ctx.beginPath(); ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(41,151,255,${0.4+p*0.5})`; ctx.fill();
+                });
+                if (p < 1) requestAnimationFrame(frame); else done();
+            }
+            frame();
+        }
+
+        // ── 3. Quantum / wave interference ─────────────────────────
+        function animQuantum(ctx, w, h, done) {
+            const t0 = performance.now(), DUR = 2800;
+            const pts = Array.from({length: 70}, (_, i) => ({
+                x: Math.random()*w, y: Math.random()*h,
+                tx: (i%10)*(w/10)+w/20, ty: Math.floor(i/10)*(h/7)+h/14
+            }));
+            let t = 0;
+            function frame() {
+                const p = Math.min((performance.now()-t0)/DUR, 1);
+                ctx.fillStyle = 'rgba(10,10,15,0.15)'; ctx.fillRect(0,0,w,h);
+                if (p < 0.65) {
+                    for (let x = 0; x < w; x += 5) {
+                        for (let y = 0; y < h; y += 5) {
+                            const v = (Math.sin(x*0.045+t*2)+Math.sin(y*0.045-t*1.5)+Math.sin((x+y)*0.025+t))/3;
+                            if (v > 0.55) { ctx.fillStyle = `rgba(191,90,242,${(v-0.55)*0.7})`; ctx.fillRect(x,y,4,4); }
+                        }
+                    }
+                }
+                if (p > 0.35) {
+                    const cp = (p-0.35)/0.65;
+                    pts.forEach(pt => {
+                        pt.x += (pt.tx-pt.x)*0.07*cp; pt.y += (pt.ty-pt.y)*0.07*cp;
+                        ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI*2);
+                        ctx.fillStyle = `rgba(191,90,242,${cp*0.85})`; ctx.fill();
+                    });
+                }
+                t += 0.04;
+                if (p < 1) requestAnimationFrame(frame); else done();
+            }
+            frame();
+        }
+
+        // ── 4. Network / graph assembly ─────────────────────────────
+        function animNetwork(ctx, w, h, done) {
+            const t0 = performance.now(), DUR = 2700;
+            const N = 22;
+            const nodes = Array.from({length: N}, (_, i) => ({
+                x: 40 + Math.random()*(w-80), y: 40 + Math.random()*(h-80),
+                r: 3+Math.random()*3, at: i/N*0.75
+            }));
+            const edges = [];
+            nodes.forEach((a,i) => nodes.slice(i+1).forEach((b,j) => {
+                if (Math.hypot(a.x-b.x,a.y-b.y) < w*0.38 && edges.length < 35)
+                    edges.push({a,b, st: Math.max(a.at,b.at)+0.04});
+            }));
+            function frame() {
+                const p = Math.min((performance.now()-t0)/DUR, 1);
+                ctx.fillStyle = 'rgba(10,10,15,0.2)'; ctx.fillRect(0,0,w,h);
+                edges.forEach(e => {
+                    const ep = Math.max(0,Math.min(1,(p-e.st)/0.25));
+                    if (ep > 0) {
+                        ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y);
+                        ctx.lineTo(e.a.x+(e.b.x-e.a.x)*ep, e.a.y+(e.b.y-e.a.y)*ep);
+                        ctx.strokeStyle = `rgba(0,212,255,${ep*0.45})`; ctx.lineWidth=1; ctx.stroke();
+                    }
+                });
+                nodes.forEach(n => {
+                    const np = Math.max(0,Math.min(1,(p-n.at)/0.1));
+                    if (np > 0) {
+                        ctx.beginPath(); ctx.arc(n.x, n.y, n.r*np, 0, Math.PI*2);
+                        ctx.fillStyle = `rgba(0,212,255,${np*0.9})`; ctx.fill();
+                    }
+                });
+                if (p < 1) requestAnimationFrame(frame); else done();
+            }
+            frame();
+        }
+
+        // ── 5. Fractal / recursive pixel fill ──────────────────────
+        function animFractal(ctx, w, h, done) {
+            const t0 = performance.now(), DUR = 2500;
+            ctx.fillStyle = '#0a0a0f'; ctx.fillRect(0,0,w,h);
+            const cells = [];
+            function subdivide(x,y,sw,sh,d) {
+                if (sw < 6 || sh < 6 || d > 7) { cells.push({x,y,w:sw,h:sh,d}); return; }
+                const hw=sw/2, hh=sh/2;
+                [[x,y],[x+hw,y],[x,y+hh],[x+hw,y+hh]].sort(()=>Math.random()-0.5)
+                    .forEach(([qx,qy])=>subdivide(qx,qy,hw,hh,d+1));
+            }
+            subdivide(0,0,w,h,0);
+            const maxC = Math.min(cells.length, 500);
+            function frame() {
+                const p = Math.min((performance.now()-t0)/DUR, 1);
+                const show = Math.floor(p*maxC);
+                for (let i=0; i<show; i++) {
+                    const c = cells[i], dr = i/maxC;
+                    ctx.fillStyle = `rgba(${Math.floor(41*(1-dr))},${Math.floor(151*dr)},255,0.65)`;
+                    ctx.fillRect(c.x+1,c.y+1,c.w-2,c.h-2);
+                }
+                if (p < 1) requestAnimationFrame(frame); else done();
+            }
+            frame();
+        }
+
+        // ── 6. Cellular / Conway-like spread ───────────────────────
+        function animCellular(ctx, w, h, done) {
+            const t0 = performance.now(), DUR = 3000;
+            const CS = 14, cols = Math.ceil(w/CS), rows = Math.ceil(h/CS);
+            let grid = Array.from({length:cols},()=>Array(rows).fill(0));
+            const ages = Array.from({length:cols},()=>Array(rows).fill(0));
+            for (let s=0;s<6;s++) grid[Math.floor(Math.random()*cols)][Math.floor(Math.random()*rows)]=1;
+            let lastStep = 0;
+            function step() {
+                const next = Array.from({length:cols},()=>Array(rows).fill(0));
+                for (let c=0;c<cols;c++) for (let r=0;r<rows;r++) {
+                    let n=0;
+                    for (let dc=-1;dc<=1;dc++) for (let dr=-1;dr<=1;dr++) {
+                        if (dc||dr) n+=grid[(c+dc+cols)%cols][(r+dr+rows)%rows];
+                    }
+                    if (grid[c][r]) { next[c][r]=(n>=2&&n<=3)?1:0; if(next[c][r])ages[c][r]++; }
+                    else { next[c][r]=(n===3)?1:0; if(next[c][r])ages[c][r]=0; }
+                }
+                grid=next;
+            }
+            function frame(ts) {
+                const p = Math.min((ts-t0)/DUR, 1);
+                if (ts-lastStep>120) { step(); lastStep=ts; }
+                ctx.fillStyle='#0a0a0f'; ctx.fillRect(0,0,w,h);
+                for (let c=0;c<cols;c++) for (let r=0;r<rows;r++) {
+                    if (grid[c][r]) {
+                        const a=Math.min(ages[c][r]/4,1);
+                        ctx.fillStyle=`rgba(0,212,255,${0.35+a*0.55})`;
+                        ctx.fillRect(c*CS+1,r*CS+1,CS-2,CS-2);
+                    }
+                }
+                if (p<1) requestAnimationFrame(frame); else done();
+            }
+            requestAnimationFrame(frame);
+        }
+
+        // ─── Card Entry Observer ───────────────────────────────────
+        const entryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const section = entry.target;
+                const animType = getSectionAnim(section);
+                section.querySelectorAll('.card-entry-overlay').forEach(overlay => {
+                    if (overlay.dataset.played) return;
+                    overlay.dataset.played = '1';
+                    playCardEntry(overlay, animType);
+                });
+                entryObserver.unobserve(section);
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section[data-section]').forEach(s => entryObserver.observe(s));
+
+        // ─── Scroll-Depth Progressive Reveal ──────────────────────
+        const extObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const section = entry.target;
+                const extId = 'ext-' + section.dataset.section;
+                const ext = document.getElementById(extId);
+                if (ext && !ext.classList.contains('revealed')) ext.classList.add('revealed');
+            });
+        }, { rootMargin: '0px 0px -50% 0px', threshold: 0 });
+
+        document.querySelectorAll('section[data-section]').forEach(s => extObserver.observe(s));
+
+        // ─── Quiz Logic ────────────────────────────────────────────
+        let quizCurrent = 0;
+        let quizAnswers = Array(5).fill(null); // selected option index per question
+        const TOTAL_Q = 5;
+
+        function selectOption(btn) {
+            const q = btn.closest('.quiz-q');
+            q.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            quizAnswers[quizCurrent] = btn;
+            // Auto-advance after short delay
+            setTimeout(() => quizNav(1), 450);
+        }
+
+        function quizNav(dir) {
+            const newIdx = quizCurrent + dir;
+            if (newIdx < 0) return;
+            // Require current question to be answered before advancing
+            if (dir > 0 && !quizAnswers[quizCurrent]) {
+                const q = document.querySelectorAll('.quiz-q')[quizCurrent];
+                q.style.outline = '1px solid var(--accent-purple)';
+                setTimeout(() => { q.style.outline = ''; }, 800);
+                return;
+            }
+            if (newIdx >= TOTAL_Q) { submitQuiz(); return; }
+
+            document.querySelectorAll('.quiz-q').forEach(q => q.classList.remove('active'));
+            quizCurrent = newIdx;
+            document.querySelectorAll('.quiz-q')[quizCurrent].classList.add('active');
+
+            const pct = ((quizCurrent) / TOTAL_Q) * 100;
+            document.getElementById('quizProgress').style.width = pct + '%';
+            document.getElementById('quizCounter').textContent = `${quizCurrent+1} / ${TOTAL_Q}`;
+            document.getElementById('quizPrev').disabled = quizCurrent === 0;
+            document.getElementById('quizNext').textContent = quizCurrent === TOTAL_Q-1 ? 'Submit ✓' : 'Next →';
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            document.querySelectorAll('.quiz-q').forEach((q, i) => {
+                const selected = quizAnswers[i];
+                if (!selected) return;
+                if (selected.dataset.correct === 'true') { selected.classList.add('correct'); score++; }
+                else {
+                    selected.classList.add('wrong');
+                    q.querySelectorAll('.quiz-option[data-correct="true"]').forEach(b => b.classList.add('correct'));
+                }
+                q.querySelectorAll('.quiz-option').forEach(b => { b.onclick = null; b.style.cursor='default'; });
+            });
+            const passed = score >= 4;
+            const body = document.querySelector('.quiz-body');
+            const result = document.getElementById('quizResult');
+            body.style.display = 'none';
+            document.getElementById('quizProgress').style.width = '100%';
+            result.classList.add('visible');
+            document.getElementById('quizResultIcon').textContent = passed ? '✓' : '✗';
+            document.getElementById('quizResultLabel').textContent = passed ? 'ACCESS GRANTED' : 'VERIFICATION FAILED';
+            document.getElementById('quizResultTitle').textContent = passed
+                ? `${score}/5 — System Comprehension Confirmed`
+                : `${score}/5 — Study the Theories & Retry`;
+            document.getElementById('quizResultText').textContent = passed
+                ? 'You demonstrate understanding of deterministic growth systems. The connection protocol is now active.'
+                : `You answered ${score} of 5 correctly. Scroll up and review the theory cards, then retry.`;
+            document.getElementById('quizRetryBtn').style.display = passed ? 'none' : '';
+            if (passed) {
+                document.getElementById('contactGate').classList.remove('contact-gate-locked');
+                document.getElementById('contactGate').classList.add('contact-gate-unlocked');
+                document.getElementById('unlockBanner').classList.add('visible');
+                document.getElementById('quizCard').style.borderColor = 'rgba(48,209,88,0.4)';
+            }
+        }
+
+        function retryQuiz() {
+            quizCurrent = 0;
+            quizAnswers = Array(5).fill(null);
+            document.querySelectorAll('.quiz-q').forEach((q, i) => {
+                q.classList.remove('active');
+                q.querySelectorAll('.quiz-option').forEach(b => {
+                    b.classList.remove('selected','correct','wrong');
+                    b.onclick = function(){ selectOption(this); };
+                    b.style.cursor = 'pointer';
+                });
+            });
+            document.querySelector('.quiz-q').classList.add('active');
+            document.getElementById('quizResult').classList.remove('visible');
+            document.querySelector('.quiz-body').style.display = '';
+            document.getElementById('quizProgress').style.width = '0%';
+            document.getElementById('quizCounter').textContent = '1 / 5';
+            document.getElementById('quizPrev').disabled = true;
+            document.getElementById('quizNext').textContent = 'Next →';
+        }
+    </script>
+    <script>
+        // ─── Custom Cursor ────────────────────────────────────────
+        (function () {
+            const dot  = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            if (!dot || !ring) return;
+            let mx = 0, my = 0, rx = 0, ry = 0;
+            document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+            // Use event delegation — one listener on document instead of per-element
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest('a, button')) {
+                    dot.style.transform = 'translate(-50%,-50%) scale(2)';
+                    ring.style.width = '56px'; ring.style.height = '56px';
+                    ring.style.borderColor = 'rgba(0,212,255,0.7)';
+                }
+            });
+            document.addEventListener('mouseout', e => {
+                if (e.target.closest('a, button')) {
+                    dot.style.transform = 'translate(-50%,-50%) scale(1)';
+                    ring.style.width = '36px'; ring.style.height = '36px';
+                    ring.style.borderColor = 'rgba(0,212,255,0.4)';
+                }
+            });
+            function tick() {
+                rx += (mx - rx) * 0.12;
+                ry += (my - ry) * 0.12;
+                dot.style.left = mx + 'px';
+                dot.style.top  = my + 'px';
+                ring.style.left = rx + 'px';
+                ring.style.top  = ry + 'px';
+                requestAnimationFrame(tick);
+            }
+            tick();
+        })();
+
+        // ─── Animated Metric Counters ─────────────────────────────
+        let countersAnimated = false;
+        function animateCounters(observer) {
+            if (countersAnimated) return;
+            countersAnimated = true;
+            if (observer) observer.disconnect();
+            document.querySelectorAll('.metric-number[data-target]').forEach(el => {
+                const target   = parseFloat(el.getAttribute('data-target'));
+                const suffix   = el.getAttribute('data-suffix') || '';
+                const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+                const duration = 1800;
+                let start = null;
+                function step(ts) {
+                    if (!start) start = ts;
+                    const progress = Math.min((ts - start) / duration, 1);
+                    const eased    = 1 - Math.pow(1 - progress, 3);
+                    const val      = target * eased;
+                    el.textContent = (decimals > 0 ? val.toFixed(decimals) : Math.floor(val)) + suffix;
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        }
+        const metricsEl = document.getElementById('metrics');
+        if (metricsEl) {
+            const metricsObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) animateCounters(metricsObserver);
+            }, { threshold: 0.5 });
+            metricsObserver.observe(metricsEl);
+        }
     </script>
 </body>
 </html>
