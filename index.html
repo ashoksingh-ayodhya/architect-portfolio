@@ -22,9 +22,10 @@
             --accent-blue: #2997ff;
             --accent-purple: #bf5af2;
             
+            --nav-height: 80px;
             --grid-unit: 8px;
             --baseline: 24px;
-            --section-gap: 160px;
+            --section-gap: 80px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -243,7 +244,7 @@
         nav {
             position: fixed;
             top: 0; left: 0; right: 0;
-            height: 80px;
+            height: var(--nav-height);
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
@@ -440,6 +441,7 @@
             .heading-xl { font-size: 40px; }
             .equation-float { display: none; }
             section { opacity: 1; transform: none; }
+            .slide-left, .slide-right { opacity: 1 !important; transform: none !important; transition: none !important; }
         }
 
         ::-webkit-scrollbar {
@@ -679,6 +681,25 @@
             display: none;
         }
         .unlock-banner.visible { display: block; }
+
+        /* ─── Nav height & main offset ───────────────────────────── */
+        main { margin-top: var(--nav-height); }
+
+        /* ─── Slide-in from sides ──────────────────────────────────
+           Elements start off-screen left/right at opacity 0.
+           When the parent section gains .in-focus they glide in.          ─────────────────────────────────────────────────────── */
+        .slide-left, .slide-right {
+            opacity: 0;
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .slide-left  { transform: translateX(-80px); }
+        .slide-right { transform: translateX(80px); }
+        section.in-focus .slide-left,
+        section.in-focus .slide-right { opacity: 1; transform: translateX(0); }
+        @media (prefers-reduced-motion: reduce) {
+            .slide-left, .slide-right { transform: none; opacity: 1; transition: none; }
+        }
     </style>
     <!-- Primary SEO: Optimized for "Growth Marketing" and "B2B Acquisition" -->
 <meta name="description" content="Ashok Singh | Growth Dynamics. Deterministic systems for B2B acquisition and revenue optimization. Specializing in growth marketing automation, Salesforce architecture, and conversion rate optimization with mathematical precision.">
@@ -915,21 +936,21 @@
         </div>
     </nav>
 
-    <main style="margin-top: 80px;">
+    <main>
         
         <!-- Hero -->
-        <section class="container" id="hero" data-section="hero">
-            <div class="col-12" style="text-align: center; margin-bottom: 64px;">
+        <section class="container in-focus" id="hero" data-section="hero">
+            <div class="col-12 slide-left" style="text-align: center; margin-bottom: 32px;">
                 <div class="label" style="margin-bottom: 16px;">Performance Growth Analytics</div>
             </div>
             
-            <div class="col-2" style="display: flex; align-items: flex-end; justify-content: center;">
+            <div class="col-2 slide-left" style="display: flex; align-items: flex-end; justify-content: center; transition-delay: 0.1s;">
                 <div class="technical" style="writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 0.3em;">
                     CHAOS THEORY
                 </div>
             </div>
             
-            <div class="col-8" style="text-align: center;">
+            <div class="col-8 slide-left" style="text-align: center; transition-delay: 0.15s;">
                 <h1 class="heading-xl">Growth<br>Dynamics</h1>
                 <p class="body-text" style="margin: 32px auto; font-size: 18px; max-width: 700px;">
                     Predictable revenue through mathematical analysis of mass population dynamics. 
@@ -941,16 +962,16 @@
                 </div>
             </div>
             
-            <div class="col-2" style="display: flex; align-items: flex-end; justify-content: center;">
+            <div class="col-2 slide-right" style="display: flex; align-items: flex-end; justify-content: center; transition-delay: 0.1s;">
                 <div class="technical" style="writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 0.3em; transform: rotate(180deg);">
                     SYSTEM ARCHITECTURE
                 </div>
             </div>
 
-            <div class="col-12" style="margin-top: 64px;">
+            <div class="col-12 slide-left" style="margin-top: 48px; transition-delay: 0.2s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 500px;">
+                    <div class="visual-container" style="height: 360px;">
                         <canvas id="heroCanvas"></canvas>
                         <div style="position: absolute; bottom: 24px; left: 24px; z-index: 10;">
                             <div class="label" style="margin-bottom: 8px;">Lorenz Attractor</div>
@@ -1008,15 +1029,15 @@
 
         <!-- Acquisition -->
         <section class="container" id="acquisition" data-section="acquisition">
-            <div class="col-12" style="margin-bottom: 64px;">
+            <div class="col-12 slide-left" style="margin-bottom: 32px;">
                 <div class="label" style="margin-bottom: 16px;">01 / Acquisition Dynamics</div>
                 <h2 class="heading-lg">Gravitational<br>Funnel Mechanics</h2>
             </div>
 
-            <div class="col-7">
+            <div class="col-7 slide-left" style="transition-delay: 0.1s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 600px;">
+                    <div class="visual-container" style="height: 420px;">
                         <canvas id="funnelCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1044,7 +1065,7 @@
                 </div>
             </div>
 
-            <div class="col-5">
+            <div class="col-5 slide-right" style="transition-delay: 0.15s;">
                 <div class="theory-card" style="margin-bottom: 24px;">
                     <div style="padding: 32px;">
                         <h3 class="heading-md">Orbital Decay</h3>
@@ -1081,15 +1102,15 @@
 
         <!-- Conversion -->
         <section class="container" id="conversion" data-section="conversion">
-            <div class="col-12" style="margin-bottom: 64px;">
+            <div class="col-12 slide-left" style="margin-bottom: 32px;">
                 <div class="label" style="margin-bottom: 16px;">02 / Quantum Conversion</div>
                 <h2 class="heading-lg">Wave Function<br>Collapse</h2>
             </div>
 
-            <div class="col-4">
+            <div class="col-4 slide-left">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 400px;">
+                    <div class="visual-container" style="height: 280px;">
                         <canvas id="waveCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1116,10 +1137,10 @@
                 </div>
             </div>
 
-            <div class="col-4">
+            <div class="col-4 slide-left" style="transition-delay: 0.1s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 400px;">
+                    <div class="visual-container" style="height: 280px;">
                         <canvas id="barrierCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1138,10 +1159,10 @@
                 </div>
             </div>
 
-            <div class="col-4">
+            <div class="col-4 slide-right" style="transition-delay: 0.15s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 400px;">
+                    <div class="visual-container" style="height: 280px;">
                         <canvas id="entropyCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1164,15 +1185,15 @@
 
         <!-- Attribution -->
         <section class="container" id="attribution" data-section="attribution">
-            <div class="col-12" style="margin-bottom: 64px;">
+            <div class="col-12 slide-left" style="margin-bottom: 32px;">
                 <div class="label" style="margin-bottom: 16px;">03 / Network Attribution</div>
                 <h2 class="heading-lg">Graph Topology &<br>Markov Chains</h2>
             </div>
 
-            <div class="col-8">
+            <div class="col-8 slide-left" style="transition-delay: 0.1s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 600px;">
+                    <div class="visual-container" style="height: 420px;">
                         <canvas id="networkCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1199,8 +1220,8 @@
                 </div>
             </div>
 
-            <div class="col-4">
-                <div class="theory-card" style="margin-bottom: 24px; height: 288px; display: flex; flex-direction: column; justify-content: center;">
+            <div class="col-4 slide-right" style="transition-delay: 0.15s;">
+                <div class="theory-card" style="margin-bottom: 24px; height: 200px; display: flex; flex-direction: column; justify-content: center;">
                     <div style="padding: 32px;">
                         <div class="technical" style="margin-bottom: 24px; color: var(--accent-cyan);">CENTRALITY METRICS</div>
                         
@@ -1236,7 +1257,7 @@
                     </div>
                 </div>
                 
-                <div class="theory-card" style="height: 288px;">
+                <div class="theory-card" style="height: 200px;">
                     <div style="padding: 32px;">
                         <div class="technical" style="margin-bottom: 16px; color: var(--accent-cyan);">CRITICAL PATH ANALYSIS</div>
                         <p class="body-text" style="font-size: 14px; line-height: 1.8; margin-bottom: 24px;">
@@ -1257,15 +1278,15 @@
 
         <!-- Growth -->
         <section class="container" id="growth" data-section="growth">
-            <div class="col-12" style="margin-bottom: 64px;">
+            <div class="col-12 slide-left" style="margin-bottom: 32px;">
                 <div class="label" style="margin-bottom: 16px;">04 / Fractal Growth</div>
                 <h2 class="heading-lg">Scaling<br>Boundaries</h2>
             </div>
 
-            <div class="col-6">
+            <div class="col-6 slide-left" style="transition-delay: 0.1s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 500px;">
+                    <div class="visual-container" style="height: 360px;">
                         <canvas id="mandelCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1293,10 +1314,10 @@
                 </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-6 slide-right" style="transition-delay: 0.1s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 500px;">
+                    <div class="visual-container" style="height: 360px;">
                         <canvas id="fibCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1319,15 +1340,15 @@
 
         <!-- Automation -->
         <section class="container" id="automation" data-section="automation">
-            <div class="col-12" style="margin-bottom: 64px;">
+            <div class="col-12 slide-left" style="margin-bottom: 32px;">
                 <div class="label" style="margin-bottom: 16px;">05 / System Automation</div>
                 <h2 class="heading-lg">Cellular<br>Automata</h2>
             </div>
 
-            <div class="col-12">
+            <div class="col-12 slide-left" style="transition-delay: 0.1s;">
                 <div class="theory-card">
                     <div class="card-entry-overlay"><canvas></canvas></div>
-                    <div class="visual-container" style="height: 400px;">
+                    <div class="visual-container" style="height: 280px;">
                         <canvas id="autoCanvas"></canvas>
                     </div>
                     <div class="theory-card-header">
@@ -1358,7 +1379,7 @@
         </section>
 
         <!-- Quiz Gateway + Locked Contact -->
-        <section class="container" style="margin-top: 160px; margin-bottom: 80px;" id="gateway">
+        <section class="container" style="margin-bottom: 80px;" id="gateway">
             <div class="col-12">
                 <!-- Quiz -->
                 <div class="quiz-card" id="quizCard">
