@@ -661,8 +661,8 @@ footer a:hover{color:var(--blue)}
 ══════════════════════════════════════════════════════════════════ */
 const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
 
-function rand(a, b){ return a + Math.random() * (b - a); }
-function randInt(a, b){ return Math.floor(rand(a, b + 1)); }
+function rand(min, max){ return min + Math.random() * (max - min); }
+function randInt(min, max){ return Math.floor(rand(min, max + 1)); }
 function shuffle(arr){
   const a = [...arr];
   for(let i = a.length - 1; i > 0; i--){
@@ -1210,8 +1210,8 @@ function drawNetwork(canvas){
     frame++;
 
     if(frame % 45 === 0 && pulses.length < 12){
-      const e = edges[Math.floor(Math.random() * edges.length)];
-      pulses.push({edge: e, t: 0});
+      const selectedEdge = edges[Math.floor(Math.random() * edges.length)];
+      pulses.push({edge: selectedEdge, t: 0});
     }
 
     edges.forEach(e => {
@@ -1509,8 +1509,10 @@ Deterministic systems; unpredictable only if you don't model them.`,
   const layouts = ['lay-a', 'lay-b', 'lay-c', 'lay-d'];
   const shuffled = shuffle(THEORIES);
 
+  function getRandomLayout(){ return layouts[Math.floor(Math.random() * layouts.length)]; }
+
   shuffled.forEach((theory, i) => {
-    const layout = layouts[Math.floor(Math.random() * layouts.length)];
+    const layout = getRandomLayout();
 
     const section = document.createElement('section');
     section.className = 'v-section';
