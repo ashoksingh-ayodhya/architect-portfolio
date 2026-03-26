@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashok Singh — Growth Dynamics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ─── Reset & Root ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #000000;
+  --surface:   #1c1c1e;
+  --elevated:  #2c2c2e;
+  --border:    rgba(255,255,255,0.08);
+  --text:      #ffffff;
+  --text-2:    rgba(255,255,255,0.65);
+  --text-3:    rgba(255,255,255,0.35);
+  --blue:      #0a84ff;
+  --green:     #30d158;
+  --red:       #ff453a;
+  --mono:      'Space Mono', monospace;
+  --nav-h:     64px;
+}
+
+html { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+body { overflow-x: hidden; }
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--elevated); border-radius: 2px; }
+
+/* ─── Loading Screen ────────────────────────────────────────────────────────── */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #000; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+#loader.hidden { opacity: 0; visibility: hidden; }
+
+.loader-ring {
+  position: relative; width: 72px; height: 72px;
+}
+.loader-ring svg { transform: rotate(-90deg); }
+.loader-ring circle.track { fill: none; stroke: var(--elevated); stroke-width: 2; }
+.loader-ring circle.fill  {
+  fill: none; stroke: var(--blue); stroke-width: 2;
+  stroke-dasharray: 201; stroke-dashoffset: 201;
+  stroke-linecap: round;
+  animation: loader-arc 2.2s ease forwards;
+}
+@keyframes loader-arc { to { stroke-dashoffset: 0; } }
+
+.loader-text {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  color: var(--text-3); text-transform: uppercase;
+}
+
+/* ─── Custom Cursor (desktop only) ─────────────────────────────────────────── */
+@media (pointer: fine) {
+  body { cursor: none; }
+  #cursor-dot  { position: fixed; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue); pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%); transition: transform 0.1s ease; }
+  #cursor-ring { position: fixed; width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid rgba(10,132,255,0.5); pointer-events: none; z-index: 9997;
+    transform: translate(-50%,-50%); transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s; }
+  body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring {
+    width: 48px; height: 48px; border-color: var(--blue);
+  }
+}
+
+/* ─── Navigation ────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.nav-logo {
+  font-size: 15px; font-weight: 600; letter-spacing: -0.3px; color: var(--text);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--blue); }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--text-2);
+  text-decoration: none; transition: color 0.2s;
+  letter-spacing: -0.1px;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--blue); color: #fff !important;
+  padding: 7px 16px; border-radius: 8px; font-size: 13px !important;
+  transition: opacity 0.2s !important;
+}
+.nav-cta:hover { opacity: 0.85; color: #fff !important; }
+.nav-burger { display: none; background: none; border: none; cursor: pointer;
+  color: var(--text); padding: 4px; }
+.nav-burger svg { display: block; }
+
+/* Mobile nav drawer */
+.nav-drawer {
+  position: fixed; top: var(--nav-h); left: 0; right: 0;
+  background: rgba(28,28,30,0.98);
+  backdrop-filter: blur(24px);
+  padding: 24px 32px 32px;
+  display: flex; flex-direction: column; gap: 20px;
+  transform: translateY(-110%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  z-index: 99; border-bottom: 1px solid var(--border);
+}
+.nav-drawer.open { transform: translateY(0); }
+.nav-drawer a {
+  font-size: 17px; font-weight: 500; color: var(--text-2);
+  text-decoration: none; padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.nav-drawer a:last-child { border-bottom: none; }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-burger { display: block; }
+}
+
+/* ─── Hero ──────────────────────────────────────────────────────────────────── */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: calc(var(--nav-h) + 80px) 32px 80px;
+  text-align: center; overflow: hidden;
+}
+#three-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  color: var(--blue); text-transform: uppercase;
+  margin-bottom: 32px; opacity: 0; animation: fade-up 0.8s 0.2s ease forwards;
+}
+.hero-h1 {
+  font-size: clamp(64px, 12vw, 120px);
+  font-weight: 800; line-height: 0.92; letter-spacing: -3px;
+  margin-bottom: 40px;
+  opacity: 0; animation: fade-up 0.8s 0.35s ease forwards;
+}
+.hero-h1 em { font-style: normal; color: var(--blue); }
+.hero-body {
+  font-size: clamp(15px, 2vw, 18px); font-weight: 400;
+  color: var(--text-2); max-width: 680px; margin: 0 auto 48px;
+  line-height: 1.7;
+  opacity: 0; animation: fade-up 0.8s 0.5s ease forwards;
+}
+.hero-sub {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--text-3); text-transform: uppercase;
+  opacity: 0; animation: fade-up 0.8s 0.65s ease forwards;
+}
+
+/* gradient fade at bottom of hero */
+#hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none; z-index: 1;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Scroll Indicator ──────────────────────────────────────────────────────── */
+.scroll-hint {
+  position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: fade-up 0.8s 1s ease forwards;
+}
+.scroll-hint span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  color: var(--text-3); text-transform: uppercase; }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--blue), transparent);
+  animation: scroll-line 2s infinite; }
+@keyframes scroll-line {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  50.01% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ─── Metrics Bar ───────────────────────────────────────────────────────────── */
+#metrics {
+  padding: 80px 32px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.metrics-inner {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px;
+}
+.metric-block {
+  padding: 48px 40px;
+  background: var(--surface);
+  text-align: center;
+  position: relative;
+}
+.metric-block::after {
+  content: ''; position: absolute; right: 0; top: 20%; bottom: 20%;
+  width: 1px; background: var(--border);
+}
+.metric-block:last-child::after { display: none; }
+.metric-num {
+  font-size: clamp(48px, 8vw, 80px); font-weight: 800; letter-spacing: -2px;
+  line-height: 1; color: var(--text); margin-bottom: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.metric-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--text-3); text-transform: uppercase; line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .metrics-inner { grid-template-columns: 1fr; }
+  .metric-block::after { right: 20%; left: 20%; top: auto; bottom: 0; width: auto; height: 1px; }
+  .metric-block:last-child::after { display: none; }
+}
+
+/* ─── Sections ──────────────────────────────────────────────────────────────── */
+.section {
+  padding: 120px 32px;
+  max-width: 1200px; margin: 0 auto;
+  transition: opacity 0.5s ease;
+}
+.section.dimmed { opacity: 0.35; }
+
+.section-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  color: var(--blue); text-transform: uppercase; margin-bottom: 20px;
+}
+.section-h2 {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 800; line-height: 0.95; letter-spacing: -2px;
+  margin-bottom: 64px;
+}
+.section-h2 em { font-style: normal; color: var(--text-2); }
+
+/* ─── Theory Cards ──────────────────────────────────────────────────────────── */
+.card-grid { display: grid; gap: 16px; }
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) {
+  .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+}
+
+.theory-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.theory-card:hover { border-color: rgba(10,132,255,0.3); transform: translateY(-2px); }
+
+.card-canvas-wrap { position: relative; overflow: hidden; }
+.card-canvas-wrap canvas { display: block; width: 100%; }
+
+.card-body { padding: 28px; }
+.card-body-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  color: var(--text-3); text-transform: uppercase; margin-bottom: 12px;
+}
+.card-body-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 12px; }
+.card-body-text  { font-size: 14px; color: var(--text-2); line-height: 1.75; }
+
+.expand-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  color: var(--blue); text-transform: uppercase;
+  background: none; border: 1px solid rgba(10,132,255,0.3);
+  border-radius: 6px; padding: 6px 12px;
+  cursor: pointer; margin-top: 16px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.expand-btn:hover { background: rgba(10,132,255,0.1); border-color: var(--blue); }
+.expand-btn .chevron { transition: transform 0.3s; display: inline-block; }
+.expand-btn.open .chevron { transform: rotate(180deg); }
+
+.theory-extra {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), padding 0.3s;
+}
+.theory-extra.open { max-height: 400px; }
+.theory-extra-inner {
+  padding: 20px 28px 28px;
+  border-top: 1px solid var(--border);
+  font-size: 13px; color: var(--text-2); line-height: 1.8;
+}
+.eq {
+  font-family: var(--mono); font-size: 13px;
+  background: var(--elevated); border-radius: 8px;
+  padding: 12px 16px; margin: 12px 0;
+  color: var(--blue); letter-spacing: 0.05em;
+}
+
+/* ─── Slide-in animations ───────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── Quiz ──────────────────────────────────────────────────────────────────── */
+#quiz-section { padding: 120px 32px; border-top: 1px solid var(--border); }
+.quiz-wrap { max-width: 760px; margin: 0 auto; }
+
+.quiz-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.quiz-header {
+  padding: 40px 40px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.quiz-icon { font-size: 28px; margin-bottom: 12px; }
+.quiz-header-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  color: var(--text-3); text-transform: uppercase; margin-bottom: 8px;
+}
+.quiz-header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 8px; }
+.quiz-header-sub { font-size: 14px; color: var(--text-2); }
+
+.quiz-progress-track {
+  height: 2px; background: var(--elevated); margin: 0 40px;
+}
+.quiz-progress-fill {
+  height: 2px; background: var(--blue); width: 0%;
+  transition: width 0.4s ease;
+}
+
+.quiz-body { padding: 40px; }
+
+.q-block { display: none; }
+.q-block.active { display: block; }
+
+.q-num {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  color: var(--blue); text-transform: uppercase; margin-bottom: 16px;
+}
+.q-text { font-size: 18px; font-weight: 600; letter-spacing: -0.3px;
+  line-height: 1.5; margin-bottom: 28px; }
+
+.q-options { display: grid; gap: 10px; }
+.q-option {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px;
+  cursor: pointer; text-align: left; color: var(--text-2);
+  font-size: 14px; font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.q-option .opt-key {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: var(--text-3); min-width: 18px; padding-top: 1px;
+  transition: color 0.2s;
+}
+.q-option:hover { border-color: rgba(10,132,255,0.4); color: var(--text);
+  background: rgba(10,132,255,0.04); }
+.q-option:hover .opt-key { color: var(--blue); }
+.q-option.selected { border-color: var(--blue); color: var(--text);
+  background: rgba(10,132,255,0.06); }
+.q-option.selected .opt-key { color: var(--blue); }
+.q-option.correct { border-color: var(--green); color: var(--green);
+  background: rgba(48,209,88,0.05); }
+.q-option.correct .opt-key { color: var(--green); }
+.q-option.wrong  { border-color: var(--red); color: var(--red);
+  background: rgba(255,69,58,0.05); }
+.q-option.wrong .opt-key { color: var(--red); }
+.q-option:disabled { cursor: not-allowed; }
+
+.quiz-nav-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 32px;
+}
+.quiz-nav-btn {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+  text-transform: uppercase; background: none;
+  border: 1px solid var(--border); color: var(--text-2);
+  border-radius: 8px; padding: 10px 20px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.quiz-nav-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+.quiz-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.quiz-counter {
+  font-family: var(--mono); font-size: 12px; color: var(--text-3);
+}
+
+.quiz-result {
+  padding: 60px 40px; text-align: center; display: none;
+}
+.quiz-result.show { display: block; }
+.quiz-result-icon { font-size: 48px; margin-bottom: 20px; }
+.quiz-result-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.quiz-result-title { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 16px; }
+.quiz-result-text { font-size: 15px; color: var(--text-2); margin-bottom: 32px; }
+.quiz-retry-btn {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+  text-transform: uppercase; background: none;
+  border: 1px solid var(--border); color: var(--text-2);
+  border-radius: 8px; padding: 12px 28px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.quiz-retry-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ─── Contact ───────────────────────────────────────────────────────────────── */
+#contact-section {
+  padding: 80px 32px 120px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  transition: filter 0.5s ease;
+}
+#contact-section.locked { filter: blur(8px); pointer-events: none; user-select: none; }
+
+.unlock-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--green); border: 1px solid rgba(48,209,88,0.3);
+  border-radius: 100px; padding: 8px 20px; margin-bottom: 64px;
+  opacity: 0; transition: opacity 0.5s;
+}
+.unlock-badge.show { opacity: 1; }
+.unlock-badge::before { content: ''; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--green); }
+
+.contact-h { font-size: clamp(40px, 7vw, 80px); font-weight: 800;
+  letter-spacing: -2px; margin-bottom: 24px; }
+.contact-sub { font-size: 16px; color: var(--text-2); margin-bottom: 64px; }
+
+.contact-links {
+  display: flex; gap: 16px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 80px;
+}
+.contact-link {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 28px;
+  font-size: 15px; font-weight: 500; color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.contact-link:hover { border-color: rgba(10,132,255,0.4);
+  background: rgba(10,132,255,0.06); transform: translateY(-2px); }
+.contact-link svg { width: 18px; height: 18px; stroke: var(--blue); }
+
+.contact-form-wrap { max-width: 560px; margin: 0 auto; }
+.contact-form { display: grid; gap: 12px; }
+.form-field {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px;
+  font-family: 'Inter', sans-serif; font-size: 15px;
+  color: var(--text); width: 100%; resize: none;
+  transition: border-color 0.2s;
+}
+.form-field:focus { outline: none; border-color: rgba(10,132,255,0.5); }
+.form-field::placeholder { color: var(--text-3); }
+.form-submit {
+  background: var(--blue); color: #fff;
+  border: none; border-radius: 12px; padding: 16px 32px;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.form-submit:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.contact-footer {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--text-3); text-transform: uppercase;
+  margin-top: 80px;
+}
+
+/* ─── Footer ────────────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-copy { font-size: 13px; color: var(--text-3); }
+.footer-mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--text-3); text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<!-- ─── Loading Screen ─────────────────────────────────────────────────────── -->
+<div id="loader">
+  <div class="loader-ring">
+    <svg width="72" height="72" viewBox="0 0 72 72">
+      <circle class="track" cx="36" cy="36" r="32"/>
+      <circle class="fill"  cx="36" cy="36" r="32"/>
+    </svg>
+  </div>
+  <div class="loader-text">Initializing System…</div>
+</div>
+
+<!-- ─── Custom Cursor ──────────────────────────────────────────────────────── -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- ─── Navigation ────────────────────────────────────────────────────────── -->
+<nav>
+  <a href="#" class="nav-logo">Ashok <span>Singh</span></a>
+  <div class="nav-links">
+    <a href="#theories">Theories</a>
+    <a href="#quiz-section">Verify</a>
+    <a href="#contact-section" class="nav-cta">Connect</a>
+  </div>
+  <button class="nav-burger" id="navBurger" aria-label="Menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <line x1="0" y1="2"  x2="22" y2="2"  id="b1"/>
+      <line x1="0" y1="8"  x2="22" y2="8"  id="b2"/>
+      <line x1="0" y1="14" x2="22" y2="14" id="b3"/>
+    </svg>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <a href="#theories" onclick="closeDrawer()">Theories</a>
+  <a href="#quiz-section" onclick="closeDrawer()">Verify Knowledge</a>
+  <a href="#contact-section" onclick="closeDrawer()">Connect</a>
+</div>
+
+<!-- ─── Hero ──────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">B2B Growth Strategy · Deterministic Systems</div>
+    <h1 class="hero-h1">Growth<br><em>Dynamics</em></h1>
+    <p class="hero-body">
+      Predictable revenue through mathematical analysis of mass population dynamics.
+      Where acquisition funnels obey gravity wells, conversion rates follow quantum probability,
+      and growth curves trace fractal boundaries.
+    </p>
+    <div class="hero-sub">Deterministic Systems &nbsp;·&nbsp; Predictive Modeling &nbsp;·&nbsp; 0.01% Deviation Tolerance</div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── Metrics ───────────────────────────────────────────────────────────── -->
+<div id="metrics">
+  <div class="metrics-inner">
+    <div class="metric-block reveal">
+      <div class="metric-num" data-target="80" data-suffix="%" data-dec="0">80%</div>
+      <div class="metric-label">Impression Share<br>Maintained</div>
+    </div>
+    <div class="metric-block reveal" style="transition-delay:0.1s">
+      <div class="metric-num" data-target="3.2" data-suffix="×" data-dec="1">3.2×</div>
+      <div class="metric-label">Conversion<br>Velocity</div>
+    </div>
+    <div class="metric-block reveal" style="transition-delay:0.2s">
+      <div class="metric-num" data-target="0" data-suffix="" data-dec="0">0</div>
+      <div class="metric-label">Touch Reporting<br>Automated</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Theory Sections (shuffled by JS) ─────────────────────────────────── -->
+<main id="theories"></main>
+
+<!-- ─── Quiz ──────────────────────────────────────────────────────────────── -->
+<section id="quiz-section">
+  <div class="quiz-wrap">
+    <div class="section-eyebrow reveal" style="text-align:center;margin-bottom:16px">Knowledge Verification</div>
+    <h2 class="section-h2 reveal" style="text-align:center;font-size:clamp(40px,6vw,72px);margin-bottom:48px">
+      Prove Your<br><em>Understanding</em>
+    </h2>
+
+    <div class="quiz-card reveal">
+      <div class="quiz-header">
+        <div class="quiz-icon">⚡</div>
+        <div class="quiz-header-label">Access Protocol</div>
+        <div class="quiz-header-title">Growth Intelligence Certification</div>
+        <div class="quiz-header-sub">Answer 4 of 5 correctly to unlock the connection protocol. Questions are drawn from the theories above.</div>
+      </div>
+      <div class="quiz-progress-track">
+        <div class="quiz-progress-fill" id="quizProg"></div>
+      </div>
+      <div class="quiz-body" id="quizBody">
+
+        <!-- Q1 -->
+        <div class="q-block active" data-q="0">
+          <div class="q-num">Question 01 / 05 — Lorenz Attractor</div>
+          <div class="q-text">In the Lorenz attractor, why do two nearly-identical campaigns diverge wildly over time?</div>
+          <div class="q-options">
+            <button class="q-option" data-correct="false"><span class="opt-key">A</span>Because the algorithm adds random noise to each impression</button>
+            <button class="q-option" data-correct="true"><span class="opt-key">B</span>Extreme sensitivity to initial conditions — infinitesimal input differences amplify exponentially through non-linear feedback</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">C</span>Market saturation resets the funnel state on each iteration</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">D</span>The attractor equation contains a random variable σ</button>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q-block" data-q="1">
+          <div class="q-num">Question 02 / 05 — Gravitational Mechanics</div>
+          <div class="q-text">Kepler's Third Law states T² ∝ R³. In the lead-orbit model, what does "perigee" represent?</div>
+          <div class="q-options">
+            <button class="q-option" data-correct="false"><span class="opt-key">A</span>The moment a lead is added to a nurture sequence</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">B</span>The highest point of brand awareness in the funnel</button>
+            <button class="q-option" data-correct="true"><span class="opt-key">C</span>The point of closest approach where conversion probability is maximum and retargeting ROI peaks</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">D</span>The beginning of the outbound sequence</button>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-block" data-q="2">
+          <div class="q-num">Question 03 / 05 — Quantum Conversion</div>
+          <div class="q-text">Before a visitor clicks, they exist in quantum superposition. What does this mean for CRO?</div>
+          <div class="q-options">
+            <button class="q-option" data-correct="true"><span class="opt-key">A</span>The visitor is simultaneously in bounce AND convert states — optimization shifts the probability amplitude toward |Convert⟩ before the wave function collapses</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">B</span>Quantum effects make conversion fundamentally unpredictable</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">C</span>Users browse multiple tabs simultaneously so attribution is impossible</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">D</span>The page exists in two states until the server renders it</button>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="q-block" data-q="3">
+          <div class="q-num">Question 04 / 05 — Markov Attribution</div>
+          <div class="q-text">The Markov chain model has the "memoryless property". In attribution modelling, this means:</div>
+          <div class="q-options">
+            <button class="q-option" data-correct="false"><span class="opt-key">A</span>Customers forget all previous ads once they convert</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">B</span>Multi-touch attribution is theoretically impossible</button>
+            <button class="q-option" data-correct="true"><span class="opt-key">C</span>The transition probability from any channel state depends only on the current channel, not the full prior journey — enabling counterfactual removal analysis</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">D</span>Email nurture has zero long-term attribution effect</button>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="q-block" data-q="4">
+          <div class="q-num">Question 05 / 05 — Mandelbrot Unit Economics</div>
+          <div class="q-text">The Mandelbrot set boundary is the "event horizon of unit economics." Points outside the set represent:</div>
+          <div class="q-options">
+            <button class="q-option" data-correct="false"><span class="opt-key">A</span>Channels with the highest ROAS and fastest payback periods</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">B</span>CAC strategies that produce exponential LTV compounding</button>
+            <button class="q-option" data-correct="true"><span class="opt-key">C</span>CAC trajectories that diverge to infinity — unprofitable at any scale, regardless of volume</button>
+            <button class="q-option" data-correct="false"><span class="opt-key">D</span>The optimal budget allocation zone for maximum market share</button>
+          </div>
+        </div>
+
+        <div class="quiz-nav-row">
+          <button class="quiz-nav-btn" id="qPrev" disabled>← Prev</button>
+          <span class="quiz-counter" id="qCounter">1 / 5</span>
+          <button class="quiz-nav-btn" id="qNext">Next →</button>
+        </div>
+      </div>
+
+      <div class="quiz-result" id="quizResult">
+        <div class="quiz-result-icon" id="qResultIcon"></div>
+        <div class="quiz-result-label" id="qResultLabel"></div>
+        <div class="quiz-result-title" id="qResultTitle"></div>
+        <div class="quiz-result-text"  id="qResultText"></div>
+        <button class="quiz-retry-btn" id="qRetry">Retry Protocol</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Contact ───────────────────────────────────────────────────────────── -->
+<section id="contact-section" class="locked">
+  <div class="unlock-badge" id="unlockBadge">Verification Passed — Protocol Unlocked</div>
+  <div class="contact-h">Initialize<br>Collaboration</div>
+  <div class="contact-sub">Ready to build predictable, compounding growth systems together.</div>
+
+  <div class="contact-links">
+    <a href="mailto:awesomeashoksingh@gmail.com" class="contact-link">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+      awesomeashoksingh@gmail.com
+    </a>
+    <a href="https://www.linkedin.com/in/digitalashok/" target="_blank" rel="noopener" class="contact-link">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/><path stroke-linecap="round" d="M8 11v5M8 8.5v.5M12 16v-5M16 16v-5a2 2 0 00-4 0"/></svg>
+      LinkedIn · digitalashok
+    </a>
+  </div>
+
+  <div class="contact-form-wrap">
+    <form class="contact-form" action="https://formspree.io/f/mpqjzqey" method="POST">
+      <input  class="form-field" type="text"  name="name"    placeholder="Your name"         required>
+      <input  class="form-field" type="email" name="email"   placeholder="Work email"        required>
+      <input  class="form-field" type="text"  name="company" placeholder="Company">
+      <textarea class="form-field" name="message" rows="5"   placeholder="What are you working on?" required></textarea>
+      <button class="form-submit" type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <div class="contact-footer">Dubai &nbsp;·&nbsp; Available Globally &nbsp;·&nbsp; +971 555 693 876</div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2025 Ashok Singh. All rights reserved.</span>
+  <span class="footer-mono">whoisashok.com</span>
+</footer>
+
+<!-- ─── Scripts ───────────────────────────────────────────────────────────── -->
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   LOADING SCREEN
+══════════════════════════════════════════════════════════════════════════ */
+setTimeout(() => {
+  document.getElementById('loader').classList.add('hidden');
+}, 2600);
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════════════════════════════════════ */
+(function() {
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  if (!dot || !ring) return;
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function tick() {
+    dot.style.left  = mx + 'px';
+    dot.style.top   = my + 'px';
+    rx += (mx - rx) * 0.15;
+    ry += (my - ry) * 0.15;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ══════════════════════════════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════════════════════════════ */
+const burger = document.getElementById('navBurger');
+const drawer = document.getElementById('navDrawer');
+burger.addEventListener('click', () => drawer.classList.toggle('open'));
+function closeDrawer() { drawer.classList.remove('open'); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THREE.JS LORENZ ATTRACTOR
+══════════════════════════════════════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
+  camera.position.set(0, 0, 90);
+
+  // Lorenz attractor parameters
+  const sigma = 10, rho = 28, beta = 8/3;
+  const N = 2000;
+  const positions = new Float32Array(N * 3);
+  const colors    = new Float32Array(N * 3);
+
+  // Generate attractor path
+  let x = 0.1, y = 0, z = 0;
+  const dt = 0.005;
+  const path = [];
+  for (let i = 0; i < N * 12; i++) {
+    const dx = sigma * (y - x);
+    const dy = x * (rho - z) - y;
+    const dz = x * y - beta * z;
+    x += dx * dt; y += dy * dt; z += dz * dt;
+    path.push(x, y, z - 25); // shift down slightly
+  }
+
+  // Pick evenly spaced points along path for particles
+  const stride = Math.floor(path.length / 3 / N);
+  for (let i = 0; i < N; i++) {
+    const idx = (i * stride) % (path.length / 3);
+    positions[i * 3]     = path[idx * 3]     * 1.5;
+    positions[i * 3 + 1] = path[idx * 3 + 1] * 1.5;
+    positions[i * 3 + 2] = path[idx * 3 + 2] * 1.5;
+
+    // Color: cyan→blue gradient by height
+    const t = (positions[i * 3 + 1] + 60) / 120;
+    const tc = Math.max(0, Math.min(1, t));
+    colors[i * 3]     = 0.04 + tc * 0.1;   // R: near 0
+    colors[i * 3 + 1] = 0.45 + tc * 0.35;  // G: cyan to blue
+    colors[i * 3 + 2] = 1.0;               // B: always strong
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+
+  const mat = new THREE.PointsMaterial({
+    size: 0.45, vertexColors: true,
+    transparent: true, opacity: 0.75,
+    sizeAttenuation: true
+  });
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // Particle state for "orbiting" animation
+  const offsets = new Float32Array(N);
+  for (let i = 0; i < N; i++) offsets[i] = Math.random() * Math.PI * 2;
+
+  function resize() {
+    const hero = document.getElementById('hero');
+    const w = hero.clientWidth, h = hero.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  const posArr = geo.attributes.position.array;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.0008;
+
+    // Slowly advance particles along path
+    for (let i = 0; i < N; i++) {
+      const base = ((i * stride + Math.floor((offsets[i] + t * 60) % (path.length / 3))) % (path.length / 3));
+      posArr[i * 3]     = path[base * 3]     * 1.5;
+      posArr[i * 3 + 1] = path[base * 3 + 1] * 1.5;
+      posArr[i * 3 + 2] = path[base * 3 + 2] * 1.5;
+    }
+    geo.attributes.position.needsUpdate = true;
+
+    // Slowly orbit camera
+    camera.position.x = 90 * Math.sin(t * 0.25);
+    camera.position.z = 90 * Math.cos(t * 0.25);
+    camera.position.y = 20 * Math.sin(t * 0.12);
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THEORY SECTIONS DATA + CANVAS ANIMATIONS
+══════════════════════════════════════════════════════════════════════════ */
+const theories = [
+  {
+    id: 'acquisition',
+    eyebrow: '01 / Acquisition Dynamics',
+    title: 'Gravitational\nFunnel Mechanics',
+    canvasId: 'cvAcq',
+    canvasH: 280,
+    label: 'N-Body Simulation · Lead Trajectories',
+    btnText: 'Analysis',
+    body: `<strong style="color:var(--blue)">Law of Acquisition Gravity:</strong><br><br>
+Leads (particles) enter the system with initial velocity (brand awareness).
+The conversion event (central mass) exerts gravitational pull proportional to
+value proposition density. Escape velocity (churn) is overcome through
+centripetal acceleration (nurture sequences).`,
+    extra: `<strong>Newton's Law of Universal Gravitation applied:</strong>
+<div class="eq">F = G·(m₁·m₂) / r²</div>
+Where G = brand equity constant, m₁ = ICP fit score, m₂ = value proposition density,
+r = awareness radius. As r → 0 (retargeting), force → ∞ — this is why retargeting
+consistently outperforms cold acquisition at 3-7× ROAS.`,
+    draw: drawOrbit
+  },
+  {
+    id: 'conversion',
+    eyebrow: '02 / Quantum Conversion',
+    title: 'Wave Function\nCollapse',
+    canvasId: 'cvConv',
+    canvasH: 280,
+    label: 'Probability Amplitude · Superposition',
+    btnText: 'Observe',
+    body: `<strong style="color:var(--blue)">Superposition Principle:</strong><br><br>
+Before measurement (click), the visitor exists in superposition of states:
+|Bounce⟩ and |Convert⟩. The waveform represents probability amplitude.
+Optimization increases the coefficient of conversion before wave function collapse.`,
+    extra: `<strong>Schrödinger's Conversion equation:</strong>
+<div class="eq">|ψ⟩ = α|Convert⟩ + β|Bounce⟩</div>
+Where |α|² is your conversion probability. CRO optimizes α by collapsing the
+waveform earlier (faster page load, clearer CTA) and increasing its amplitude
+(compelling offer, social proof). A/B testing is wave function measurement.`,
+    draw: drawWave
+  },
+  {
+    id: 'attribution',
+    eyebrow: '03 / Network Attribution',
+    title: 'Graph Topology &\nMarkov Chains',
+    canvasId: 'cvAttr',
+    canvasH: 280,
+    label: 'Transition Probability Matrix',
+    btnText: 'Map',
+    body: `<strong style="color:var(--blue)">Markov Attribution Model:</strong><br><br>
+Each marketing touchpoint is a node in a directed graph. The probability of
+transitioning from channel A → channel B → conversion is modelled as a Markov
+chain. Counterfactual removal analysis reveals true channel contribution by
+measuring conversion probability when each channel node is removed.`,
+    extra: `<strong>The Memoryless Property:</strong>
+<div class="eq">P(Xₙ₊₁ | X₀…Xₙ) = P(Xₙ₊₁ | Xₙ)</div>
+The future state depends only on present state. This means each channel's
+credit is determined by its forward-looking conversion probability, not historic
+position. This mathematically invalidates both first-click and last-click models.`,
+    draw: drawNetwork
+  },
+  {
+    id: 'growth',
+    eyebrow: '04 / Fractal Growth',
+    title: 'Mandelbrot\nUnit Economics',
+    canvasId: 'cvGrow',
+    canvasH: 280,
+    label: 'Self-Similar Scaling · CAC Boundaries',
+    btnText: 'Compute',
+    body: `<strong style="color:var(--blue)">Fractal Boundary Theorem:</strong><br><br>
+The Mandelbrot set defines the boundary between stable and chaotic growth.
+Points inside = LTV > CAC at every scale. Points outside = CAC trajectories
+that diverge to infinity, unprofitable regardless of volume. The fractal
+boundary is the event horizon of unit economics.`,
+    extra: `<strong>Mandelbrot iteration applied:</strong>
+<div class="eq">zₙ₊₁ = zₙ² + c</div>
+Where z = cumulative LTV, c = CAC + operating costs. If |zₙ| → ∞, the
+business model is outside the set — structurally unprofitable. If bounded,
+you're inside the set — scalable at any spend level. This is why CAC:LTV
+ratio must be measured at cohort depth, not campaign average.`,
+    draw: drawMandelbrot
+  },
+  {
+    id: 'automation',
+    eyebrow: '05 / Systems Automation',
+    title: 'Zero-Touch\nOperations',
+    canvasId: 'cvAuto',
+    canvasH: 280,
+    label: 'Deterministic Pipelines · Closed-Loop',
+    btnText: 'Execute',
+    body: `<strong style="color:var(--blue)">Closed-Loop Automation:</strong><br><br>
+Marketing operations modelled as a control system: input signals (ad spend),
+transfer function (attribution model), output (pipeline value), feedback
+loop (ROAS signal → budget reallocation). Automation removes human latency
+from the feedback loop, achieving near-real-time system correction.`,
+    extra: `<strong>PID Controller analogy:</strong>
+<div class="eq">u(t) = Kₚe(t) + Kᵢ∫e dt + Kd·de/dt</div>
+Proportional (P) = current ROAS delta correction. Integral (I) = accumulated
+CAC debt correction. Derivative (D) = rate-of-change of pipeline velocity.
+Properly tuned, the system self-corrects within one reporting cycle.`,
+    draw: drawAutomation
+  }
+];
+
+/* Fisher-Yates shuffle */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+shuffle(theories);
+
+/* Build HTML */
+const main = document.getElementById('theories');
+theories.forEach((t, idx) => {
+  const sec = document.createElement('section');
+  sec.className = 'section';
+  sec.id = t.id;
+  const lines = t.title.split('\n');
+  sec.innerHTML = `
+    <div class="section-eyebrow reveal">${t.eyebrow}</div>
+    <h2 class="section-h2 reveal">${lines[0]}<br><em>${lines[1] || ''}</em></h2>
+    <div class="card-grid reveal" style="transition-delay:0.15s">
+      <div class="theory-card">
+        <div class="card-canvas-wrap">
+          <canvas id="${t.canvasId}" height="${t.canvasH}"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-body-label">${t.label}</div>
+          <div class="card-body-text">${t.body}</div>
+          <button class="expand-btn" data-target="${t.id}-extra">
+            ${t.btnText} <span class="chevron">↓</span>
+          </button>
+        </div>
+        <div class="theory-extra" id="${t.id}-extra">
+          <div class="theory-extra-inner">${t.extra}</div>
+        </div>
+      </div>
+    </div>`;
+  main.appendChild(sec);
+});
+
+/* Expand toggle */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.expand-btn');
+  if (!btn) return;
+  const target = document.getElementById(btn.dataset.target);
+  if (!target) return;
+  const open = target.classList.toggle('open');
+  btn.classList.toggle('open', open);
+});
+
+/* ══════════════════════════════════════════════════════════════════════════
+   2D CANVAS ANIMATIONS
+══════════════════════════════════════════════════════════════════════════ */
+
+function startCanvases() {
+  theories.forEach(t => {
+    const canvas = document.getElementById(t.canvasId);
+    if (!canvas) return;
+    canvas.width  = canvas.parentElement.clientWidth;
+    canvas.height = t.canvasH;
+    t.draw(canvas);
+  });
+}
+
+/* Gravitational orbit */
+function drawOrbit(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+  const particles = Array.from({length: 60}, (_, i) => ({
+    a: (Math.random() * 0.5 + 0.3) * Math.min(W, H) * 0.38,
+    b: (Math.random() * 0.2 + 0.1) * Math.min(W, H) * 0.38,
+    angle: Math.random() * Math.PI * 2,
+    speed: (Math.random() * 0.004 + 0.002) * (Math.random() < 0.5 ? 1 : -1),
+    size: Math.random() * 2 + 0.5,
+    opacity: Math.random() * 0.5 + 0.3,
+    tilt: Math.random() * Math.PI
+  }));
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    // Draw orbit paths faintly
+    particles.forEach(p => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(p.tilt);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.a, p.b, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(10,132,255,0.06)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+    });
+    // Central mass
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 24);
+    grd.addColorStop(0, 'rgba(10,132,255,0.8)');
+    grd.addColorStop(1, 'rgba(10,132,255,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, 24, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+    // Particles
+    particles.forEach(p => {
+      p.angle += p.speed;
+      const cosT = Math.cos(p.tilt), sinT = Math.sin(p.tilt);
+      const lx = p.a * Math.cos(p.angle), ly = p.b * Math.sin(p.angle);
+      const rx = lx * cosT - ly * sinT + cx;
+      const ry = lx * sinT + ly * cosT + cy;
+      ctx.beginPath();
+      ctx.arc(rx, ry, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(10,132,255,${p.opacity})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Quantum wave */
+function drawWave(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t = 0;
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (let w = 0; w < 3; w++) {
+      ctx.beginPath();
+      const amp = (30 - w * 8) * (H / 280);
+      const freq = 0.018 + w * 0.006;
+      const phase = t + w * 1.1;
+      const opacity = 0.6 - w * 0.18;
+      for (let x = 0; x <= W; x++) {
+        const envelope = Math.exp(-((x / W - 0.5) ** 2) / 0.08);
+        const y = H / 2 + amp * envelope * Math.sin(freq * x - phase);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(10,132,255,${opacity})`;
+      ctx.lineWidth = 1.5 - w * 0.4;
+      ctx.stroke();
+    }
+    // Probability cloud dots
+    for (let i = 0; i < 4; i++) {
+      const px = (0.2 + i * 0.2) * W;
+      const envelope = Math.exp(-((px / W - 0.5) ** 2) / 0.08);
+      const py = H / 2 + 30 * envelope * Math.sin(0.018 * px - t);
+      ctx.beginPath();
+      ctx.arc(px, py, 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(48,209,88,0.8)';
+      ctx.fill();
+    }
+    t += 0.035;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Network graph */
+function drawNetwork(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const nodes = [
+    { label: 'Paid', x: 0.15, y: 0.25 },
+    { label: 'SEO',  x: 0.15, y: 0.75 },
+    { label: 'Email',x: 0.4,  y: 0.15 },
+    { label: 'Social',x: 0.4, y: 0.85 },
+    { label: 'Direct',x: 0.65,y: 0.5  },
+    { label: 'Conv', x: 0.88, y: 0.5  }
+  ];
+  const edges = [
+    [0,2],[0,4],[1,3],[1,4],[2,4],[3,4],[4,5],[2,5],[0,5]
+  ];
+  const particles = edges.map(([from, to]) => ({
+    from, to, t: Math.random(), speed: 0.003 + Math.random() * 0.003
+  }));
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    // Edges
+    edges.forEach(([a, b]) => {
+      const na = nodes[a], nb = nodes[b];
+      ctx.beginPath();
+      ctx.moveTo(na.x * W, na.y * H);
+      ctx.lineTo(nb.x * W, nb.y * H);
+      ctx.strokeStyle = 'rgba(10,132,255,0.12)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+    // Flow particles
+    particles.forEach(p => {
+      p.t += p.speed;
+      if (p.t > 1) p.t = 0;
+      const na = nodes[p.from], nb = nodes[p.to];
+      const px = (na.x + (nb.x - na.x) * p.t) * W;
+      const py = (na.y + (nb.y - na.y) * p.t) * H;
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(10,132,255,${0.4 + p.t * 0.5})`;
+      ctx.fill();
+    });
+    // Nodes
+    nodes.forEach((n, i) => {
+      const isConv = i === nodes.length - 1;
+      ctx.beginPath();
+      ctx.arc(n.x * W, n.y * H, isConv ? 12 : 7, 0, Math.PI * 2);
+      ctx.fillStyle = isConv ? 'rgba(48,209,88,0.9)' : 'rgba(10,132,255,0.7)';
+      ctx.fill();
+      ctx.font = `${Math.floor(W/50)}px Space Mono, monospace`;
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x * W, n.y * H - 14);
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Mandelbrot */
+function drawMandelbrot(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const imgData = ctx.createImageData(W, H);
+  const maxIter = 80;
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const cr = (px / W) * 3.5 - 2.5;
+      const ci = (py / H) * 2.0 - 1.0;
+      let zr = 0, zi = 0, iter = 0;
+      while (zr * zr + zi * zi <= 4 && iter < maxIter) {
+        const t = zr * zr - zi * zi + cr;
+        zi = 2 * zr * zi + ci;
+        zr = t; iter++;
+      }
+      const idx = (py * W + px) * 4;
+      if (iter === maxIter) {
+        imgData.data[idx] = 10; imgData.data[idx+1] = 10; imgData.data[idx+2] = 15; imgData.data[idx+3] = 255;
+      } else {
+        const t = iter / maxIter;
+        imgData.data[idx]   = Math.floor(t * 10);
+        imgData.data[idx+1] = Math.floor(t * 100 + 30);
+        imgData.data[idx+2] = Math.floor(t * 200 + 55);
+        imgData.data[idx+3] = 255;
+      }
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+  // No animation needed — static beauty
+}
+
+/* Automation flow */
+function drawAutomation(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const boxes = [
+    { label: 'INPUT',    x: 0.08, y: 0.5 },
+    { label: 'PROCESS',  x: 0.35, y: 0.5 },
+    { label: 'OUTPUT',   x: 0.62, y: 0.5 },
+    { label: 'FEEDBACK', x: 0.35, y: 0.82 }
+  ];
+  const links = [[0,1],[1,2],[2,3],[3,1]];
+  let t = 0;
+  const bw = W * 0.14, bh = H * 0.18;
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    links.forEach(([a, b]) => {
+      const na = boxes[a], nb = boxes[b];
+      const x1 = na.x * W, y1 = na.y * H;
+      const x2 = nb.x * W, y2 = nb.y * H;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.strokeStyle = 'rgba(10,132,255,0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      // Animated dot
+      const pt = (t * 0.6 + a * 0.25) % 1;
+      const dx = (x1 + (x2 - x1) * pt), dy = (y1 + (y2 - y1) * pt);
+      ctx.beginPath();
+      ctx.arc(dx, dy, 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(10,132,255,${0.5 + pt * 0.5})`;
+      ctx.fill();
+    });
+    boxes.forEach(n => {
+      const bx = n.x * W - bw / 2, by = n.y * H - bh / 2;
+      ctx.beginPath();
+      ctx.roundRect(bx, by, bw, bh, 6);
+      ctx.fillStyle = 'rgba(28,28,30,0.9)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(10,132,255,0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.font = `bold ${Math.floor(W / 55)}px Space Mono, monospace`;
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(n.label, n.x * W, n.y * H);
+    });
+    t += 0.012;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Start canvases after DOM paint */
+requestAnimationFrame(startCanvases);
+window.addEventListener('resize', () => {
+  theories.forEach(t => {
+    const c = document.getElementById(t.canvasId);
+    if (c) { c.width = c.parentElement.clientWidth; }
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════════════════
+   INTERSECTION OBSERVER — reveal + focus dimming + metric counters
+══════════════════════════════════════════════════════════════════════════ */
+const allSections = () => document.querySelectorAll('.section');
+
+/* Reveal */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* Section focus dimming */
+const focusObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    e.target.classList.toggle('dimmed', !e.isIntersecting);
+  });
+}, { threshold: 0.2 });
+allSections().forEach(s => focusObs.observe(s));
+
+/* Metric counters */
+let metricsAnimated = false;
+const metricsObs = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting && !metricsAnimated) {
+    metricsAnimated = true;
+    document.querySelectorAll('.metric-num[data-target]').forEach(el => {
+      const target = parseFloat(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const dec    = parseInt(el.dataset.dec) || 0;
+      const dur    = 1600;
+      const start  = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = (target * ease).toFixed(dec) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toFixed(dec) + suffix;
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+}, { threshold: 0.5 });
+const metricsEl = document.getElementById('metrics');
+if (metricsEl) metricsObs.observe(metricsEl);
+
+/* ══════════════════════════════════════════════════════════════════════════
+   QUIZ SYSTEM
+══════════════════════════════════════════════════════════════════════════ */
+let qCurrent = 0;
+const qAnswers = new Array(5).fill(null); // null | true | false
+const qBlocks  = document.querySelectorAll('.q-block');
+const qTotal   = qBlocks.length;
+
+function updateProgress() {
+  const pct = ((qCurrent) / qTotal) * 100;
+  document.getElementById('quizProg').style.width = pct + '%';
+  document.getElementById('qCounter').textContent = (qCurrent + 1) + ' / ' + qTotal;
+  document.getElementById('qPrev').disabled = qCurrent === 0;
+  document.getElementById('qNext').textContent = qCurrent === qTotal - 1 ? 'Submit →' : 'Next →';
+}
+
+function showQ(idx) {
+  qBlocks.forEach((b, i) => b.classList.toggle('active', i === idx));
+  updateProgress();
+}
+
+document.getElementById('qPrev').addEventListener('click', () => {
+  if (qCurrent > 0) { qCurrent--; showQ(qCurrent); }
+});
+
+document.getElementById('qNext').addEventListener('click', () => {
+  if (qCurrent < qTotal - 1) {
+    qCurrent++;
+    showQ(qCurrent);
+  } else {
+    submitQuiz();
+  }
+});
+
+document.querySelectorAll('.q-option').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const block = this.closest('.q-block');
+    const qIdx  = parseInt(block.dataset.q);
+    if (block.querySelector('.correct, .wrong')) return; // already answered
+    const correct = this.dataset.correct === 'true';
+    qAnswers[qIdx] = correct;
+    block.querySelectorAll('.q-option').forEach(b => {
+      b.disabled = true;
+      if (b.dataset.correct === 'true') b.classList.add('correct');
+      else if (b === this) b.classList.add('wrong');
+    });
+  });
+});
+
+function submitQuiz() {
+  const score = qAnswers.filter(a => a === true).length;
+  const pass  = score >= 4;
+
+  document.getElementById('quizBody').style.display = 'none';
+  const result = document.getElementById('quizResult');
+  result.classList.add('show');
+
+  if (pass) {
+    document.getElementById('qResultIcon').textContent  = '✅';
+    document.getElementById('qResultLabel').style.color = 'var(--green)';
+    document.getElementById('qResultLabel').textContent = 'Verification Passed';
+    document.getElementById('qResultTitle').textContent = `${score}/5 — Protocol Unlocked`;
+    document.getElementById('qResultText').textContent  = 'You have demonstrated mastery of deterministic growth systems. The connection protocol is now active.';
+    document.getElementById('qRetry').style.display     = 'none';
+    unlockContact();
+  } else {
+    document.getElementById('qResultIcon').textContent  = '⚠️';
+    document.getElementById('qResultLabel').style.color = 'var(--red)';
+    document.getElementById('qResultLabel').textContent = 'Verification Failed';
+    document.getElementById('qResultTitle').textContent = `${score}/5 — Below Threshold`;
+    document.getElementById('qResultText').textContent  = 'Minimum 4/5 required. Review the theory sections above, then retry.';
+  }
+}
+
+document.getElementById('qRetry').addEventListener('click', () => {
+  qCurrent = 0;
+  qAnswers.fill(null);
+  qBlocks.forEach(b => {
+    b.querySelectorAll('.q-option').forEach(opt => {
+      opt.disabled = false;
+      opt.classList.remove('correct', 'wrong', 'selected');
+    });
+  });
+  document.getElementById('quizResult').classList.remove('show');
+  document.getElementById('quizBody').style.display = '';
+  showQ(0);
+});
+
+function unlockContact() {
+  const contact = document.getElementById('contact-section');
+  const badge   = document.getElementById('unlockBadge');
+  contact.classList.remove('locked');
+  badge.classList.add('show');
+}
+
+updateProgress();
+</script>
+</body>
+</html>

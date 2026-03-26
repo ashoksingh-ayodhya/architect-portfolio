@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashok Singh — Growth Dynamics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+/* ─── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #ffffff;
+  --surface:   #f5f5f7;
+  --alt:       #fbfbfd;
+  --border:    #d2d2d7;
+  --text:      #1d1d1f;
+  --text-2:    #6e6e73;
+  --text-3:    #a1a1a6;
+  --blue:      #0066cc;
+  --blue-soft: rgba(0, 102, 204, 0.08);
+  --nav-h:     52px;
+  --max-w:     1080px;
+  --r:         16px;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+body { overflow-x: hidden; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ─── Loading Screen ─────────────────────────────────────────────────────── */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #ffffff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding-bottom: 48px; gap: 16px;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-text {
+  font-size: 13px; font-weight: 300; color: var(--text-2);
+  letter-spacing: 0.02em;
+}
+.loader-track {
+  width: 200px; height: 2px;
+  background: var(--border); border-radius: 1px; overflow: hidden;
+}
+.loader-fill {
+  height: 100%; width: 0%; background: var(--text);
+  border-radius: 1px;
+  transition: width 0.04s linear;
+}
+
+/* ─── Navigation ─────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+}
+.nav-logo {
+  font-size: 17px; font-weight: 600; color: var(--text);
+  text-decoration: none; letter-spacing: -0.02em;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 32px; list-style: none;
+}
+.nav-links a {
+  font-size: 14px; font-weight: 400; color: var(--text-2);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links .nav-cta {
+  font-size: 14px; font-weight: 500;
+  color: var(--blue); text-decoration: none;
+  padding: 6px 16px; border: 1px solid var(--blue);
+  border-radius: 980px; transition: background 0.2s, color 0.2s;
+}
+.nav-links .nav-cta:hover { background: var(--blue); color: #fff; }
+
+.nav-burger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px;
+}
+.nav-burger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--text); border-radius: 1px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.nav-mobile-menu {
+  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  padding: 24px; flex-direction: column; gap: 24px; z-index: 899;
+}
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-menu a {
+  font-size: 17px; font-weight: 400; color: var(--text);
+  text-decoration: none; padding: 8px 0;
+  border-bottom: 1px solid var(--surface);
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+}
+
+/* ─── Shared Layout ──────────────────────────────────────────────────────── */
+.container {
+  max-width: var(--max-w); margin: 0 auto; padding: 0 24px;
+}
+.section { padding: 96px 0; }
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--blue); margin-bottom: 16px;
+}
+.section-h2 {
+  font-size: clamp(32px, 5vw, 52px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--text); line-height: 1.08;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px; font-weight: 400; color: var(--text-2);
+  max-width: 560px; line-height: 1.6;
+}
+
+/* ─── Scroll Reveal ──────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
+.reveal[data-delay="1"] { transition-delay: 0.1s; }
+.reveal[data-delay="2"] { transition-delay: 0.2s; }
+.reveal[data-delay="3"] { transition-delay: 0.3s; }
+.reveal[data-delay="4"] { transition-delay: 0.4s; }
+.reveal[data-delay="5"] { transition-delay: 0.5s; }
+
+/* ─── Hero ───────────────────────────────────────────────────────────────── */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center;
+  padding-top: var(--nav-h);
+  overflow: hidden; background: var(--bg);
+}
+#heroCanvas {
+  position: absolute; inset: 0; width: 100% !important; height: 100% !important;
+  opacity: 0.45; pointer-events: none;
+}
+.hero-content {
+  position: relative; z-index: 1;
+  padding: 80px 24px 80px;
+  max-width: var(--max-w); margin: 0 auto; width: 100%;
+}
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--text-2); margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+}
+.hero-h1 {
+  font-size: clamp(60px, 10vw, 120px); font-weight: 800;
+  letter-spacing: -0.04em; line-height: 0.92;
+  color: var(--text); margin-bottom: 36px;
+  opacity: 0; animation: fadeUp 0.9s 0.35s ease forwards;
+}
+.hero-sub {
+  font-size: clamp(17px, 2vw, 21px); font-weight: 300;
+  color: var(--text-2); max-width: 520px;
+  line-height: 1.55; margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.9s 0.5s ease forwards;
+}
+.hero-tags {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; color: var(--text-3);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  opacity: 0; animation: fadeUp 0.9s 0.65s ease forwards;
+}
+.hero-ctas {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 48px;
+  opacity: 0; animation: fadeUp 0.9s 0.8s ease forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; background: var(--text); color: #fff;
+  font-size: 15px; font-weight: 500; border-radius: 980px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-primary:hover { background: #3a3a3c; transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; background: transparent; color: var(--blue);
+  font-size: 15px; font-weight: 500; border-radius: 980px;
+  text-decoration: none; border: 1px solid var(--blue); cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-secondary:hover { background: var(--blue); color: #fff; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ─── Hero scroll arrow ──────────────────────────────────────────────────── */
+.hero-scroll {
+  position: absolute; bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: fadeUp 1s 1.2s ease forwards; cursor: default;
+}
+.hero-scroll span {
+  font-size: 10px; color: var(--text-3); letter-spacing: 0.15em; text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+}
+.scroll-line {
+  width: 1px; height: 40px; background: linear-gradient(to bottom, var(--border), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+  50%       { opacity: 1;   transform: scaleY(1);   }
+}
+
+/* ─── Metrics Bar ────────────────────────────────────────────────────────── */
+#metrics { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+#metrics .container { padding-top: 0; padding-bottom: 0; }
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+}
+.metric-item {
+  padding: 48px 32px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.metric-item:last-child { border-right: none; }
+.metric-num {
+  font-size: clamp(48px, 6vw, 76px); font-weight: 800;
+  letter-spacing: -0.04em; color: var(--text); line-height: 1;
+  margin-bottom: 10px;
+}
+.metric-lbl {
+  font-size: 13px; font-weight: 400; color: var(--text-2);
+  line-height: 1.4;
+}
+@media (max-width: 640px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .metric-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .metric-item:last-child { border-bottom: none; }
+}
+
+/* ─── Theory Sections ────────────────────────────────────────────────────── */
+#theories { background: var(--bg); }
+.theory-section { padding: 80px 0; border-bottom: 1px solid var(--surface); }
+.theory-section:last-child { border-bottom: none; }
+.theory-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
+  margin-top: 48px;
+}
+.theory-card {
+  background: var(--surface);
+  border-radius: var(--r); overflow: hidden;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  transition: box-shadow 0.3s;
+}
+.theory-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+.theory-canvas-wrap { position: relative; overflow: hidden; }
+.theory-canvas-wrap canvas { display: block; width: 100%; }
+.theory-body { padding: 28px 28px 24px; }
+.theory-body-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--blue); margin-bottom: 14px;
+}
+.theory-body-text {
+  font-size: 15px; color: var(--text-2); line-height: 1.65;
+}
+.theory-body-text strong { color: var(--text); font-weight: 600; }
+.expand-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 18px;
+  font-size: 13px; font-weight: 500; color: var(--blue);
+  background: none; border: none; cursor: pointer; padding: 0;
+  transition: gap 0.2s;
+}
+.expand-btn:hover { gap: 12px; }
+.expand-btn .chevron {
+  display: inline-block; font-size: 12px;
+  transition: transform 0.3s;
+}
+.expand-btn.open .chevron { transform: rotate(180deg); }
+.theory-extra {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.theory-extra.open { max-height: 300px; }
+.theory-extra-inner {
+  padding: 0 28px 28px;
+  font-size: 14px; color: var(--text-2); line-height: 1.7;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.theory-extra-inner strong { color: var(--text); font-weight: 600; }
+.theory-extra-inner .eq {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px; color: var(--blue);
+  background: var(--blue-soft);
+  padding: 10px 14px; border-radius: 8px;
+  margin: 12px 0; display: block;
+}
+.theory-meta { padding: 28px; }
+.theory-meta .section-h2 { font-size: clamp(28px, 4vw, 40px); }
+
+@media (max-width: 768px) {
+  .theory-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Quiz ───────────────────────────────────────────────────────────────── */
+#quiz-section { background: var(--surface); padding: 96px 0; border-top: 1px solid var(--border); }
+.quiz-wrap { max-width: 720px; margin: 0 auto; }
+.quiz-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+.quiz-header {
+  padding: 36px 36px 0;
+  border-bottom: 1px solid var(--surface);
+  padding-bottom: 28px;
+}
+.quiz-header-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--blue); margin-bottom: 10px;
+}
+.quiz-header-title {
+  font-size: 22px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.02em; margin-bottom: 6px;
+}
+.quiz-header-sub { font-size: 14px; color: var(--text-2); }
+.quiz-progress-track {
+  height: 2px; background: var(--surface); margin-top: 20px;
+}
+.quiz-progress-fill {
+  height: 100%; width: 0%; background: var(--blue);
+  transition: width 0.4s ease;
+}
+.quiz-body { padding: 36px; }
+.q-block { display: none; }
+.q-block.active { display: block; }
+.q-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--text-3); margin-bottom: 14px;
+}
+.q-text {
+  font-size: 17px; font-weight: 600; color: var(--text);
+  letter-spacing: -0.02em; line-height: 1.4; margin-bottom: 24px;
+}
+.q-options { display: grid; gap: 10px; }
+.q-option {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 14px; font-weight: 400; color: var(--text-2);
+  text-align: left; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.q-option:hover { border-color: var(--blue); color: var(--text); background: var(--blue-soft); }
+.q-option.selected { border-color: var(--blue); color: var(--text); background: var(--blue-soft); }
+.q-option.correct  { border-color: #34c759; color: #1a7f37; background: rgba(52,199,89,0.07); }
+.q-option.wrong    { border-color: #ff3b30; color: #a81f1a; background: rgba(255,59,48,0.07); }
+.q-option:disabled { cursor: not-allowed; }
+.opt-key {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--border); display: flex; align-items: center;
+  justify-content: center; font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700; color: var(--text-3);
+  transition: border-color 0.2s, color 0.2s;
+}
+.q-option:hover .opt-key, .q-option.selected .opt-key { border-color: var(--blue); color: var(--blue); }
+.q-option.correct .opt-key { border-color: #34c759; color: #34c759; }
+.q-option.wrong   .opt-key { border-color: #ff3b30; color: #ff3b30; }
+.quiz-nav-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--surface);
+}
+.quiz-nav-btn {
+  padding: 10px 22px; border: 1.5px solid var(--border);
+  border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--text);
+  background: none; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.quiz-nav-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+.quiz-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.quiz-counter {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  color: var(--text-3);
+}
+.quiz-result { display: none; padding: 48px 36px; text-align: center; }
+.quiz-result.show { display: block; }
+.quiz-result-icon { font-size: 52px; margin-bottom: 20px; }
+.quiz-result-label {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--blue); margin-bottom: 10px;
+}
+.quiz-result-title {
+  font-size: 26px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.03em; margin-bottom: 12px;
+}
+.quiz-result-text { font-size: 15px; color: var(--text-2); margin-bottom: 28px; }
+.quiz-retry-btn {
+  padding: 12px 28px; border: 1.5px solid var(--border);
+  border-radius: 980px; font-size: 14px; font-weight: 500; color: var(--text);
+  background: none; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.quiz-retry-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ─── Contact ────────────────────────────────────────────────────────────── */
+#contact { background: var(--bg); padding: 96px 0; border-top: 1px solid var(--border); }
+.contact-gate-locked {
+  text-align: center; padding: 48px 24px;
+  border: 1.5px dashed var(--border); border-radius: var(--r);
+  color: var(--text-2); font-size: 15px;
+}
+.contact-gate-locked .lock-icon { font-size: 36px; margin-bottom: 16px; }
+.contact-gate-unlocked { display: none; }
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px;
+}
+.contact-block h3 {
+  font-size: 13px; font-weight: 600; color: var(--text);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+.contact-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 16px;
+}
+.contact-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.contact-label { font-size: 12px; color: var(--text-3); margin-bottom: 2px; }
+.contact-value { font-size: 14px; font-weight: 500; color: var(--text); }
+.contact-value a { color: var(--blue); text-decoration: none; }
+.contact-value a:hover { text-decoration: underline; }
+.contact-form { display: grid; gap: 14px; }
+.contact-form input,
+.contact-form textarea {
+  width: 100%; padding: 12px 16px;
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; font-size: 14px; color: var(--text);
+  font-family: inherit; resize: vertical;
+  transition: border-color 0.2s;
+}
+.contact-form input:focus,
+.contact-form textarea:focus { outline: none; border-color: var(--blue); }
+.contact-form textarea { min-height: 120px; }
+.contact-form button {
+  padding: 13px 28px; background: var(--text); color: #fff;
+  border: none; border-radius: 980px; font-size: 14px; font-weight: 500;
+  font-family: inherit; cursor: pointer;
+  transition: background 0.2s;
+}
+.contact-form button:hover { background: #3a3a3c; }
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 32px 24px; text-align: center;
+}
+footer p {
+  font-size: 12px; color: var(--text-3);
+}
+footer a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- ─── Loading Screen ──────────────────────────────────────────────────── -->
+<div id="loader">
+  <span class="loader-text">Loading…</span>
+  <div class="loader-track">
+    <div class="loader-fill" id="loaderFill"></div>
+  </div>
+</div>
+
+<!-- ─── Navigation ─────────────────────────────────────────────────────── -->
+<nav>
+  <a href="#hero" class="nav-logo">Ashok Singh</a>
+  <ul class="nav-links">
+    <li><a href="#theories">Systems</a></li>
+    <li><a href="#metrics">Results</a></li>
+    <li><a href="#quiz-section">Verify</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="nav-burger" id="navBurger" role="button" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="#theories" onclick="closeMobile()">Systems</a>
+  <a href="#metrics" onclick="closeMobile()">Results</a>
+  <a href="#quiz-section" onclick="closeMobile()">Verify</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ─── Hero ────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">B2B Growth Strategy · Dubai, UAE</div>
+    <h1 class="hero-h1">Growth<br>Dynamics</h1>
+    <p class="hero-sub">Mathematical analysis of acquisition systems. Deterministic modelling for predictable B2B revenue at scale.</p>
+    <p class="hero-tags">Deterministic Systems &nbsp;·&nbsp; Predictive Modeling &nbsp;·&nbsp; 0.01% Deviation Tolerance</p>
+    <div class="hero-ctas">
+      <a href="#theories" class="btn-primary">Explore Systems</a>
+      <a href="#quiz-section" class="btn-secondary">Verify Knowledge</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ─── Metrics ─────────────────────────────────────────────────────────── -->
+<section id="metrics">
+  <div class="container">
+    <div class="metrics-grid">
+      <div class="metric-item reveal">
+        <div class="metric-num" data-target="80" data-suffix="%" data-dec="0">80%</div>
+        <div class="metric-lbl">Impression Share<br>Maintained</div>
+      </div>
+      <div class="metric-item reveal" data-delay="2">
+        <div class="metric-num" data-target="3.2" data-suffix="×" data-dec="1">3.2×</div>
+        <div class="metric-lbl">Conversion<br>Velocity</div>
+      </div>
+      <div class="metric-item reveal" data-delay="4">
+        <div class="metric-num" data-target="0" data-suffix="" data-dec="0">0</div>
+        <div class="metric-lbl">Touch Reporting<br>Automated</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Theories ────────────────────────────────────────────────────────── -->
+<section class="section" id="theories">
+  <div class="container">
+    <p class="section-label reveal">Theoretical Frameworks</p>
+    <h2 class="section-h2 reveal" data-delay="1">Five Systems.<br>One Architecture.</h2>
+    <p class="section-sub reveal" data-delay="2">Each growth model is grounded in deterministic mathematics. Not best practices — first principles.</p>
+  </div>
+  <div id="theoriesContainer"></div>
+</section>
+
+<!-- ─── Quiz ─────────────────────────────────────────────────────────────── -->
+<section id="quiz-section">
+  <div class="container">
+    <div class="quiz-wrap reveal">
+      <div class="section-label" style="text-align:center;margin-bottom:16px;">Access Protocol</div>
+      <h2 class="section-h2" style="text-align:center;margin-bottom:8px;">Growth Intelligence<br>Certification</h2>
+      <p class="section-sub" style="text-align:center;margin:0 auto 48px;max-width:480px;">Answer 4 of 5 correctly to unlock the connection protocol. Questions are drawn from the theories above.</p>
+
+      <div class="quiz-card">
+        <div class="quiz-header">
+          <div class="quiz-header-tag">Protocol · 5 Questions</div>
+          <div class="quiz-header-title">Verify Theoretical Alignment</div>
+          <div class="quiz-header-sub">Select the most accurate answer for each question.</div>
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" id="quizProg"></div>
+          </div>
+        </div>
+
+        <div class="quiz-body" id="quizBody">
+          <!-- Q1 -->
+          <div class="q-block active" data-q="0">
+            <div class="q-num">Question 01 / 05 — Lorenz Attractor</div>
+            <div class="q-text">In the Lorenz attractor, why do two nearly-identical campaigns diverge wildly over time?</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>Because the algorithm adds random noise to each impression</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">B</span>Extreme sensitivity to initial conditions — infinitesimal input differences amplify exponentially through non-linear feedback</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">C</span>Market saturation resets the funnel state on each iteration</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The attractor equation contains a random variable σ</button>
+            </div>
+          </div>
+          <!-- Q2 -->
+          <div class="q-block" data-q="1">
+            <div class="q-num">Question 02 / 05 — Gravitational Mechanics</div>
+            <div class="q-text">Kepler's Third Law states T² ∝ R³. In the lead-orbit model, what does "perigee" represent?</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>The moment a lead is added to a nurture sequence</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>The highest point of brand awareness in the funnel</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">C</span>The point of closest approach where conversion probability is maximum and retargeting ROI peaks</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The beginning of the outbound sequence</button>
+            </div>
+          </div>
+          <!-- Q3 -->
+          <div class="q-block" data-q="2">
+            <div class="q-num">Question 03 / 05 — Quantum Conversion</div>
+            <div class="q-text">Before a visitor clicks, they exist in quantum superposition. What does this mean for CRO?</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="true"><span class="opt-key">A</span>The visitor is simultaneously in bounce AND convert states — optimization shifts the probability amplitude toward |Convert⟩ before the wave function collapses</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>Quantum effects make conversion fundamentally unpredictable</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">C</span>Users browse multiple tabs simultaneously so attribution is impossible</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The page exists in two states until the server renders it</button>
+            </div>
+          </div>
+          <!-- Q4 -->
+          <div class="q-block" data-q="3">
+            <div class="q-num">Question 04 / 05 — Markov Attribution</div>
+            <div class="q-text">The Markov chain model has the "memoryless property". In attribution modelling, this means:</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>Customers forget all previous ads once they convert</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>Multi-touch attribution is theoretically impossible</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">C</span>The transition probability from any channel state depends only on the current channel, not the full prior journey — enabling counterfactual removal analysis</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>Email nurture has zero long-term attribution effect</button>
+            </div>
+          </div>
+          <!-- Q5 -->
+          <div class="q-block" data-q="4">
+            <div class="q-num">Question 05 / 05 — Mandelbrot Unit Economics</div>
+            <div class="q-text">The Mandelbrot set boundary is the "event horizon of unit economics." Points outside the set represent:</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>Channels with the highest ROAS and fastest payback periods</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>CAC strategies that produce exponential LTV compounding</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">C</span>CAC trajectories that diverge to infinity — unprofitable at any scale, regardless of volume</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The optimal budget allocation zone for maximum market share</button>
+            </div>
+          </div>
+
+          <div class="quiz-nav-row">
+            <button class="quiz-nav-btn" id="qPrev" disabled>← Prev</button>
+            <span class="quiz-counter" id="qCounter">1 / 5</span>
+            <button class="quiz-nav-btn" id="qNext">Next →</button>
+          </div>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+          <div class="quiz-result-icon" id="qResultIcon"></div>
+          <div class="quiz-result-label" id="qResultLabel"></div>
+          <div class="quiz-result-title" id="qResultTitle"></div>
+          <div class="quiz-result-text" id="qResultText"></div>
+          <button class="quiz-retry-btn" id="qRetry">Retry Protocol</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Contact ──────────────────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label reveal">Connect</p>
+    <h2 class="section-h2 reveal" data-delay="1">Start the Conversation</h2>
+    <p class="section-sub reveal" data-delay="2">Only serious growth conversations. Unlock by passing the knowledge protocol above.</p>
+
+    <div class="contact-gate-locked reveal" id="contactLocked" data-delay="3">
+      <div class="lock-icon">🔒</div>
+      <p>Complete the Growth Intelligence Certification above<br>to unlock contact details and direct message.</p>
+    </div>
+
+    <div class="contact-gate-unlocked" id="contactUnlocked">
+      <div class="contact-grid">
+        <div class="contact-block">
+          <h3>Direct</h3>
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value"><a href="mailto:awesomeashoksingh@gmail.com">awesomeashoksingh@gmail.com</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">💼</div>
+            <div>
+              <div class="contact-label">LinkedIn</div>
+              <div class="contact-value"><a href="https://linkedin.com/in/digitalashok" target="_blank" rel="noopener">linkedin.com/in/digitalashok</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <div class="contact-label">Location</div>
+              <div class="contact-value">Dubai, UAE</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🌐</div>
+            <div>
+              <div class="contact-label">Website</div>
+              <div class="contact-value"><a href="https://whoisashok.com" target="_blank" rel="noopener">whoisashok.com</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-block">
+          <h3>Send a Message</h3>
+          <form class="contact-form" action="https://formspree.io/f/mpqjzqey" method="POST" id="contactForm">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="your@email.com" required>
+            <input type="text" name="company" placeholder="Company / role">
+            <textarea name="message" placeholder="What are you working on?" rows="4"></textarea>
+            <button type="submit" id="submitBtn">Send Message →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ───────────────────────────────────────────────────────────── -->
+<footer>
+  <p>© 2025 Ashok Singh · <a href="https://whoisashok.com" target="_blank" rel="noopener">whoisashok.com</a> · Dubai, UAE</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════════════════════════════ */
+(function() {
+  const fill = document.getElementById('loaderFill');
+  const loader = document.getElementById('loader');
+  let w = 0;
+  const iv = setInterval(() => {
+    w = Math.min(w + Math.random() * 14, 95);
+    fill.style.width = w + '%';
+  }, 60);
+  window.addEventListener('load', () => {
+    clearInterval(iv);
+    fill.style.width = '100%';
+    setTimeout(() => loader.classList.add('hidden'), 400);
+  });
+  setTimeout(() => loader.classList.add('hidden'), 1800);
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════════════════ */
+const burger = document.getElementById('navBurger');
+const mobileMenu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+function closeMobile() { mobileMenu.classList.remove('open'); }
+
+/* ══════════════════════════════════════════════════════════════════
+   THREE.JS HERO — Subtle Rotating Wireframe Icosahedron
+══════════════════════════════════════════════════════════════════ */
+(function initThree() {
+  const canvas = document.getElementById('heroCanvas');
+  if (!THREE || !canvas) return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0xffffff, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+  camera.position.z = 5;
+
+  /* Wireframe icosahedron */
+  const geo = new THREE.IcosahedronGeometry(2.2, 1);
+  const mat = new THREE.MeshBasicMaterial({
+    color: 0xc7c7cc,
+    wireframe: true
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.x = 2.5;
+  scene.add(mesh);
+
+  /* Outer detail ring — larger, more translucent */
+  const geo2 = new THREE.IcosahedronGeometry(3.5, 1);
+  const mat2 = new THREE.MeshBasicMaterial({ color: 0xe0e0e5, wireframe: true });
+  const mesh2 = new THREE.Mesh(geo2, mat2);
+  mesh2.position.x = 2.5;
+  scene.add(mesh2);
+
+  function resize() {
+    const w = canvas.parentElement.clientWidth;
+    const h = canvas.parentElement.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let frame = 0;
+  (function animate() {
+    requestAnimationFrame(animate);
+    frame += 0.004;
+    mesh.rotation.x = frame * 0.35;
+    mesh.rotation.y = frame * 0.55;
+    mesh2.rotation.x = -frame * 0.2;
+    mesh2.rotation.y = frame * 0.3;
+    renderer.render(scene, camera);
+  })();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   THEORIES DATA
+══════════════════════════════════════════════════════════════════ */
+const theories = [
+  {
+    id: 'acquisition',
+    eyebrow: '01 / Acquisition Dynamics',
+    title: 'Gravitational<br><em>Funnel Mechanics</em>',
+    canvasId: 'cvAcq',
+    canvasH: 220,
+    label: 'N-Body Simulation · Lead Trajectories',
+    btnText: 'Analysis',
+    body: `<strong>Law of Acquisition Gravity:</strong><br><br>
+Leads enter the system with initial velocity (brand awareness). The conversion event (central mass) exerts
+gravitational pull proportional to value proposition density. Escape velocity (churn) is overcome through
+centripetal acceleration — nurture sequences.`,
+    extra: `<strong>Newton's Law applied:</strong>
+<span class="eq">F = G·(m₁·m₂) / r²</span>
+Where G = brand equity constant, m₁ = ICP fit score, m₂ = value proposition density,
+r = awareness radius. As r → 0 (retargeting), force → ∞ — this is why retargeting
+consistently outperforms cold acquisition at 3–7× ROAS.`,
+    draw: drawOrbit
+  },
+  {
+    id: 'conversion',
+    eyebrow: '02 / Quantum Conversion',
+    title: 'Wave Function<br><em>Collapse</em>',
+    canvasId: 'cvConv',
+    canvasH: 220,
+    label: 'Probability Amplitude · Superposition',
+    btnText: 'Observe',
+    body: `<strong>Superposition Principle:</strong><br><br>
+Before measurement (click), the visitor exists in superposition of states: |Bounce⟩ and |Convert⟩.
+The waveform represents probability amplitude. Optimization increases the coefficient of
+conversion before wave function collapse.`,
+    extra: `<strong>Schrödinger's Conversion equation:</strong>
+<span class="eq">|ψ⟩ = α|Convert⟩ + β|Bounce⟩</span>
+Where |α|² is your conversion probability. CRO optimizes α by collapsing the waveform earlier
+(faster page load, clearer CTA) and increasing its amplitude (compelling offer, social proof).
+A/B testing is wave function measurement.`,
+    draw: drawWave
+  },
+  {
+    id: 'attribution',
+    eyebrow: '03 / Network Attribution',
+    title: 'Graph Topology &amp;<br><em>Markov Chains</em>',
+    canvasId: 'cvAttr',
+    canvasH: 220,
+    label: 'Transition Probability Matrix',
+    btnText: 'Map',
+    body: `<strong>Markov Attribution Model:</strong><br><br>
+Each marketing touchpoint is a node in a directed graph. The probability of transitioning from
+channel A → channel B → conversion is modelled as a Markov chain. Counterfactual removal analysis
+reveals true channel contribution by measuring conversion probability when each node is removed.`,
+    extra: `<strong>The Memoryless Property:</strong>
+<span class="eq">P(Xₙ₊₁ | X₀…Xₙ) = P(Xₙ₊₁ | Xₙ)</span>
+The future state depends only on present state. This means each channel's credit is determined
+by its forward-looking conversion probability, not historic position. This mathematically
+invalidates both first-click and last-click models.`,
+    draw: drawNetwork
+  },
+  {
+    id: 'growth',
+    eyebrow: '04 / Fractal Growth',
+    title: 'Mandelbrot<br><em>Unit Economics</em>',
+    canvasId: 'cvGrow',
+    canvasH: 220,
+    label: 'Self-Similar Scaling · CAC Boundaries',
+    btnText: 'Compute',
+    body: `<strong>Fractal Boundary Theorem:</strong><br><br>
+The Mandelbrot set defines the boundary between stable and chaotic growth. Points inside = LTV > CAC
+at every scale. Points outside = CAC trajectories that diverge to infinity, unprofitable regardless
+of volume. The fractal boundary is the event horizon of unit economics.`,
+    extra: `<strong>Mandelbrot iteration applied:</strong>
+<span class="eq">zₙ₊₁ = zₙ² + c</span>
+Where z = cumulative LTV, c = CAC + operating costs. If |zₙ| → ∞, the business model is outside
+the set — structurally unprofitable. If bounded, you're inside the set — scalable at any spend level.
+This is why CAC:LTV ratio must be measured at cohort depth, not campaign average.`,
+    draw: drawMandelbrot
+  },
+  {
+    id: 'automation',
+    eyebrow: '05 / Systems Automation',
+    title: 'Zero-Touch<br><em>Operations</em>',
+    canvasId: 'cvAuto',
+    canvasH: 220,
+    label: 'Deterministic Pipelines · Closed-Loop',
+    btnText: 'Execute',
+    body: `<strong>Closed-Loop Automation:</strong><br><br>
+Marketing operations modelled as a control system: input signals (ad spend), transfer function
+(attribution model), output (pipeline value), feedback loop (ROAS signal → budget reallocation).
+Automation removes human latency from the feedback loop, achieving near-real-time correction.`,
+    extra: `<strong>PID Controller analogy:</strong>
+<span class="eq">u(t) = Kₚe(t) + Kᵢ∫e dt + Kd·de/dt</span>
+Proportional (P) = current ROAS delta correction. Integral (I) = accumulated CAC debt correction.
+Derivative (D) = rate-of-change of pipeline velocity. Properly tuned, the system self-corrects
+within one reporting cycle.`,
+    draw: drawAutomation
+  }
+];
+
+/* Fisher-Yates shuffle */
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+shuffle(theories);
+
+/* Build theory sections */
+const container = document.getElementById('theoriesContainer');
+theories.forEach((t, i) => {
+  const sec = document.createElement('div');
+  sec.className = 'theory-section';
+  sec.id = t.id;
+  sec.innerHTML = `
+    <div class="container">
+      <div class="theory-grid">
+        <div class="theory-meta reveal" data-delay="${i % 2 === 0 ? '1' : '2'}">
+          <p class="section-label">${t.eyebrow}</p>
+          <h2 class="section-h2">${t.title}</h2>
+        </div>
+        <div class="theory-card reveal" data-delay="${i % 2 === 0 ? '2' : '1'}">
+          <div class="theory-canvas-wrap">
+            <canvas id="${t.canvasId}" height="${t.canvasH}"></canvas>
+          </div>
+          <div class="theory-body">
+            <div class="theory-body-label">${t.label}</div>
+            <div class="theory-body-text">${t.body}</div>
+            <button class="expand-btn" data-target="${t.id}-extra">
+              ${t.btnText} <span class="chevron">↓</span>
+            </button>
+          </div>
+          <div class="theory-extra" id="${t.id}-extra">
+            <div class="theory-extra-inner">${t.extra}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  container.appendChild(sec);
+});
+
+/* Expand toggle */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.expand-btn');
+  if (!btn) return;
+  const target = document.getElementById(btn.dataset.target);
+  if (!target) return;
+  const open = target.classList.toggle('open');
+  btn.classList.toggle('open', open);
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   2D CANVAS ANIMATIONS (light-mode: dark/blue lines on white)
+══════════════════════════════════════════════════════════════════ */
+function startCanvases() {
+  theories.forEach(t => {
+    const canvas = document.getElementById(t.canvasId);
+    if (!canvas) return;
+    canvas.width  = canvas.parentElement.clientWidth;
+    canvas.height = t.canvasH;
+    t.draw(canvas);
+  });
+}
+
+/* Gravitational orbit */
+function drawOrbit(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+  const BLUE = 'rgba(0,102,204,';
+  const particles = Array.from({length: 48}, () => ({
+    a:     (Math.random() * 0.4 + 0.25) * Math.min(W, H) * 0.42,
+    b:     (Math.random() * 0.18 + 0.08) * Math.min(W, H) * 0.42,
+    angle: Math.random() * Math.PI * 2,
+    speed: (Math.random() * 0.006 + 0.002) * (Math.random() < 0.5 ? 1 : -1),
+    size:  Math.random() * 2.5 + 0.8,
+    op:    Math.random() * 0.45 + 0.2,
+    tilt:  Math.random() * Math.PI
+  }));
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    /* orbit ellipses */
+    particles.forEach(p => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(p.tilt);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.a, p.b, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = BLUE + '0.07)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+    });
+    /* central glow */
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 22);
+    grd.addColorStop(0, BLUE + '0.7)');
+    grd.addColorStop(1, BLUE + '0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+    /* particles */
+    particles.forEach(p => {
+      p.angle += p.speed;
+      const cosT = Math.cos(p.tilt), sinT = Math.sin(p.tilt);
+      const lx = p.a * Math.cos(p.angle), ly = p.b * Math.sin(p.angle);
+      const rx = lx * cosT - ly * sinT + cx;
+      const ry = lx * sinT + ly * cosT + cy;
+      ctx.beginPath();
+      ctx.arc(rx, ry, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = BLUE + p.op + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Quantum wave */
+function drawWave(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t = 0;
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (let w = 0; w < 3; w++) {
+      ctx.beginPath();
+      const amp   = (28 - w * 7) * (H / 220);
+      const freq  = 0.019 + w * 0.007;
+      const phase = t + w * 1.2;
+      const op    = 0.55 - w * 0.16;
+      for (let x = 0; x <= W; x++) {
+        const env = Math.exp(-((x / W - 0.5) ** 2) / 0.08);
+        const y = H / 2 + amp * env * Math.sin(freq * x - phase);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(0,102,204,${op})`;
+      ctx.lineWidth   = 1.8 - w * 0.5;
+      ctx.stroke();
+    }
+    /* probability dots */
+    for (let i = 0; i < 5; i++) {
+      const px  = (0.15 + i * 0.18) * W;
+      const env = Math.exp(-((px / W - 0.5) ** 2) / 0.08);
+      const py  = H / 2 + 28 * env * Math.sin(0.019 * px - t);
+      ctx.beginPath();
+      ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,160,80,0.75)';
+      ctx.fill();
+    }
+    t += 0.036;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Network / Markov graph */
+function drawNetwork(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const nodes = [
+    {x: W*0.15, y: H*0.5,  r:8,  lbl:'Cold',      speed:0},
+    {x: W*0.35, y: H*0.25, r:6,  lbl:'Social',     speed:0.008},
+    {x: W*0.35, y: H*0.75, r:6,  lbl:'Search',     speed:0.01},
+    {x: W*0.58, y: H*0.15, r:5,  lbl:'Email',      speed:0.012},
+    {x: W*0.58, y: H*0.5,  r:7,  lbl:'Retarget',   speed:0.009},
+    {x: W*0.58, y: H*0.85, r:5,  lbl:'Content',    speed:0.011},
+    {x: W*0.82, y: H*0.5,  r:11, lbl:'Convert',    speed:0}
+  ];
+  const edges = [[0,1],[0,2],[1,3],[1,4],[2,4],[2,5],[3,6],[4,6],[5,6],[1,2],[3,4],[4,5]];
+  const packets = edges.map(([s,e]) => ({
+    s, e, t: Math.random(), speed: Math.random()*0.004+0.003
+  }));
+  let tick = 0;
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    /* pulse node positions slightly */
+    nodes.forEach(n => {
+      if (n.speed) {
+        n._offsetY = (n._offsetY || 0);
+        n._phase   = (n._phase   || Math.random() * Math.PI * 2);
+        n._phase  += n.speed;
+        n._oy = Math.sin(n._phase) * 4;
+      }
+    });
+    /* edges */
+    edges.forEach(([s, e]) => {
+      const a = nodes[s], b = nodes[e];
+      const ay = a.y + (a._oy || 0), by = b.y + (b._oy || 0);
+      ctx.beginPath();
+      ctx.moveTo(a.x, ay);
+      ctx.lineTo(b.x, by);
+      ctx.strokeStyle = 'rgba(0,0,0,0.07)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+    /* packets */
+    packets.forEach(p => {
+      p.t += p.speed;
+      if (p.t > 1) p.t = 0;
+      const a = nodes[p.s], b = nodes[p.e];
+      const ay = a.y + (a._oy || 0), by = b.y + (b._oy || 0);
+      const px = a.x + (b.x - a.x) * p.t;
+      const py = ay + (by - ay) * p.t;
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,102,204,0.65)';
+      ctx.fill();
+    });
+    /* nodes */
+    nodes.forEach((n, i) => {
+      const ny = n.y + (n._oy || 0);
+      const grd = ctx.createRadialGradient(n.x, ny, 0, n.x, ny, n.r + 8);
+      grd.addColorStop(0, i === 6 ? 'rgba(0,102,204,0.18)' : 'rgba(0,0,0,0.06)');
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(n.x, ny, n.r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = grd; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x, ny, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = i === 6 ? 'rgba(0,102,204,0.9)' : 'rgba(29,29,31,0.75)';
+      ctx.fill();
+      ctx.font = `bold ${Math.max(8, n.r * 0.9)}px Inter, sans-serif`;
+      ctx.fillStyle = 'rgba(29,29,31,0.5)';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.lbl, n.x, ny + n.r + 12);
+    });
+    tick++;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Mandelbrot */
+function drawMandelbrot(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const img = ctx.createImageData(W, H);
+  const maxIter = 64;
+  const cx = -0.6, cy = 0;
+  const zoom = 2.8;
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const x0 = (px / W - 0.5) * zoom + cx;
+      const y0 = (py / H - 0.5) * zoom * (H / W) + cy;
+      let x = 0, y = 0, iter = 0;
+      while (x*x + y*y <= 4 && iter < maxIter) {
+        const xNew = x*x - y*y + x0;
+        y = 2*x*y + y0;
+        x = xNew;
+        iter++;
+      }
+      const idx = (py * W + px) * 4;
+      if (iter === maxIter) {
+        img.data[idx]   = 245;
+        img.data[idx+1] = 245;
+        img.data[idx+2] = 247;
+        img.data[idx+3] = 255;
+      } else {
+        const t = iter / maxIter;
+        img.data[idx]   = Math.round(245 - t * 220);
+        img.data[idx+1] = Math.round(245 - t * 160);
+        img.data[idx+2] = Math.round(247 - t * 80 + t * 204);
+        img.data[idx+3] = 255;
+      }
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  /* overlay subtle animation */
+  let phase = 0;
+  function animate() {
+    ctx.putImageData(img, 0, 0);
+    /* scan line highlight */
+    const grad = ctx.createLinearGradient(0, 0, W, 0);
+    const scanX = (Math.sin(phase) * 0.5 + 0.5) * W;
+    grad.addColorStop(Math.max(0, (scanX - 40) / W), 'rgba(0,102,204,0)');
+    grad.addColorStop(scanX / W, 'rgba(0,102,204,0.12)');
+    grad.addColorStop(Math.min(1, (scanX + 40) / W), 'rgba(0,102,204,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+    phase += 0.012;
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+/* Automation / PID signal */
+function drawAutomation(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const nodes = [
+    {x: W*0.1,  y: H*0.5, lbl: 'Input\n(Spend)'},
+    {x: W*0.35, y: H*0.5, lbl: 'Attrib\nModel'},
+    {x: W*0.6,  y: H*0.5, lbl: 'Pipeline\nValue'},
+    {x: W*0.85, y: H*0.5, lbl: 'Output\n(ROAS)'}
+  ];
+  const feedbackY = H * 0.82;
+  const arrows = [[0,1],[1,2],[2,3]];
+  let tick = 0;
+  const signals = arrows.map(([s,e]) => ({s, e, t: 0, speed: 0.018}));
+  signals[1].t = 0.33;
+  signals[2].t = 0.66;
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    /* feedback arc */
+    ctx.beginPath();
+    ctx.moveTo(nodes[3].x, nodes[3].y + 18);
+    ctx.lineTo(nodes[3].x, feedbackY);
+    ctx.lineTo(nodes[0].x, feedbackY);
+    ctx.lineTo(nodes[0].x, nodes[0].y + 18);
+    ctx.strokeStyle = 'rgba(0,102,204,0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(0,102,204,0.35)';
+    ctx.font = '10px Space Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('ROAS Feedback Loop', W / 2, feedbackY + 14);
+    /* arrows */
+    arrows.forEach(([s, e]) => {
+      const a = nodes[s], b = nodes[e];
+      ctx.beginPath();
+      ctx.moveTo(a.x + 42, a.y);
+      ctx.lineTo(b.x - 42, b.y);
+      ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+    /* signal packets */
+    signals.forEach(p => {
+      p.t += p.speed;
+      if (p.t > 1) p.t = 0;
+      const a = nodes[p.s], b = nodes[p.e];
+      const px = (a.x + 42) + ((b.x - 42) - (a.x + 42)) * p.t;
+      ctx.beginPath();
+      ctx.arc(px, a.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,102,204,0.8)';
+      ctx.fill();
+    });
+    /* nodes */
+    nodes.forEach(n => {
+      ctx.beginPath();
+      const rx = n.x - 38, ry = n.y - 24, rw = 76, rh = 48, rr = 8;
+      if (ctx.roundRect) { ctx.roundRect(rx, ry, rw, rh, rr); }
+      else { ctx.rect(rx, ry, rw, rh); }
+      ctx.fillStyle = 'rgba(245,245,247,0.95)';
+      ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+      ctx.lineWidth = 1;
+      ctx.fill();
+      ctx.stroke();
+      const lines = n.lbl.split('\n');
+      ctx.fillStyle = 'rgba(29,29,31,0.85)';
+      ctx.font = 'bold 10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      lines.forEach((ln, li) => {
+        ctx.fillText(ln, n.x, n.y - 4 + li * 14);
+      });
+    });
+    /* PID signal line */
+    const pidY = H * 0.15;
+    ctx.beginPath();
+    for (let px = 0; px <= W; px += 2) {
+      const t = px / W;
+      const damp = Math.exp(-t * 3);
+      const y = pidY + 30 * damp * Math.sin(t * Math.PI * 10 - tick * 0.08) + 20;
+      px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+    }
+    ctx.strokeStyle = 'rgba(0,102,204,0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    tick++;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* Start canvases when visible */
+const canvasObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      startCanvases();
+      canvasObserver.disconnect();
+    }
+  });
+}, { threshold: 0.1 });
+const theoriesEl = document.getElementById('theoriesContainer');
+if (theoriesEl) canvasObserver.observe(theoriesEl);
+
+window.addEventListener('resize', () => {
+  theories.forEach(t => {
+    const canvas = document.getElementById(t.canvasId);
+    if (!canvas) return;
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = t.canvasH;
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════════════════════════════════ */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+function observeReveals() {
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+}
+observeReveals();
+
+/* Mutation observer for dynamically added .reveal elements */
+new MutationObserver(() => observeReveals())
+  .observe(document.body, { childList: true, subtree: true });
+
+/* ══════════════════════════════════════════════════════════════════
+   METRIC COUNTER ANIMATION
+══════════════════════════════════════════════════════════════════ */
+const metricObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target  = parseFloat(el.dataset.target);
+    const suffix  = el.dataset.suffix || '';
+    const dec     = parseInt(el.dataset.dec  || '0');
+    if (isNaN(target)) return;
+    let start = null;
+    const dur = 1400;
+    function step(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * ease).toFixed(dec) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+    metricObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.metric-num[data-target]').forEach(el => metricObs.observe(el));
+
+/* ══════════════════════════════════════════════════════════════════
+   QUIZ
+══════════════════════════════════════════════════════════════════ */
+(function initQuiz() {
+  const blocks   = document.querySelectorAll('.q-block');
+  const prevBtn  = document.getElementById('qPrev');
+  const nextBtn  = document.getElementById('qNext');
+  const counter  = document.getElementById('qCounter');
+  const prog     = document.getElementById('quizProg');
+  const bodyEl   = document.getElementById('quizBody');
+  const resultEl = document.getElementById('quizResult');
+  const retryBtn = document.getElementById('qRetry');
+  const total    = blocks.length;
+  let current    = 0;
+  let answers    = new Array(total).fill(null);
+  let submitted  = false;
+
+  function show(idx) {
+    blocks.forEach((b, i) => b.classList.toggle('active', i === idx));
+    prevBtn.disabled = idx === 0;
+    nextBtn.textContent = idx === total - 1 ? 'Submit →' : 'Next →';
+    counter.textContent = `${idx + 1} / ${total}`;
+    prog.style.width = `${((idx + 1) / total) * 100}%`;
+  }
+
+  blocks.forEach((block, qi) => {
+    block.querySelectorAll('.q-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (submitted) return;
+        block.querySelectorAll('.q-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[qi] = btn;
+      });
+    });
+  });
+
+  prevBtn.addEventListener('click', () => { if (current > 0) show(--current); });
+
+  nextBtn.addEventListener('click', () => {
+    if (current < total - 1) {
+      show(++current);
+    } else {
+      submitQuiz();
+    }
+  });
+
+  function submitQuiz() {
+    submitted = true;
+    let score = 0;
+    blocks.forEach((block, qi) => {
+      const chosen = answers[qi];
+      block.querySelectorAll('.q-option').forEach(btn => {
+        btn.disabled = true;
+        const correct = btn.dataset.correct === 'true';
+        if (correct) btn.classList.add('correct');
+        if (btn === chosen && !correct) btn.classList.add('wrong');
+      });
+      if (chosen && chosen.dataset.correct === 'true') score++;
+    });
+    setTimeout(() => showResult(score), 600);
+  }
+
+  function showResult(score) {
+    bodyEl.style.display = 'none';
+    resultEl.classList.add('show');
+    const pass = score >= 4;
+    document.getElementById('qResultIcon').textContent  = pass ? '✓' : '✕';
+    document.getElementById('qResultLabel').textContent = pass ? 'Access Granted' : 'Certification Failed';
+    document.getElementById('qResultTitle').textContent = pass
+      ? `${score}/5 — Theoretical Alignment Confirmed`
+      : `${score}/5 — Insufficient Alignment`;
+    document.getElementById('qResultText').textContent = pass
+      ? 'You understand deterministic growth systems. Contact details are now unlocked below.'
+      : `You need 4 correct answers. You scored ${score}/5. Review the theories above and try again.`;
+    if (pass) unlockContact();
+  }
+
+  retryBtn.addEventListener('click', () => {
+    submitted = false;
+    answers = new Array(total).fill(null);
+    blocks.forEach(b => {
+      b.querySelectorAll('.q-option').forEach(btn => {
+        btn.classList.remove('selected','correct','wrong');
+        btn.disabled = false;
+      });
+    });
+    current = 0;
+    bodyEl.style.display = '';
+    resultEl.classList.remove('show');
+    show(0);
+  });
+
+  show(0);
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   CONTACT UNLOCK
+══════════════════════════════════════════════════════════════════ */
+function unlockContact() {
+  const locked   = document.getElementById('contactLocked');
+  const unlocked = document.getElementById('contactUnlocked');
+  if (!locked || !unlocked) return;
+  locked.style.opacity   = '0';
+  locked.style.transform = 'translateY(-8px)';
+  locked.style.transition = 'opacity 0.4s, transform 0.4s';
+  setTimeout(() => { locked.style.display = 'none'; }, 400);
+  unlocked.style.display  = 'block';
+  unlocked.style.opacity  = '0';
+  unlocked.style.transform = 'translateY(12px)';
+  unlocked.style.transition = 'opacity 0.5s 0.1s, transform 0.5s 0.1s';
+  requestAnimationFrame(() => {
+    unlocked.style.opacity   = '1';
+    unlocked.style.transform = 'none';
+  });
+  unlocked.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* Contact form */
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    try {
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { Accept: 'application/json' }
+      });
+      if (res.ok) {
+        btn.textContent = 'Message Sent ✓';
+        contactForm.reset();
+      } else {
+        btn.textContent = 'Error — Try Again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Error — Try Again';
+      btn.disabled = false;
+    }
+  });
+}
+</script>
+</body>
+</html>

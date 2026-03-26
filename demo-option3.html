@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashok Singh — Void Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#000000;
+  --text:#ffffff;
+  --text-2:rgba(255,255,255,0.55);
+  --text-3:rgba(255,255,255,0.28);
+  --blue:#2997ff;
+  --blue-dim:rgba(41,151,255,0.12);
+  --border:rgba(255,255,255,0.08);
+  --surface:rgba(255,255,255,0.04);
+  --nav-h:56px;
+  --max-w:1200px;
+}
+
+html{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{overflow-x:hidden}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+
+/* ── Custom Cursor ───────────────────────────────────────────────────────── */
+body{cursor:none}
+#cursor{
+  position:fixed;width:12px;height:12px;background:var(--blue);border-radius:50%;
+  pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+  transition:width 0.2s,height 0.2s,opacity 0.2s;mix-blend-mode:screen;
+}
+#cursor-ring{
+  position:fixed;width:40px;height:40px;border:1px solid rgba(41,151,255,0.4);border-radius:50%;
+  pointer-events:none;z-index:99998;transform:translate(-50%,-50%);
+  transition:all 0.12s ease;mix-blend-mode:screen;
+}
+body:hover #cursor{opacity:1}
+
+/* ── Loading Screen ──────────────────────────────────────────────────────── */
+#loader{
+  position:fixed;inset:0;z-index:99990;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  transition:opacity 0.8s ease, visibility 0.8s ease;
+}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+#loader-canvas{position:absolute;inset:0;width:100%;height:100%}
+.loader-ui{
+  position:relative;z-index:2;display:flex;flex-direction:column;
+  align-items:center;gap:24px;
+}
+.loader-brand{
+  font-family:'Space Mono',monospace;font-size:clamp(32px,6vw,72px);font-weight:700;
+  letter-spacing:0.15em;color:#fff;opacity:0;
+  animation:loaderBrandIn 0.6s ease 1.2s forwards;
+}
+.loader-brand span{color:var(--blue)}
+.loader-progress-text{
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--text-2);
+  letter-spacing:0.1em;min-width:260px;text-align:center;
+}
+.loader-bar{width:260px;height:1px;background:rgba(255,255,255,0.1);position:relative;overflow:hidden}
+.loader-bar-fill{height:100%;width:0%;background:var(--blue);transition:width 0.04s linear}
+@keyframes loaderBrandIn{from{opacity:0;letter-spacing:0.3em}to{opacity:1;letter-spacing:0.15em}}
+
+/* ── Navigation ─────────────────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;padding:0 40px;
+  transition:background 0.4s ease, backdrop-filter 0.4s ease, border-bottom 0.4s ease;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom-color:var(--border);
+}
+.nav-logo{
+  font-family:'Space Mono',monospace;font-size:14px;font-weight:700;
+  letter-spacing:0.12em;color:#fff;text-decoration:none;
+}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text-2);
+  text-decoration:none;text-transform:uppercase;transition:color 0.2s;
+}
+.nav-links a:hover{color:#fff}
+.nav-cta{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:0.1em;padding:8px 20px;border:1px solid var(--blue);
+  color:var(--blue);background:transparent;cursor:none;text-decoration:none;
+  transition:background 0.2s,color 0.2s;text-transform:uppercase;
+}
+.nav-cta:hover{background:var(--blue);color:#000}
+
+/* ── Floating Math Background ────────────────────────────────────────────── */
+#math-bg{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.math-eq{
+  position:absolute;font-family:'Space Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,0.04);white-space:nowrap;animation:floatUp 18s linear infinite;
+  user-select:none;
+}
+@keyframes floatUp{
+  from{transform:translateY(110vh) rotate(-5deg);opacity:0}
+  5%{opacity:1}
+  90%{opacity:1}
+  to{transform:translateY(-10vh) rotate(-5deg);opacity:0}
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+#hero{
+  position:relative;width:100%;height:100vh;min-height:700px;
+  display:flex;align-items:center;overflow:hidden;
+}
+#hero-canvas{
+  position:absolute;inset:0;width:100%;height:100%;z-index:0;
+}
+.hero-content{
+  position:relative;z-index:2;padding:0 60px;max-width:900px;
+}
+.hero-eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.2em;
+  color:var(--blue);text-transform:uppercase;margin-bottom:24px;
+  opacity:0;animation:fadeUp 0.8s ease 0.2s forwards;
+}
+.hero-heading{
+  font-size:clamp(72px,12vw,140px);font-weight:900;line-height:0.92;
+  letter-spacing:-0.03em;margin-bottom:32px;
+}
+.hero-heading .line{
+  display:block;overflow:hidden;
+}
+.hero-heading .line span{
+  display:block;transform:translateY(110%);
+  animation:lineReveal 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.hero-heading .line:nth-child(1) span{animation-delay:0.5s}
+.hero-heading .line:nth-child(2) span{animation-delay:0.72s;color:var(--text-2)}
+@keyframes lineReveal{to{transform:translateY(0)}}
+.hero-tag{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.12em;
+  color:var(--text-3);border:1px solid var(--border);display:inline-block;
+  padding:8px 16px;margin-bottom:40px;
+  opacity:0;animation:fadeUp 0.8s ease 1.2s forwards;
+}
+.hero-cta-row{
+  display:flex;gap:16px;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.8s ease 1.4s forwards;
+}
+.btn-primary{
+  font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+  letter-spacing:0.1em;padding:14px 32px;background:var(--blue);color:#000;
+  border:none;cursor:none;text-decoration:none;text-transform:uppercase;
+  transition:transform 0.2s,box-shadow 0.2s;display:inline-block;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(41,151,255,0.4)}
+.btn-ghost{
+  font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+  letter-spacing:0.1em;padding:14px 32px;background:transparent;color:var(--text-2);
+  border:1px solid var(--border);cursor:none;text-decoration:none;text-transform:uppercase;
+  transition:border-color 0.2s,color 0.2s;display:inline-block;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.3);color:#fff}
+.hero-scroll-hint{
+  position:absolute;bottom:40px;left:60px;z-index:2;
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;
+  color:var(--text-3);text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;
+  opacity:0;animation:fadeUp 0.8s ease 2s forwards;
+}
+.scroll-line{width:40px;height:1px;background:var(--border)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Metrics Ticker ──────────────────────────────────────────────────────── */
+#metrics{border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;padding:0}
+.ticker-wrap{display:flex;overflow:hidden}
+.ticker-track{
+  display:flex;gap:80px;align-items:center;padding:32px 40px;
+  animation:ticker 20s linear infinite;white-space:nowrap;
+}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.metric-item{display:flex;align-items:baseline;gap:12px;flex-shrink:0}
+.metric-val{
+  font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-0.03em;color:#fff;
+}
+.metric-val.blue{color:var(--blue)}
+.metric-label{font-size:11px;color:var(--text-3);letter-spacing:0.1em;font-family:'Space Mono',monospace;text-transform:uppercase}
+.metric-div{width:1px;height:48px;background:var(--border);flex-shrink:0}
+
+/* ── Section Shell ───────────────────────────────────────────────────────── */
+.v-section{
+  padding:120px 0;border-bottom:1px solid var(--border);position:relative;
+  animation:breathe 6s ease-in-out infinite;
+}
+.v-section:focus-within,
+.v-section:hover{animation:none;box-shadow:inset 0 0 80px rgba(41,151,255,0.025)}
+@keyframes breathe{
+  0%,100%{box-shadow:inset 0 0 60px rgba(41,151,255,0)}
+  50%{box-shadow:inset 0 0 60px rgba(41,151,255,0.03)}
+}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 40px}
+
+/* ── Section label + heading ─────────────────────────────────────────────── */
+.s-label{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;
+  color:var(--blue);text-transform:uppercase;margin-bottom:16px;
+}
+.s-h2{
+  font-size:clamp(36px,5vw,72px);font-weight:900;letter-spacing:-0.025em;
+  line-height:1;margin-bottom:20px;
+}
+.s-sub{font-size:16px;color:var(--text-2);max-width:560px;line-height:1.7}
+
+/* ── Layout Variants ─────────────────────────────────────────────────────── */
+/* A: full-width canvas | right text */
+.lay-a{display:grid;grid-template-columns:1fr 480px;gap:0;align-items:stretch}
+.lay-a .sec-canvas-col{position:relative}
+.lay-a .sec-text-col{padding:60px 48px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--border)}
+
+/* B: left text | right canvas */
+.lay-b{display:grid;grid-template-columns:480px 1fr;gap:0;align-items:stretch}
+.lay-b .sec-text-col{padding:60px 48px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+.lay-b .sec-canvas-col{position:relative}
+
+/* C: full-width canvas above, text below */
+.lay-c{display:flex;flex-direction:column}
+.lay-c .sec-canvas-col{width:100%}
+.lay-c .sec-text-col{padding:48px 0 0;max-width:720px}
+
+/* D: text centered above, canvas below */
+.lay-d{display:flex;flex-direction:column;align-items:center;text-align:center}
+.lay-d .sec-text-col{padding:0 0 48px;max-width:720px}
+.lay-d .sec-canvas-col{width:100%}
+
+.sec-canvas-col canvas{display:block;width:100%;height:280px}
+.lay-a .sec-canvas-col canvas,.lay-b .sec-canvas-col canvas{height:100%;min-height:320px}
+
+/* ── Theory Card inner ───────────────────────────────────────────────────── */
+.t-eyebrow{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;
+  color:var(--blue);text-transform:uppercase;margin-bottom:16px;
+}
+.t-title{
+  font-size:clamp(28px,3.5vw,48px);font-weight:900;letter-spacing:-0.02em;
+  line-height:1.1;margin-bottom:24px;
+}
+.t-title em{font-style:normal;color:var(--text-2)}
+.t-eq{
+  font-family:'Space Mono',monospace;font-size:18px;font-weight:700;
+  color:var(--blue);letter-spacing:0.04em;margin-bottom:20px;
+  padding:16px 20px;border:1px solid rgba(41,151,255,0.25);
+  background:rgba(41,151,255,0.04);display:inline-block;
+}
+.t-body{font-size:15px;color:var(--text-2);line-height:1.75;margin-bottom:20px}
+.t-body strong{color:#fff;font-weight:600}
+.t-toggle{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--blue);background:none;border:none;
+  cursor:none;padding:0;display:flex;align-items:center;gap:8px;
+}
+.t-toggle::before{content:'[+]'}
+.t-toggle.open::before{content:'[–]'}
+.t-extra{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1)}
+.t-extra.open{max-height:400px}
+.t-extra-inner{
+  margin-top:20px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:13px;color:var(--text-2);line-height:1.8;
+}
+.t-extra-inner .eq{
+  display:block;font-family:'Space Mono',monospace;font-size:14px;color:var(--blue);
+  margin:12px 0;
+}
+.canvas-label{
+  position:absolute;bottom:12px;left:16px;
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;
+  color:var(--text-3);text-transform:uppercase;pointer-events:none;
+}
+
+/* ── Quiz ────────────────────────────────────────────────────────────────── */
+#quiz-section{
+  padding:120px 0;background:#000;border-top:1px solid var(--border);
+}
+.quiz-shell{max-width:760px;margin:0 auto}
+.quiz-card{
+  border:1px solid var(--border);background:var(--surface);
+  position:relative;overflow:hidden;
+}
+.quiz-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);
+}
+.quiz-header{padding:40px 44px 32px;border-bottom:1px solid var(--border)}
+.quiz-header-tag{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;
+  color:var(--blue);text-transform:uppercase;margin-bottom:12px;
+}
+.quiz-header-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.quiz-header-sub{font-size:13px;color:var(--text-2);margin-bottom:24px}
+/* Circuit-style progress */
+.quiz-progress-bar{position:relative;height:2px;background:rgba(255,255,255,0.06)}
+.quiz-progress-fill{height:100%;background:var(--blue);transition:width 0.4s cubic-bezier(0.16,1,0.3,1)}
+.quiz-body{padding:40px 44px}
+.q-block{display:none}
+.q-block.active{display:block}
+.q-num{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;
+  color:var(--text-3);text-transform:uppercase;margin-bottom:16px;
+}
+.q-text{font-size:18px;font-weight:600;line-height:1.5;margin-bottom:28px;color:#fff}
+.q-options{display:flex;flex-direction:column;gap:10px}
+.q-option{
+  display:flex;align-items:flex-start;gap:14px;padding:14px 18px;
+  border:1px solid var(--border);background:transparent;color:var(--text-2);
+  font-size:14px;text-align:left;cursor:none;transition:all 0.2s;line-height:1.5;
+}
+.q-option:hover{border-color:rgba(41,151,255,0.4);color:#fff;background:rgba(41,151,255,0.04)}
+.q-option.correct{border-color:#34c759;color:#34c759;background:rgba(52,199,89,0.06)}
+.q-option.wrong{border-color:#ff453a;color:#ff453a;background:rgba(255,69,58,0.06)}
+.opt-key{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--blue);flex-shrink:0;width:16px;
+}
+.quiz-nav-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:32px;padding-top:28px;border-top:1px solid var(--border);
+}
+.quiz-nav-btn{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;
+  border:1px solid var(--border);background:transparent;color:var(--text-2);
+  cursor:none;transition:all 0.2s;
+}
+.quiz-nav-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.quiz-nav-btn:disabled{opacity:0.2;cursor:default}
+.quiz-counter{
+  font-family:'Space Mono',monospace;font-size:11px;color:var(--text-3);letter-spacing:0.08em;
+}
+.quiz-result{display:none;padding:60px 44px;text-align:center}
+.quiz-result.show{display:block}
+.quiz-result-glyph{font-size:48px;margin-bottom:20px}
+.quiz-result-label{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.quiz-result-title{font-size:28px;font-weight:800;margin-bottom:12px}
+.quiz-result-text{font-size:14px;color:var(--text-2);max-width:420px;margin:0 auto 28px;line-height:1.7}
+.quiz-retry-btn{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:0.12em;padding:12px 28px;border:1px solid var(--border);
+  background:transparent;color:var(--text-2);cursor:none;text-transform:uppercase;transition:all 0.2s;
+}
+.quiz-retry-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── Contact ─────────────────────────────────────────────────────────────── */
+#contact{padding:120px 0;position:relative}
+.contact-locked{
+  padding:80px 40px;text-align:center;border:1px solid var(--border);
+  max-width:560px;margin:48px auto 0;
+}
+.contact-locked .lock-glyph{font-size:40px;margin-bottom:20px}
+.contact-locked p{font-size:15px;color:var(--text-2);line-height:1.7}
+.contact-unlocked{display:none;margin-top:64px}
+.contact-unlocked.show{display:block}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
+.contact-block{background:#000;padding:48px}
+.contact-block h3{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:32px;
+}
+.contact-item{display:flex;gap:16px;align-items:flex-start;margin-bottom:24px}
+.contact-icon{font-size:20px;width:32px;flex-shrink:0}
+.contact-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text-3);text-transform:uppercase;margin-bottom:4px}
+.contact-value{font-size:15px;color:var(--text-2)}
+.contact-value a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--border);transition:color 0.2s,border-color 0.2s}
+.contact-value a:hover{color:var(--blue);border-color:var(--blue)}
+.contact-form{display:flex;flex-direction:column;gap:12px}
+.contact-form input,.contact-form textarea{
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  color:#fff;font-family:'Inter',sans-serif;font-size:14px;padding:12px 16px;
+  outline:none;transition:border-color 0.2s;
+  -webkit-appearance:none;
+}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--text-3)}
+.contact-form input:focus,.contact-form textarea:focus{border-color:rgba(41,151,255,0.5)}
+.contact-form textarea{resize:vertical;min-height:100px}
+.contact-form button{
+  font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+  letter-spacing:0.1em;padding:14px;background:var(--blue);color:#000;
+  border:none;cursor:none;text-transform:uppercase;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.contact-form button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(41,151,255,0.35)}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+footer{
+  padding:40px;text-align:center;border-top:1px solid var(--border);
+  font-family:'Space Mono',monospace;font-size:11px;color:var(--text-3);letter-spacing:0.08em;
+}
+footer a{color:var(--text-3);text-decoration:none}
+footer a:hover{color:var(--blue)}
+
+/* ── Reveal animation ────────────────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal[data-delay="1"]{transition-delay:0.1s}
+.reveal[data-delay="2"]{transition-delay:0.2s}
+.reveal[data-delay="3"]{transition-delay:0.3s}
+
+/* ── Mobile ──────────────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  body{cursor:auto}
+  #cursor,#cursor-ring{display:none}
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .hero-content{padding:0 24px}
+  .container{padding:0 24px}
+  .lay-a,.lay-b{grid-template-columns:1fr}
+  .lay-a .sec-text-col,.lay-b .sec-text-col{border:none;border-top:1px solid var(--border);padding:32px 0}
+  .lay-c .sec-text-col,.lay-d .sec-text-col{padding:32px 0 0}
+  .lay-d{text-align:left}
+  .v-section{padding:80px 0}
+  .contact-grid{grid-template-columns:1fr}
+  .contact-block{padding:32px 24px}
+  #hero-canvas{display:none}
+  #hero{background:radial-gradient(ellipse at 60% 40%,rgba(41,151,255,0.15) 0%,transparent 70%)}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Custom Cursor ───────────────────────────────────────────────────────── -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ── Loader ─────────────────────────────────────────────────────────────── -->
+<div id="loader">
+  <canvas id="loader-canvas"></canvas>
+  <div class="loader-ui">
+    <div class="loader-brand">A<span>·</span>S</div>
+    <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill"></div></div>
+    <div class="loader-progress-text" id="loaderText">INITIALIZING [░░░░░░░░░░] 0%</div>
+  </div>
+</div>
+
+<!-- ── Floating Math Background ───────────────────────────────────────────── -->
+<div id="math-bg"></div>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav id="nav">
+  <a class="nav-logo" href="#hero">ASHOK<span>.</span>SINGH</a>
+  <ul class="nav-links">
+    <li><a href="#theories">Theories</a></li>
+    <li><a href="#metrics">Metrics</a></li>
+    <li><a href="#quiz-section">Verify</a></li>
+    <li><a href="#contact">Connect</a></li>
+  </ul>
+  <a class="nav-cta" href="#quiz-section">Access Protocol</a>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">B2B Growth Strategy · Dubai, UAE · whoisashok.com</div>
+    <h1 class="hero-heading">
+      <span class="line"><span>GROWTH</span></span>
+      <span class="line"><span>DYNAMICS</span></span>
+    </h1>
+    <div class="hero-tag">Deterministic Systems · Predictive Modeling · 0.01% Deviation Tolerance</div>
+    <div class="hero-cta-row">
+      <a href="#theories" class="btn-primary">Explore Frameworks</a>
+      <a href="#quiz-section" class="btn-ghost">Verify Knowledge</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint"><span class="scroll-line"></span>Scroll to initiate</div>
+</section>
+
+<!-- ── Metrics Ticker ─────────────────────────────────────────────────────── -->
+<section id="metrics">
+  <div class="ticker-wrap">
+    <div class="ticker-track" id="tickerTrack">
+      <!-- duplicated twice for infinite scroll -->
+    </div>
+  </div>
+</section>
+
+<!-- ── Dynamic Theory Sections ────────────────────────────────────────────── -->
+<div id="theories"></div>
+
+<!-- ── Quiz ───────────────────────────────────────────────────────────────── -->
+<section id="quiz-section">
+  <div class="container">
+    <div class="quiz-shell">
+      <p class="s-label reveal" style="text-align:center">Access Protocol</p>
+      <h2 class="s-h2 reveal" style="text-align:center;font-size:clamp(32px,4vw,56px)" data-delay="1">Growth Intelligence<br>Certification</h2>
+      <p class="reveal" style="text-align:center;color:var(--text-2);font-size:15px;margin:12px auto 48px;max-width:480px" data-delay="2">Answer 4 of 5 correctly to unlock the connection protocol.</p>
+
+      <div class="quiz-card reveal" data-delay="3">
+        <div class="quiz-header">
+          <div class="quiz-header-tag">Protocol · 5 Questions</div>
+          <div class="quiz-header-title">Verify Theoretical Alignment</div>
+          <div class="quiz-header-sub">Select the most accurate answer for each question.</div>
+          <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProg" style="width:20%"></div></div>
+        </div>
+
+        <div class="quiz-body" id="quizBody">
+          <div class="q-block active" data-q="0">
+            <div class="q-num">Question 01 / 05 — Lorenz Attractor</div>
+            <div class="q-text">In the Lorenz attractor, why do two nearly-identical campaigns diverge wildly over time?</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>Because the algorithm adds random noise to each impression</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">B</span>Extreme sensitivity to initial conditions — infinitesimal input differences amplify exponentially through non-linear feedback</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">C</span>Market saturation resets the funnel state on each iteration</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The attractor equation contains a random variable σ</button>
+            </div>
+          </div>
+          <div class="q-block" data-q="1">
+            <div class="q-num">Question 02 / 05 — Gravitational Mechanics</div>
+            <div class="q-text">Kepler's Third Law states T² ∝ R³. In the lead-orbit model, what does "perigee" represent?</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>The moment a lead is added to a nurture sequence</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>The highest point of brand awareness in the funnel</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">C</span>The point of closest approach where conversion probability is maximum and retargeting ROI peaks</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The beginning of the outbound sequence</button>
+            </div>
+          </div>
+          <div class="q-block" data-q="2">
+            <div class="q-num">Question 03 / 05 — Quantum Conversion</div>
+            <div class="q-text">Before a visitor clicks, they exist in quantum superposition. What does this mean for CRO?</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="true"><span class="opt-key">A</span>The visitor is simultaneously in bounce AND convert states — optimization shifts the probability amplitude toward |Convert⟩ before the wave function collapses</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>Quantum effects make conversion fundamentally unpredictable</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">C</span>Users browse multiple tabs simultaneously so attribution is impossible</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The page exists in two states until the server renders it</button>
+            </div>
+          </div>
+          <div class="q-block" data-q="3">
+            <div class="q-num">Question 04 / 05 — Markov Attribution</div>
+            <div class="q-text">The Markov chain model has the "memoryless property". In attribution modelling, this means:</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>Customers forget all previous ads once they convert</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>Multi-touch attribution is theoretically impossible</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">C</span>The transition probability from any channel state depends only on the current channel, not the full prior journey — enabling counterfactual removal analysis</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>Email nurture has zero long-term attribution effect</button>
+            </div>
+          </div>
+          <div class="q-block" data-q="4">
+            <div class="q-num">Question 05 / 05 — Mandelbrot Unit Economics</div>
+            <div class="q-text">The Mandelbrot set boundary is the "event horizon of unit economics." Points outside the set represent:</div>
+            <div class="q-options">
+              <button class="q-option" data-correct="false"><span class="opt-key">A</span>Channels with the highest ROAS and fastest payback periods</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">B</span>CAC strategies that produce exponential LTV compounding</button>
+              <button class="q-option" data-correct="true"><span class="opt-key">C</span>CAC trajectories that diverge to infinity — unprofitable at any scale, regardless of volume</button>
+              <button class="q-option" data-correct="false"><span class="opt-key">D</span>The optimal budget allocation zone for maximum market share</button>
+            </div>
+          </div>
+
+          <div class="quiz-nav-row">
+            <button class="quiz-nav-btn" id="qPrev" disabled>← Prev</button>
+            <span class="quiz-counter" id="qCounter">1 / 5</span>
+            <button class="quiz-nav-btn" id="qNext">Next →</button>
+          </div>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+          <div class="quiz-result-glyph" id="qResultIcon"></div>
+          <div class="quiz-result-label" id="qResultLabel"></div>
+          <div class="quiz-result-title" id="qResultTitle"></div>
+          <div class="quiz-result-text" id="qResultText"></div>
+          <button class="quiz-retry-btn" id="qRetry">Retry Protocol</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact ─────────────────────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <p class="s-label reveal">Connect</p>
+    <h2 class="s-h2 reveal" data-delay="1">Start the<br>Conversation</h2>
+    <p class="reveal" style="color:var(--text-2);font-size:16px;margin-top:16px;line-height:1.7" data-delay="2">Only serious growth conversations. Unlock by passing the knowledge protocol above.</p>
+
+    <div class="contact-locked reveal" id="contactLocked" data-delay="3">
+      <div class="lock-glyph">⬡</div>
+      <p>Complete the Growth Intelligence Certification<br>to unlock contact details and direct message.</p>
+    </div>
+
+    <div class="contact-unlocked" id="contactUnlocked">
+      <div class="contact-grid">
+        <div class="contact-block">
+          <h3>Direct Channels</h3>
+          <div class="contact-item">
+            <div class="contact-icon">✉</div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value"><a href="mailto:awesomeashoksingh@gmail.com">awesomeashoksingh@gmail.com</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">◈</div>
+            <div>
+              <div class="contact-label">LinkedIn</div>
+              <div class="contact-value"><a href="https://linkedin.com/in/digitalashok" target="_blank" rel="noopener">linkedin.com/in/digitalashok</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">◎</div>
+            <div>
+              <div class="contact-label">Location</div>
+              <div class="contact-value">Dubai, UAE</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⬡</div>
+            <div>
+              <div class="contact-label">Website</div>
+              <div class="contact-value"><a href="https://whoisashok.com" target="_blank" rel="noopener">whoisashok.com</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-block">
+          <h3>Send a Message</h3>
+          <form class="contact-form" action="https://formspree.io/f/mpqjzqey" method="POST" id="contactForm">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="your@email.com" required>
+            <input type="text" name="company" placeholder="Company / role">
+            <textarea name="message" placeholder="What are you working on?" rows="4"></textarea>
+            <button type="submit" id="submitBtn">Transmit Message →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer>
+  © 2025 Ashok Singh ·
+  <a href="https://whoisashok.com" target="_blank" rel="noopener">whoisashok.com</a> ·
+  Dubai, UAE · Growth Dynamics
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════════════════════════════ */
+const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+function rand(min, max){ return min + Math.random() * (max - min); }
+function randInt(min, max){ return Math.floor(rand(min, max + 1)); }
+function shuffle(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LOADER PARTICLE SYSTEM
+══════════════════════════════════════════════════════════════════ */
+(function initLoader(){
+  const canvas = document.getElementById('loader-canvas');
+  const ctx = canvas.getContext('2d');
+  const fill = document.getElementById('loaderFill');
+  const loaderText = document.getElementById('loaderText');
+  const loader = document.getElementById('loader');
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const BLUE = '#2997ff';
+  const NUM_PARTICLES = isMobile ? 80 : 200;
+  const cx = () => canvas.width / 2;
+  const cy = () => canvas.height / 2;
+
+  const particles = Array.from({length: NUM_PARTICLES}, () => ({
+    x: rand(0, canvas.width),
+    y: rand(0, canvas.height),
+    vx: rand(-1.5, 1.5),
+    vy: rand(-1.5, 1.5),
+    size: rand(1, 3),
+    alpha: rand(0.3, 0.8),
+  }));
+
+  let progress = 0;
+  let done = false;
+
+  function buildBar(pct){
+    const filled = Math.floor(pct / 10);
+    const bars = '█'.repeat(filled) + '░'.repeat(10 - filled);
+    return `INITIALIZING [${bars}] ${Math.round(pct)}%`;
+  }
+
+  function drawFrame(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0) p.x = canvas.width;
+      if(p.x > canvas.width) p.x = 0;
+      if(p.y < 0) p.y = canvas.height;
+      if(p.y > canvas.height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(41,151,255,${p.alpha * (progress / 100)})`;
+      ctx.fill();
+    });
+
+    // connect nearby particles
+    for(let i = 0; i < particles.length; i++){
+      for(let j = i + 1; j < particles.length; j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if(dist < 80){
+          const a = (1 - dist / 80) * 0.15 * (progress / 100);
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(41,151,255,${a})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  let rafId;
+  function animate(){
+    drawFrame();
+    if(!done) rafId = requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Progress counter
+  const iv = setInterval(() => {
+    progress = Math.min(progress + rand(3, 10), 95);
+    fill.style.width = progress + '%';
+    loaderText.textContent = buildBar(progress);
+  }, 80);
+
+  function hideLoader(){
+    if(done) return;
+    done = true;
+    clearInterval(iv);
+    progress = 100;
+    fill.style.width = '100%';
+    loaderText.textContent = buildBar(100);
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      cancelAnimationFrame(rafId);
+    }, 500);
+  }
+
+  window.addEventListener('load', () => setTimeout(hideLoader, 400));
+  setTimeout(hideLoader, 3000);
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   FLOATING MATH EQUATIONS
+══════════════════════════════════════════════════════════════════ */
+(function spawnMath(){
+  const bg = document.getElementById('math-bg');
+  const eqs = [
+    'zₙ₊₁ = zₙ² + c',
+    'F = G·m₁m₂/r²',
+    '|ψ⟩ = α|0⟩ + β|1⟩',
+    'P(Xₙ₊₁|Xₙ) = P(Xₙ₊₁)',
+    'dx/dt = σ(y−x)',
+    'dy/dt = x(ρ−z)−y',
+    'LTV/CAC > 3',
+    'T² ∝ R³',
+    'dz/dt = xy − βz',
+    'CAC < LTV · e⁻ʳᵗ',
+    'Σ(touchpoints) → conversion',
+    'ROAS = Revenue / AdSpend',
+    'MRR = ARR / 12',
+    '∂ψ/∂t = Ĥψ',
+    'μ = Σxᵢpᵢ',
+  ];
+  const numEqs = isMobile ? 4 : 10;
+  for(let i = 0; i < numEqs; i++){
+    const el = document.createElement('div');
+    el.className = 'math-eq';
+    el.textContent = eqs[i % eqs.length];
+    el.style.left = rand(5, 90) + '%';
+    el.style.animationDelay = rand(0, 16) + 's';
+    el.style.animationDuration = rand(14, 24) + 's';
+    bg.appendChild(el);
+  }
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════════════════════════════ */
+if(!isMobile){
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = -100, my = -100, rx = -100, ry = -100;
+
+  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, {passive: true});
+
+  (function cursorLoop(){
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(cursorLoop);
+  })();
+
+  document.querySelectorAll('a,button,.q-option').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '6px';
+      cursor.style.height = '6px';
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+      ring.style.borderColor = 'rgba(41,151,255,0.7)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      ring.style.width = '40px';
+      ring.style.height = '40px';
+      ring.style.borderColor = 'rgba(41,151,255,0.4)';
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   NAV SCROLL
+══════════════════════════════════════════════════════════════════ */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+}, {passive: true});
+
+/* ══════════════════════════════════════════════════════════════════
+   METRICS TICKER
+══════════════════════════════════════════════════════════════════ */
+(function buildTicker(){
+  const track = document.getElementById('tickerTrack');
+  const items = [
+    {val: '80%', label: 'Pipeline Growth', blue: false},
+    {val: '3.2×', label: 'Revenue Multiplier', blue: true},
+    {val: '0', label: 'Deviation Events', blue: false},
+    {val: '$0', label: 'Wasted Ad Spend', blue: false},
+    {val: '100%', label: 'Deterministic Output', blue: true},
+    {val: '<0.01%', label: 'Error Tolerance', blue: false},
+  ];
+  // Duplicate for seamless loop
+  const doubled = [...items, ...items];
+  const html = doubled.map(it =>
+    `<div class="metric-item">
+      <span class="metric-val${it.blue ? ' blue' : ''}">${it.val}</span>
+      <span class="metric-label">${it.label}</span>
+    </div>
+    <div class="metric-div"></div>`
+  ).join('');
+  track.innerHTML = html;
+
+  // Dynamically adjust animation speed based on content width
+  const totalW = track.scrollWidth / 2;
+  track.style.animationDuration = (totalW / 60) + 's';
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   THREE.JS HERO — Neural Network Particle Field
+══════════════════════════════════════════════════════════════════ */
+(function initHeroThree(){
+  if(isMobile) return;
+  const canvas = document.getElementById('hero-canvas');
+  if(!window.THREE || !canvas) return;
+
+  const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 200);
+  camera.position.set(0, 0, 55);
+
+  const NUM_PTS = 3000;
+  const positions = new Float32Array(NUM_PTS * 3);
+  const velocities = [];
+  const spread = 35;
+
+  for(let i = 0; i < NUM_PTS; i++){
+    // Cluster into a cloud — denser in center, sparse edges
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = Math.pow(Math.random(), 0.5) * spread;
+    positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.6;
+    positions[i * 3 + 2] = r * Math.cos(phi) * 0.6;
+    velocities.push(
+      (Math.random() - 0.5) * 0.012,
+      (Math.random() - 0.5) * 0.012,
+      (Math.random() - 0.5) * 0.008
+    );
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const mat = new THREE.PointsMaterial({
+    color: 0xffffff, size: 0.28, transparent: true, opacity: 0.7,
+    sizeAttenuation: true,
+  });
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // Line connections — subsample for performance
+  const LINE_SAMPLE = 400;
+  const linePosArr = new Float32Array(LINE_SAMPLE * LINE_SAMPLE * 6);
+  const lineGeo = new THREE.BufferGeometry();
+  const linePosAttr = new THREE.BufferAttribute(new Float32Array(LINE_SAMPLE * 3 * 2), 3);
+  lineGeo.setAttribute('position', linePosAttr);
+
+  const lineMat = new THREE.LineBasicMaterial({
+    color: 0x2997ff, transparent: true, opacity: 0.15, vertexColors: false
+  });
+
+  // Build line segments dynamically
+  let lineSegs = new THREE.LineSegments(
+    new THREE.BufferGeometry(), lineMat
+  );
+  scene.add(lineSegs);
+
+  let mouseX = 0, mouseY = 0;
+  let targetX = 0, targetY = 0;
+
+  window.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
+  }, {passive: true});
+
+  function resize(){
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas.parentElement);
+  resize();
+
+  let t = 0;
+  const DIST_THRESH = 9;
+  const DIST_THRESH_SQ = DIST_THRESH * DIST_THRESH;
+
+  function buildLines(){
+    const pos = geo.attributes.position.array;
+    const lineVerts = [];
+    const step = Math.ceil(NUM_PTS / LINE_SAMPLE);
+
+    for(let i = 0; i < NUM_PTS; i += step){
+      for(let j = i + step; j < NUM_PTS; j += step){
+        const dx = pos[i*3] - pos[j*3];
+        const dy = pos[i*3+1] - pos[j*3+1];
+        const dz = pos[i*3+2] - pos[j*3+2];
+        const dSq = dx*dx + dy*dy + dz*dz;
+        if(dSq < DIST_THRESH_SQ){
+          lineVerts.push(pos[i*3], pos[i*3+1], pos[i*3+2]);
+          lineVerts.push(pos[j*3], pos[j*3+1], pos[j*3+2]);
+        }
+      }
+    }
+
+    const arr = new Float32Array(lineVerts);
+    const newGeo = new THREE.BufferGeometry();
+    newGeo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+    const old = lineSegs.geometry;
+    lineSegs.geometry = newGeo;
+    old.dispose();
+  }
+
+  let lineFrame = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.005;
+
+    // Drift camera
+    targetX += (mouseX * 6 - targetX) * 0.025;
+    targetY += (mouseY * 4 - targetY) * 0.025;
+    camera.position.x = targetX;
+    camera.position.y = targetY;
+    camera.lookAt(0, 0, 0);
+
+    // Drift camera Z slowly
+    camera.position.z = 55 + Math.sin(t * 0.3) * 3;
+
+    const pos = geo.attributes.position.array;
+    for(let i = 0; i < NUM_PTS; i++){
+      pos[i*3]   += velocities[i*3];
+      pos[i*3+1] += velocities[i*3+1];
+      pos[i*3+2] += velocities[i*3+2];
+
+      // Boundary bounce
+      for(let ax = 0; ax < 3; ax++){
+        if(Math.abs(pos[i*3+ax]) > spread){
+          velocities[i*3+ax] *= -1;
+          pos[i*3+ax] = Math.sign(pos[i*3+ax]) * spread;
+        }
+      }
+    }
+    geo.attributes.position.needsUpdate = true;
+
+    // Rebuild lines every 4 frames
+    lineFrame++;
+    if(lineFrame % 4 === 0) buildLines();
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   CANVAS ANIMATION FUNCTIONS
+══════════════════════════════════════════════════════════════════ */
+
+/* Orbit / Gravitational */
+function drawOrbit(canvas){
+  const ctx = canvas.getContext('2d');
+  let W, H, raf;
+  let leads = [];
+
+  function init(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+
+    leads = Array.from({length: 30}, () => ({
+      angle: Math.random() * Math.PI * 2,
+      r: rand(H * 0.15, H * 0.45),
+      speed: rand(0.004, 0.015) * (Math.random() > 0.5 ? 1 : -1),
+      size: rand(1.5, 4),
+      trail: [],
+    }));
+  }
+
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = W * 0.5, cy = H * 0.5;
+
+    // Central mass glow
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+    grad.addColorStop(0, 'rgba(41,151,255,0.6)');
+    grad.addColorStop(0.5, 'rgba(41,151,255,0.15)');
+    grad.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#2997ff';
+    ctx.fill();
+
+    leads.forEach(l => {
+      l.angle += l.speed;
+      const x = cx + Math.cos(l.angle) * l.r * (W / H < 1 ? 0.9 : 1);
+      const y = cy + Math.sin(l.angle) * l.r * 0.45;
+
+      l.trail.push({x, y});
+      if(l.trail.length > 14) l.trail.shift();
+
+      for(let i = 1; i < l.trail.length; i++){
+        const a = (i / l.trail.length) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(l.trail[i-1].x, l.trail[i-1].y);
+        ctx.lineTo(l.trail[i].x, l.trail[i].y);
+        ctx.strokeStyle = `rgba(41,151,255,${a})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.arc(x, y, l.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,0.8)`;
+      ctx.fill();
+    });
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(() => { cancelAnimationFrame(raf); init(); draw(); });
+  ro.observe(canvas);
+  init(); draw();
+}
+
+/* Wave / Quantum */
+function drawWave(canvas){
+  const ctx = canvas.getContext('2d');
+  let W, H, raf, t = 0;
+
+  function init(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.fillRect(0, 0, W, H);
+    t += 0.025;
+
+    const waves = [
+      {amp: H * 0.25, freq: 0.018, phase: t, color: 'rgba(41,151,255,0.5)', lw: 1.5},
+      {amp: H * 0.15, freq: 0.03, phase: t * 1.3, color: 'rgba(255,255,255,0.2)', lw: 1},
+      {amp: H * 0.35, freq: 0.012, phase: t * 0.7, color: 'rgba(41,151,255,0.2)', lw: 2},
+    ];
+
+    waves.forEach(w => {
+      ctx.beginPath();
+      for(let x = 0; x < W; x++){
+        const y = H/2 + Math.sin(x * w.freq + w.phase) * w.amp
+                      * Math.exp(-Math.pow((x - W/2) / (W * 0.4), 2));
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = w.color;
+      ctx.lineWidth = w.lw;
+      ctx.stroke();
+    });
+
+    // Probability fill
+    ctx.beginPath();
+    for(let x = 0; x < W; x++){
+      const y = H/2 + Math.sin(x * 0.018 + t) * H * 0.25
+                    * Math.exp(-Math.pow((x - W/2) / (W * 0.4), 2));
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H/2); ctx.lineTo(0, H/2); ctx.closePath();
+    ctx.fillStyle = 'rgba(41,151,255,0.04)';
+    ctx.fill();
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(() => { cancelAnimationFrame(raf); init(); draw(); });
+  ro.observe(canvas);
+  init(); draw();
+}
+
+/* Network / Markov */
+function drawNetwork(canvas){
+  const ctx = canvas.getContext('2d');
+  let W, H, raf;
+  const LABELS = ['Social', 'Email', 'SEO', 'Paid', 'Direct', 'Content', 'Referral'];
+  let nodes = [], edges = [], pulses = [];
+
+  function init(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+
+    const n = 7;
+    nodes = LABELS.map((lbl, i) => {
+      const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+      const r = Math.min(W, H) * 0.36;
+      return {
+        x: W/2 + Math.cos(angle) * r,
+        y: H/2 + Math.sin(angle) * r,
+        label: lbl,
+        isConvert: false,
+      };
+    });
+    nodes.push({x: W/2, y: H/2, label: 'Convert', isConvert: true});
+
+    edges = [];
+    for(let i = 0; i < n; i++){
+      edges.push({from: i, to: n, weight: rand(0.3, 0.9)});
+      edges.push({from: i, to: (i+1)%n, weight: rand(0.1, 0.4)});
+    }
+    pulses = [];
+  }
+
+  let frame = 0;
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0, 0, W, H);
+    frame++;
+
+    if(frame % 45 === 0 && pulses.length < 12){
+      const selectedEdge = edges[Math.floor(Math.random() * edges.length)];
+      pulses.push({edge: selectedEdge, t: 0});
+    }
+
+    edges.forEach(e => {
+      const a = nodes[e.from], b = nodes[e.to];
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = `rgba(41,151,255,${e.weight * 0.25})`;
+      ctx.lineWidth = e.weight * 1.5;
+      ctx.stroke();
+    });
+
+    pulses = pulses.filter(p => {
+      p.t += 0.02;
+      if(p.t >= 1) return false;
+      const a = nodes[p.edge.from], b = nodes[p.edge.to];
+      const x = a.x + (b.x - a.x) * p.t;
+      const y = a.y + (b.y - a.y) * p.t;
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#2997ff';
+      ctx.fill();
+      return true;
+    });
+
+    nodes.forEach(node => {
+      if(node.isConvert){
+        const g = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, 22);
+        g.addColorStop(0, 'rgba(41,151,255,0.6)');
+        g.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 22, 0, Math.PI * 2);
+        ctx.fillStyle = g; ctx.fill();
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#2997ff'; ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.font = '10px Space Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(node.label, node.x, node.y - 12);
+    });
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(() => { cancelAnimationFrame(raf); init(); draw(); });
+  ro.observe(canvas);
+  init(); draw();
+}
+
+/* Fractal / Mandelbrot-style */
+function drawFractal(canvas){
+  const ctx = canvas.getContext('2d');
+  let W, H, raf, t = 0;
+  let lastW = 0, lastH = 0;
+  let imageData;
+
+  function mandel(cr, ci, maxIter){
+    let zr = 0, zi = 0, i = 0;
+    while(i < maxIter && zr*zr + zi*zi < 4){
+      const tmp = zr*zr - zi*zi + cr;
+      zi = 2*zr*zi + ci;
+      zr = tmp;
+      i++;
+    }
+    return i;
+  }
+
+  function renderMandel(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    imageData = ctx.createImageData(W, H);
+    const data = imageData.data;
+    const maxIter = 48;
+    const zoom = 2.8;
+    const offX = -0.5, offY = 0;
+    for(let py = 0; py < H; py++){
+      for(let px = 0; px < W; px++){
+        const cr = (px/W - 0.5) * zoom * (W/H) + offX;
+        const ci = (py/H - 0.5) * zoom + offY;
+        const iter = mandel(cr, ci, maxIter);
+        const idx = (py * W + px) * 4;
+        if(iter === maxIter){
+          data[idx] = 0; data[idx+1] = 0; data[idx+2] = 0; data[idx+3] = 255;
+        } else {
+          const frac = iter / maxIter;
+          data[idx] = Math.floor(frac * 41);
+          data[idx+1] = Math.floor(frac * 151);
+          data[idx+2] = Math.floor(frac * 255);
+          data[idx+3] = 255;
+        }
+      }
+    }
+  }
+
+  function draw(){
+    if(canvas.offsetWidth !== lastW || canvas.offsetHeight !== lastH){
+      lastW = canvas.offsetWidth; lastH = canvas.offsetHeight;
+      renderMandel();
+    }
+    ctx.putImageData(imageData, 0, 0);
+
+    // Overlay animated shimmer
+    t += 0.01;
+    ctx.save();
+    ctx.globalAlpha = 0.05 + 0.03 * Math.sin(t);
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, 'rgba(41,151,255,0)');
+    grad.addColorStop(0.5, 'rgba(41,151,255,0.6)');
+    grad.addColorStop(1, 'rgba(41,151,255,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(() => { cancelAnimationFrame(raf); lastW = 0; draw(); });
+  ro.observe(canvas);
+  draw();
+}
+
+/* Lorenz / Chaos */
+function drawLorenz(canvas){
+  const ctx = canvas.getContext('2d');
+  let W, H, raf;
+  let x = 0.1, y = 0, z = 0;
+  const sigma = 10, rho = 28, beta = 8/3;
+  const dt = 0.008;
+  let pts = [];
+  let t2 = 0;
+
+  function init(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    pts = [];
+    x = 0.1 + Math.random() * 0.01;
+    y = 0; z = 0;
+    t2 = 0;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function project(lx, ly, lz){
+    const scale = Math.min(W, H) * 0.023;
+    const px = W/2 + lx * scale;
+    const py = H/2 - (lz - 25) * scale * 0.8;
+    return {px, py};
+  }
+
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, 0, W, H);
+
+    for(let i = 0; i < 3; i++){
+      const dx = sigma * (y - x);
+      const dy = x * (rho - z) - y;
+      const dz = x * y - beta * z;
+      x += dx * dt; y += dy * dt; z += dz * dt;
+
+      const {px, py} = project(x, y, z);
+      pts.push({px, py, t: t2});
+      t2++;
+    }
+
+    if(pts.length > 1200) pts = pts.slice(pts.length - 1200);
+
+    for(let i = 1; i < pts.length; i++){
+      const age = (i / pts.length);
+      const a = Math.pow(age, 2) * 0.7;
+      ctx.beginPath();
+      ctx.moveTo(pts[i-1].px, pts[i-1].py);
+      ctx.lineTo(pts[i].px, pts[i].py);
+      ctx.strokeStyle = `rgba(41,151,255,${a})`;
+      ctx.lineWidth = age * 1.5;
+      ctx.stroke();
+    }
+
+    if(pts.length > 0){
+      const last = pts[pts.length - 1];
+      ctx.beginPath();
+      ctx.arc(last.px, last.py, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(() => { cancelAnimationFrame(raf); init(); draw(); });
+  ro.observe(canvas);
+  init(); draw();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   THEORY DATA
+══════════════════════════════════════════════════════════════════ */
+const THEORIES = [
+  {
+    id: 'acquisition',
+    eyebrow: '01 / Acquisition Dynamics',
+    title: 'Gravitational <em>Funnel Mechanics</em>',
+    eq: 'F = G·m₁m₂ / r²',
+    canvasLabel: 'N-Body Simulation · Lead Trajectories',
+    btnText: 'Analysis',
+    body: `<strong>Law of Acquisition Gravity:</strong><br><br>
+Leads enter the system with initial velocity (brand awareness). The conversion event (central mass) exerts
+gravitational pull proportional to value proposition density. Escape velocity is overcome through
+centripetal acceleration — nurture sequences.`,
+    extra: `<strong>Newton's Law applied:</strong>
+<span class="eq">F = G·(m₁·m₂) / r²</span>
+Where G = brand equity constant, m₁ = ICP fit score, m₂ = value proposition density,
+r = awareness radius. As r → 0 (retargeting), force → ∞ — this is why retargeting
+consistently outperforms cold acquisition at 3–7× ROAS.`,
+    drawFn: drawOrbit,
+  },
+  {
+    id: 'conversion',
+    eyebrow: '02 / Quantum Conversion',
+    title: 'Wave Function <em>Collapse</em>',
+    eq: '|ψ⟩ = α|Convert⟩ + β|Bounce⟩',
+    canvasLabel: 'Probability Amplitude · Superposition',
+    btnText: 'Observe',
+    body: `<strong>Superposition Principle:</strong><br><br>
+Before measurement (click), the visitor exists in superposition of states: |Bounce⟩ and |Convert⟩.
+The waveform represents probability amplitude. Optimization increases the coefficient of
+conversion before wave function collapse.`,
+    extra: `<strong>Schrödinger's Conversion:</strong>
+<span class="eq">|ψ⟩ = α|Convert⟩ + β|Bounce⟩</span>
+Where |α|² is your conversion probability. CRO optimizes α by collapsing the waveform earlier
+(faster page load, clearer CTA) and increasing its amplitude. A/B testing is wave function measurement.`,
+    drawFn: drawWave,
+  },
+  {
+    id: 'attribution',
+    eyebrow: '03 / Network Attribution',
+    title: 'Graph Topology &amp; <em>Markov Chains</em>',
+    eq: 'P(Xₙ₊₁ | Xₙ…X₀) = P(Xₙ₊₁ | Xₙ)',
+    canvasLabel: 'Transition Probability Matrix · Directed Graph',
+    btnText: 'Map',
+    body: `<strong>Markov Attribution Model:</strong><br><br>
+Each marketing touchpoint is a node in a directed graph. Transition probabilities from channel A → B → conversion
+are modelled as a Markov chain. Counterfactual removal analysis reveals true channel contribution.`,
+    extra: `<strong>The Memoryless Property:</strong>
+<span class="eq">P(Xₙ₊₁ | X₀…Xₙ) = P(Xₙ₊₁ | Xₙ)</span>
+Future state depends only on present state. Each channel's credit is determined by its forward-looking
+conversion probability — not historic position. This mathematically invalidates first-click and last-click models.`,
+    drawFn: drawNetwork,
+  },
+  {
+    id: 'growth',
+    eyebrow: '04 / Fractal Growth',
+    title: 'Mandelbrot <em>Unit Economics</em>',
+    eq: 'zₙ₊₁ = zₙ² + c',
+    canvasLabel: 'Self-Similar Scaling · CAC Boundary',
+    btnText: 'Compute',
+    body: `<strong>Fractal Boundary Theorem:</strong><br><br>
+The Mandelbrot set defines the boundary between stable and chaotic growth. Points inside: LTV > CAC
+at every scale. Points outside: CAC trajectories diverge to infinity — unprofitable regardless of volume.`,
+    extra: `<strong>Mandelbrot iteration:</strong>
+<span class="eq">zₙ₊₁ = zₙ² + c</span>
+If |z| remains bounded as n → ∞, the business is inside the set (viable). The fractal boundary is the
+event horizon of unit economics — scale inside it, and LTV compounds. Scale outside, and CAC destroys margin.`,
+    drawFn: drawFractal,
+  },
+  {
+    id: 'chaos',
+    eyebrow: '05 / Chaos Theory',
+    title: 'Lorenz <em>Attractor</em>',
+    eq: 'dx/dt = σ(y−x)',
+    canvasLabel: 'Strange Attractor · Sensitive Dependence',
+    btnText: 'Destabilise',
+    body: `<strong>Butterfly Effect in Campaigns:</strong><br><br>
+Two campaigns with imperceptibly different initial conditions diverge exponentially. The Lorenz system
+models how small optimisation differences compound into wildly different revenue outcomes.
+Control the initial conditions — control the trajectory.`,
+    extra: `<strong>Lorenz system:</strong>
+<span class="eq">dx/dt = σ(y−x) &nbsp; dy/dt = x(ρ−z)−y &nbsp; dz/dt = xy−βz</span>
+σ=10, ρ=28, β=8/3. Despite being deterministic, the attractor is chaotic. In marketing,
+this means A/B test variants that seem equivalent often diverge 100× over a quarter.
+Deterministic systems; unpredictable only if you don't model them.`,
+    drawFn: drawLorenz,
+  },
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   BUILD DYNAMIC THEORY SECTIONS
+══════════════════════════════════════════════════════════════════ */
+(function buildTheories(){
+  const container = document.getElementById('theories');
+  const layouts = ['lay-a', 'lay-b', 'lay-c', 'lay-d'];
+  const shuffled = shuffle(THEORIES);
+
+  function getRandomLayout(){ return layouts[Math.floor(Math.random() * layouts.length)]; }
+
+  shuffled.forEach((theory, i) => {
+    const layout = getRandomLayout();
+
+    const section = document.createElement('section');
+    section.className = 'v-section';
+    section.id = 'theory-' + theory.id;
+
+    const canvasId = 'cv-' + theory.id;
+
+    const textHTML = `
+      <div class="t-eyebrow">${theory.eyebrow}</div>
+      <h2 class="t-title">${theory.title}</h2>
+      <div class="t-eq">${theory.eq}</div>
+      <p class="t-body">${theory.body}</p>
+      <button class="t-toggle" data-target="extra-${theory.id}">${theory.btnText}</button>
+      <div class="t-extra" id="extra-${theory.id}">
+        <div class="t-extra-inner">${theory.extra}</div>
+      </div>`;
+
+    const canvasHTML = `
+      <canvas id="${canvasId}"></canvas>
+      <div class="canvas-label">${theory.canvasLabel}</div>`;
+
+    let innerHTML;
+
+    if(layout === 'lay-a'){
+      innerHTML = `<div class="container"><div class="${layout}">
+        <div class="sec-canvas-col">${canvasHTML}</div>
+        <div class="sec-text-col">${textHTML}</div>
+      </div></div>`;
+    } else if(layout === 'lay-b'){
+      innerHTML = `<div class="container"><div class="${layout}">
+        <div class="sec-text-col">${textHTML}</div>
+        <div class="sec-canvas-col">${canvasHTML}</div>
+      </div></div>`;
+    } else if(layout === 'lay-c'){
+      innerHTML = `<div class="container"><div class="${layout}">
+        <div class="sec-canvas-col">${canvasHTML}</div>
+        <div class="sec-text-col">${textHTML}</div>
+      </div></div>`;
+    } else { // lay-d
+      innerHTML = `<div class="container"><div class="${layout}">
+        <div class="sec-text-col">${textHTML}</div>
+        <div class="sec-canvas-col">${canvasHTML}</div>
+      </div></div>`;
+    }
+
+    section.innerHTML = innerHTML;
+    container.appendChild(section);
+
+    // Initialize canvas animation when visible
+    const canvasEl = section.querySelector('canvas');
+    let animStarted = false;
+    const obs = new IntersectionObserver(entries => {
+      if(entries[0].isIntersecting && !animStarted){
+        animStarted = true;
+        theory.drawFn(canvasEl);
+      }
+    }, {threshold: 0.1});
+    obs.observe(section);
+  });
+
+  // Toggle handlers
+  document.querySelectorAll('.t-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.target;
+      const extra = document.getElementById(targetId);
+      const isOpen = extra.classList.contains('open');
+      extra.classList.toggle('open', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+    });
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   REVEAL ON SCROLL
+══════════════════════════════════════════════════════════════════ */
+(function initReveal(){
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, {threshold: 0.12});
+  els.forEach(el => obs.observe(el));
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   QUIZ ENGINE
+══════════════════════════════════════════════════════════════════ */
+(function initQuiz(){
+  const blocks = Array.from(document.querySelectorAll('.q-block'));
+  const prog = document.getElementById('quizProg');
+  const counter = document.getElementById('qCounter');
+  const prevBtn = document.getElementById('qPrev');
+  const nextBtn = document.getElementById('qNext');
+  const body = document.getElementById('quizBody');
+  const result = document.getElementById('quizResult');
+  const retryBtn = document.getElementById('qRetry');
+  const total = blocks.length;
+  const answers = new Array(total).fill(null);
+  let current = 0;
+
+  function updateProgress(){
+    prog.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = `${current + 1} / ${total}`;
+    prevBtn.disabled = current === 0;
+    nextBtn.textContent = current === total - 1 ? 'Submit →' : 'Next →';
+  }
+
+  function showBlock(idx){
+    blocks.forEach((b, i) => b.classList.toggle('active', i === idx));
+    current = idx;
+    updateProgress();
+  }
+
+  blocks.forEach((block, qi) => {
+    block.querySelectorAll('.q-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        if(answers[qi] !== null) return; // already answered
+        answers[qi] = opt.dataset.correct === 'true';
+        block.querySelectorAll('.q-option').forEach(o => {
+          o.classList.toggle('correct', o.dataset.correct === 'true');
+          o.classList.toggle('wrong', o.dataset.correct !== 'true' && o === opt);
+        });
+      });
+    });
+  });
+
+  prevBtn.addEventListener('click', () => { if(current > 0) showBlock(current - 1); });
+
+  nextBtn.addEventListener('click', () => {
+    if(current < total - 1){
+      showBlock(current + 1);
+    } else {
+      // Submit
+      const score = answers.filter(Boolean).length;
+      body.style.display = 'none';
+      result.classList.add('show');
+
+      if(score >= 4){
+        document.getElementById('qResultIcon').textContent = '◉';
+        document.getElementById('qResultLabel').style.color = '#34c759';
+        document.getElementById('qResultLabel').textContent = 'ACCESS GRANTED';
+        document.getElementById('qResultTitle').textContent = `${score}/5 — Protocol Verified`;
+        document.getElementById('qResultText').textContent = 'Theoretical alignment confirmed. The connection protocol is now active. Scroll down to access direct contact.';
+        unlockContact();
+      } else {
+        document.getElementById('qResultIcon').textContent = '○';
+        document.getElementById('qResultLabel').style.color = '#ff453a';
+        document.getElementById('qResultLabel').textContent = 'ACCESS DENIED';
+        document.getElementById('qResultTitle').textContent = `${score}/5 — Insufficient Score`;
+        document.getElementById('qResultText').textContent = 'Minimum threshold is 4/5. Review the theoretical frameworks above and retry the protocol.';
+      }
+    }
+  });
+
+  retryBtn.addEventListener('click', () => {
+    answers.fill(null);
+    blocks.forEach(b => {
+      b.querySelectorAll('.q-option').forEach(o => {
+        o.classList.remove('correct', 'wrong');
+      });
+    });
+    result.classList.remove('show');
+    body.style.display = '';
+    showBlock(0);
+  });
+
+  updateProgress();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   CONTACT UNLOCK
+══════════════════════════════════════════════════════════════════ */
+function unlockContact(){
+  document.getElementById('contactLocked').style.display = 'none';
+  const unlocked = document.getElementById('contactUnlocked');
+  unlocked.classList.add('show');
+  setTimeout(() => {
+    document.getElementById('contact').scrollIntoView({behavior: 'smooth'});
+  }, 600);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CONTACT FORM
+══════════════════════════════════════════════════════════════════ */
+(function initContactForm(){
+  const form = document.getElementById('contactForm');
+  const btn = document.getElementById('submitBtn');
+  if(!form) return;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    btn.textContent = 'Transmitting...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {Accept: 'application/json'},
+      });
+      if(res.ok){
+        btn.textContent = 'Transmitted ✓';
+        form.reset();
+      } else {
+        btn.textContent = 'Error — Retry';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Error — Retry';
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
