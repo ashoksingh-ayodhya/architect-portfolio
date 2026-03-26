@@ -770,7 +770,7 @@ function closeDrawer() { drawer.classList.remove('open'); }
   camera.position.set(0, 0, 90);
 
   // Lorenz attractor parameters
-  const σ = 10, ρ = 28, β = 8/3;
+  const sigma = 10, rho = 28, beta = 8/3;
   const N = 2000;
   const positions = new Float32Array(N * 3);
   const colors    = new Float32Array(N * 3);
@@ -780,9 +780,9 @@ function closeDrawer() { drawer.classList.remove('open'); }
   const dt = 0.005;
   const path = [];
   for (let i = 0; i < N * 12; i++) {
-    const dx = σ * (y - x);
-    const dy = x * (ρ - z) - y;
-    const dz = x * y - β * z;
+    const dx = sigma * (y - x);
+    const dy = x * (rho - z) - y;
+    const dz = x * y - beta * z;
     x += dx * dt; y += dy * dt; z += dz * dt;
     path.push(x, y, z - 25); // shift down slightly
   }
