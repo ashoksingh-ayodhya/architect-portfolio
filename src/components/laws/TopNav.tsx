@@ -6,6 +6,7 @@ const TopNav = () => {
     { to: "/", label: "Home" },
     { to: "/conversion", label: "Conversion" },
     { to: "/stack", label: "Stack" },
+    { to: "/blog", label: "Blog" },
   ];
 
   return (
@@ -20,7 +21,7 @@ const TopNav = () => {
 
         <div className="flex items-center gap-1 sm:gap-3">
           {links.map((l) => {
-            const isActive = pathname === l.to;
+            const isActive = l.to === "/" ? pathname === "/" : pathname.startsWith(l.to);
             return (
               <Link
                 key={l.to}

@@ -17,6 +17,7 @@ const SiteFooter = () => {
     { href: "/", label: "Home" },
     { href: "/conversion", label: "Conversion Playbook" },
     { href: "/stack", label: "Sales Stack Playbook" },
+    { href: "/blog", label: "The Blog — 24 Rants" },
   ];
   return (
     <footer id="yell" className="relative mt-16 border-t-2 border-ink bg-ink text-paper">

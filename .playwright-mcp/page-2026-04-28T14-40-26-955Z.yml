@@ -1,0 +1,792 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - main [ref=e3]:
+    - generic:
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e8]: The Laws of Performance Marketing
+        - generic [ref=e9]: v.2026 · still mad
+      - generic [ref=e11]:
+        - paragraph [ref=e12]: a portfolio of opinions, mostly correct,
+        - heading "twelve laws of performance marketing, shouted into the void of LinkedIn." [level=1] [ref=e13]:
+          - text: twelve laws of performance marketing,
+          - text: shouted into the void of LinkedIn.
+        - paragraph [ref=e14]: Not a deck. Not a course. Not a “let’s hop on a quick call.” Just twelve things we keep watching teams pay tuition for, illustrated mostly with memes because, frankly, the spreadsheet didn’t convince anyone last time either.
+        - generic [ref=e15]:
+          - link "start scrolling" [ref=e16] [cursor=pointer]:
+            - /url: "#law-01"
+            - text: start scrolling
+            - generic [ref=e17]: ↓
+          - link "skip to the punchline" [ref=e18] [cursor=pointer]:
+            - /url: "#law-12"
+          - generic [ref=e19]: no email gate, relax
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - paragraph [ref=e22]: "12"
+            - paragraph [ref=e23]: laws
+            - paragraph [ref=e24]: ish
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: "0"
+            - paragraph [ref=e27]: case studies
+            - paragraph [ref=e28]: by design
+          - generic [ref=e29]:
+            - paragraph [ref=e30]: "0"
+            - paragraph [ref=e31]: “book a demo”
+            - paragraph [ref=e32]: promise
+          - generic [ref=e33]:
+            - paragraph [ref=e34]: ∞
+            - paragraph [ref=e35]: spicy takes
+            - paragraph [ref=e36]: tap to read
+    - generic [ref=e39]:
+      - paragraph [ref=e40]: before you scroll · pick your poison
+      - paragraph [ref=e41]: I’m a…
+      - generic [ref=e42]:
+        - button "CMO I sign the POs" [ref=e43] [cursor=pointer]:
+          - generic [ref=e45]: 🎩
+          - paragraph [ref=e46]: CMO
+          - paragraph [ref=e47]: I sign the POs
+        - button "✓ you marketer I push the buttons" [pressed] [ref=e48] [cursor=pointer]:
+          - generic [ref=e49]:
+            - generic [ref=e50]: 🛠️
+            - generic [ref=e51]: ✓ you
+          - paragraph [ref=e52]: marketer
+          - paragraph [ref=e53]: I push the buttons
+        - button "founder I am the budget" [ref=e54] [cursor=pointer]:
+          - generic [ref=e56]: 🔥
+          - paragraph [ref=e57]: founder
+          - paragraph [ref=e58]: I am the budget
+        - button "agency I bill in retainers" [ref=e59] [cursor=pointer]:
+          - generic [ref=e61]: 🧾
+          - paragraph [ref=e62]: agency
+          - paragraph [ref=e63]: I bill in retainers
+      - paragraph [ref=e64]: changes the examples below. saved locally. nobody is emailed. promise.
+    - generic [ref=e66]:
+      - generic [ref=e67]: ★ no ROAS guarantees ★ no “growth hacks” ★ MMM is just regression with a haircut ★ your ICP is not a vibe ★ creative is yogurt ★ stop A/B testing button colors ★ blended ROAS is the only ROAS ★ the funnel is a colander ★ ‘intent data’ is a horoscope ★ brand or die, math or die, pick both
+      - generic [ref=e68]: ★ no ROAS guarantees ★ no “growth hacks” ★ MMM is just regression with a haircut ★ your ICP is not a vibe ★ creative is yogurt ★ stop A/B testing button colors ★ blended ROAS is the only ROAS ★ the funnel is a colander ★ ‘intent data’ is a horoscope ★ brand or die, math or die, pick both
+    - generic [ref=e69]:
+      - paragraph: "01"
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: LAW · 01
+            - generic [ref=e74]: /
+            - generic [ref=e75]: last-click is a horoscope
+          - heading "Attribution is an iceberg. The dashboard sees the tip." [level=2] [ref=e76]
+          - generic [ref=e77]:
+            - paragraph [ref=e78]:
+              - text: Your CMO points at the
+              - emphasis [ref=e79]: last-click
+              - text: sliver and asks why brand spend isn’t “working.” It’s working. It is the entire iceberg you are currently steering a Q4 plan into.
+            - paragraph [ref=e80]: "test: turn off the channel. measure the hole."
+        - generic [ref=e83]:
+          - img [ref=e87]:
+            - generic [ref=e88]: CMO eye-line
+            - generic [ref=e90]: LAST CLICK
+            - generic [ref=e92]: Brand search you didn’t pay for
+            - generic [ref=e93]: Podcast they heard 7 months ago
+            - generic [ref=e94]: Founder’s LinkedIn shitpost
+            - generic [ref=e95]: Slack DM from a friend
+            - generic [ref=e96]: That one banner ad in 2022
+            - generic [ref=e97]: Vibes
+            - generic [ref=e99]: 100% credit lol
+          - paragraph [ref=e100]: "data: every B2B holdout test we’ve ever shipped"
+    - generic [ref=e101]:
+      - paragraph: "02"
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]: LAW · 02
+            - generic [ref=e106]: /
+            - generic [ref=e107]: CAC is loud. payback is right.
+          - heading "If your KPI fits in a single number, it’s lying to you." [level=2] [ref=e108]
+          - generic [ref=e109]:
+            - paragraph [ref=e110]: CAC without payback is a number you can shrink by being worse at sales. LTV without cohort math is a fanfic. Payback is what the CFO actually felt last month.
+            - paragraph [ref=e111]: One number is a press release. Three numbers, by cohort, are a business.
+        - generic [ref=e114]:
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic [ref=e120]: 🙅🏽‍♂️
+                - generic [ref=e121]: "NO"
+              - paragraph [ref=e123]: “What is our CAC this week?”
+              - generic [ref=e124]:
+                - generic [ref=e125]: 😎👉
+                - generic [ref=e126]: "YES"
+              - paragraph [ref=e128]: “What is our payback period by cohort?”
+            - generic [ref=e129]:
+              - generic [ref=e130]:
+                - paragraph [ref=e131]: CAC
+                - paragraph [ref=e132]: $420
+                - paragraph [ref=e133]: vanity
+              - generic [ref=e134]:
+                - paragraph [ref=e135]: LTV
+                - paragraph [ref=e136]: $3,140
+                - paragraph [ref=e137]: fanfic
+              - generic [ref=e138]:
+                - paragraph [ref=e139]: Payback
+                - paragraph [ref=e140]: 8.4 mo
+                - paragraph [ref=e141]: the only one that pays rent
+          - paragraph [ref=e142]: if you cannot defend it by cohort, it didn’t happen
+    - generic [ref=e143]:
+      - paragraph: "03"
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e147]: LAW · 03
+            - generic [ref=e148]: /
+            - generic [ref=e149]: the new shiny is rarely the bottleneck
+          - heading "The next vendor demo will not save you." [level=2] [ref=e150]
+          - generic [ref=e151]:
+            - paragraph [ref=e152]: Lead routing has been broken since 2021. The data warehouse has three sources of truth. Sales hasn’t opened the playbook. And yet — fourth martech RFP this year.
+            - paragraph [ref=e153]: "Distracted-CMO syndrome is treatable. Symptom: re-platforming. Cure: fixing the boring thing that already prints money."
+        - generic [ref=e156]:
+          - generic [ref=e159]:
+            - generic [ref=e160]:
+              - generic [ref=e161]:
+                - generic [ref=e162]: 👨🏽‍💼
+                - paragraph [ref=e163]: CMO
+                - paragraph [ref=e164]: looking →
+              - generic [ref=e165]:
+                - generic [ref=e166]: 🤖
+                - paragraph [ref=e167]: AI agentic GTM platform
+                - paragraph [ref=e168]: demo today??
+              - generic [ref=e169]:
+                - generic [ref=e170]: 📊
+                - paragraph [ref=e171]: A working dashboard
+                - paragraph [ref=e172]: 3 yrs married
+            - generic [ref=e173]:
+              - paragraph [ref=e174]: QUARTERLY ROADMAP
+              - list [ref=e175]:
+                - listitem [ref=e176]:
+                  - generic [ref=e177]: Rebrand
+                  - generic [ref=e178]: again
+                - listitem [ref=e179]:
+                  - generic [ref=e180]: New martech vendor
+                  - generic [ref=e181]: 3rd this year
+                - listitem [ref=e182]:
+                  - generic [ref=e183]: Fix lead routing from 2021
+                  - generic [ref=e184]: next quarter
+          - paragraph [ref=e185]: based on a true story · all of them
+    - generic [ref=e186]:
+      - paragraph: "04"
+      - generic [ref=e187]:
+        - generic [ref=e188]:
+          - generic [ref=e189]:
+            - generic [ref=e190]: LAW · 04
+            - generic [ref=e191]: /
+            - generic [ref=e192]: the worst takes have the highest CTR
+          - heading "The loudest media buyer in the room has been doing it for nine weeks." [level=2] [ref=e193]
+          - generic [ref=e194]:
+            - paragraph [ref=e195]: "Week 2: “ROAS is easy.” Week 6: cold sweat. Month 3: humility. Year 2: quietly running incrementality tests and refusing to celebrate before geo-lift confirms."
+            - paragraph [ref=e196]: The skill curve is a U-bend. If your agency’s pitch was straight up, they’re on the left side of it.
+        - generic [ref=e199]:
+          - generic [ref=e202]:
+            - img [ref=e203]:
+              - generic [ref=e204]: EXPERIENCE →
+              - generic [ref=e205]: CONFIDENCE
+              - generic [ref=e209]: Week 2
+              - generic [ref=e212]: Week 6
+              - generic [ref=e215]: Month 3
+              - generic [ref=e218]: Year 2
+            - generic [ref=e219]:
+              - generic [ref=e220]:
+                - paragraph [ref=e221]: Week 2
+                - paragraph [ref=e222]: “ROAS is easy.”
+              - generic [ref=e223]:
+                - paragraph [ref=e224]: Week 6
+                - paragraph [ref=e225]: “why is it 0.4”
+              - generic [ref=e226]:
+                - paragraph [ref=e227]: Month 3
+                - paragraph [ref=e228]: “I’m not the audience”
+              - generic [ref=e229]:
+                - paragraph [ref=e230]: Year 2
+                - paragraph [ref=e231]: “creative > targeting”
+          - paragraph [ref=e232]: confidence and competence are not the same axis
+    - generic [ref=e233]:
+      - paragraph: "05"
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - generic [ref=e236]:
+            - generic [ref=e237]: LAW · 05
+            - generic [ref=e238]: /
+            - generic [ref=e239]: 20 ads. 1 winner. cope.
+          - heading "Creative is a power law. Stop pretending it’s a bell curve." [level=2] [ref=e240]
+          - generic [ref=e241]:
+            - paragraph [ref=e242]: Three out of twenty ads carry the account. The other seventeen exist so the three could be born. Treating them as “equally promising” is how budgets die in democracy.
+            - paragraph [ref=e243]: kill faster. promote louder. apologise to no one.
+        - generic [ref=e246]:
+          - generic [ref=e249]:
+            - generic [ref=e251]:
+              - generic:
+                - generic: THIS one
+            - generic [ref=e252]:
+              - generic [ref=e253]: 20 ads tested
+              - generic [ref=e254]: 1 ad → 78% of spend
+              - generic [ref=e255]: 17 ads → 0% of LinkedIn brag
+            - paragraph [ref=e256]: “but the brand guidelines—” the brand guidelines are losing money.
+          - paragraph [ref=e257]: every ad account, every quarter, since the beginning of ad accounts
+    - generic [ref=e258]:
+      - paragraph: "06"
+      - generic [ref=e259]:
+        - generic [ref=e260]:
+          - generic [ref=e261]:
+            - generic [ref=e262]: LAW · 06
+            - generic [ref=e263]: /
+            - generic [ref=e264]: measure what you didn’t do, too
+          - heading "Attribution maturity is just learning to trust holdouts." [level=2] [ref=e265]
+          - paragraph [ref=e267]:
+            - text: Last-click → time-decay → Markov → MMM is not a tool stack. It’s a grief cycle. You bargain with platform dashboards until one quarter you finally accept that the only honest number came from the campaign you intentionally
+            - emphasis [ref=e268]: didn’t
+            - text: run.
+        - generic [ref=e271]:
+          - generic [ref=e274]:
+            - generic [ref=e275]:
+              - generic [ref=e276]: 🧠
+              - generic [ref=e277]:
+                - paragraph [ref=e278]: Last-click in GA
+                - paragraph [ref=e279]: “Email did it all 🎉”
+              - generic [ref=e280]: LVL 1
+            - generic [ref=e281]:
+              - generic [ref=e282]: 🧠✨
+              - generic [ref=e283]:
+                - paragraph [ref=e284]: Linear / time-decay
+                - paragraph [ref=e285]: okay, calmer now
+              - generic [ref=e286]: LVL 2
+            - generic [ref=e287]:
+              - generic [ref=e288]: 🧠🌟
+              - generic [ref=e289]:
+                - paragraph [ref=e290]: Markov + holdouts
+                - paragraph [ref=e291]: now we’re cooking
+              - generic [ref=e292]: LVL 3
+            - generic [ref=e293]:
+              - generic [ref=e294]: 🧠🌌
+              - generic [ref=e295]:
+                - paragraph [ref=e296]: Geo-lift + MMM
+                - paragraph [ref=e297]: we measure the ad we did NOT run
+              - generic [ref=e298]: LVL 4
+          - paragraph [ref=e299]: GA is not a measurement system, GA is a feelings journal
+    - generic [ref=e301]:
+      - paragraph [ref=e302]: interactive break · tap the button
+      - heading "the bullshit-o-meter" [level=2] [ref=e303]
+      - paragraph [ref=e304]: clinically calibrated to LinkedIn, est. 2026
+      - generic [ref=e305]:
+        - generic [ref=e306]:
+          - generic [ref=e307]: BS detected
+          - generic [ref=e308]: "0"
+        - paragraph [ref=e310]: "reading: calibrating…"
+        - button "detect some bullshit" [ref=e311] [cursor=pointer]:
+          - text: detect some bullshit
+          - generic [ref=e312]: 🚨
+    - generic [ref=e313]:
+      - paragraph: "07"
+      - generic [ref=e314]:
+        - generic [ref=e315]:
+          - generic [ref=e316]:
+            - generic [ref=e317]: LAW · 07
+            - generic [ref=e318]: /
+            - generic [ref=e319]: add up your ROAS. now divide by reality.
+          - heading "If platform ROAS > revenue, you’re double-counting someone’s lunch." [level=2] [ref=e320]
+          - generic [ref=e321]:
+            - paragraph [ref=e322]:
+              - text: Meta says 5x. Google says 4x. TikTok says 9x. Your bank account, with the calm authority of a rock, says
+              - emphasis [ref=e323]: 1.9x
+              - text: . Each platform takes full credit for the same conversion, like four uncles claiming credit for one cousin.
+            - paragraph [ref=e324]: Blended MER is the only number with a job.
+        - generic [ref=e327]:
+          - generic [ref=e331]:
+            - paragraph [ref=e333]: CHANNEL ATTRIBUTION CO.
+            - paragraph [ref=e334]: "order #420 · self-reported"
+            - separator [ref=e335]
+            - list [ref=e336]:
+              - listitem [ref=e337]:
+                - generic [ref=e338]: Meta dashboard ROAS
+                - generic [ref=e339]: 5.4x
+              - listitem [ref=e340]:
+                - generic [ref=e341]: Google Ads ROAS
+                - generic [ref=e342]: 4.1x
+              - listitem [ref=e343]:
+                - generic [ref=e344]: TikTok ROAS
+                - generic [ref=e345]: 9.8x
+              - listitem [ref=e346]:
+                - generic [ref=e347]: —— vibes subtotal ——
+                - generic [ref=e348]: 19.3x
+              - listitem [ref=e349]:
+                - generic [ref=e350]: Blended ROAS (reality)
+                - generic [ref=e351]: 1.9x
+              - listitem [ref=e352]:
+                - generic [ref=e353]: Incremental MER
+                - generic [ref=e354]: 1.3x
+            - separator [ref=e355]
+            - generic [ref=e356]:
+              - generic [ref=e357]: TOTAL
+              - generic [ref=e358]: $ feelings
+            - paragraph [ref=e359]: tip not included · neither is incrementality
+            - generic [ref=e360]: double counted
+          - paragraph [ref=e361]: finance has the receipts. so do we now.
+    - generic [ref=e362]:
+      - paragraph: "08"
+      - generic [ref=e363]:
+        - generic [ref=e364]:
+          - generic [ref=e365]:
+            - generic [ref=e366]: LAW · 08
+            - generic [ref=e367]: /
+            - generic [ref=e368]: every stage leaks. that’s the stage.
+          - heading "Your funnel is a colander. The plan should be plumbing." [level=2] [ref=e369]
+          - generic [ref=e370]:
+            - paragraph [ref=e371]: Don’t tell us how many MQLs you’re generating. Tell us how many MQLs you’re losing between scoring and routing because someone deleted a Salesforce field on a Friday.
+            - paragraph [ref=e372]: Top-of-funnel is a vanity sport. Conversion-rate-between-stages is where companies are quietly built or quietly bled.
+        - generic [ref=e375]:
+          - generic [ref=e378]:
+            - generic [ref=e379]:
+              - generic [ref=e382]:
+                - generic [ref=e383]: Impression
+                - generic [ref=e384]: 1,000,000
+                - generic [ref=e385]: −98%
+              - generic [ref=e388]:
+                - generic [ref=e389]: Click
+                - generic [ref=e390]: 20,000
+                - generic [ref=e391]: −85%
+              - generic [ref=e394]:
+                - generic [ref=e395]: Lead
+                - generic [ref=e396]: 3,000
+                - generic [ref=e397]: −70%
+              - generic [ref=e400]:
+                - generic [ref=e401]: MQL
+                - generic [ref=e402]: "900"
+                - generic [ref=e403]: −50%
+              - generic [ref=e406]:
+                - generic [ref=e407]: SQL
+                - generic [ref=e408]: "450"
+                - generic [ref=e409]: −60%
+              - generic [ref=e412]:
+                - generic [ref=e413]: Closed Won
+                - generic [ref=e414]: "180"
+            - paragraph [ref=e415]: that’s not a funnel, that’s a colander.
+          - paragraph [ref=e416]: the floor is wet, the bucket has a hole, and the meeting is about fonts
+    - generic [ref=e418]:
+      - generic [ref=e419]:
+        - generic [ref=e420]:
+          - paragraph [ref=e421]: intermission · the quote wall
+          - heading "every marketing truth was already said in a movie." [level=2] [ref=e422]:
+            - text: every marketing truth was
+            - text: already said in a movie.
+        - paragraph [ref=e423]: tap a card · pls
+      - generic [ref=e425]:
+        - button "creative “A.B.C. — Always Be Closing.” — Glengarry Glen Ross (1992) Always be testing. Closing is a lagging indicator of a hook that already worked. tap for truth" [ref=e426] [cursor=pointer]:
+          - generic [ref=e427]:
+            - generic [ref=e428]: creative
+            - paragraph [ref=e429]: “A.B.C. — Always Be Closing.”
+            - paragraph [ref=e430]: — Glengarry Glen Ross (1992)
+            - paragraph [ref=e431]: Always be testing. Closing is a lagging indicator of a hook that already worked.
+            - generic [ref=e432]: tap for truth
+        - 'button "CRO “I’m gonna make him an offer he can’t refuse.” — The Godfather (1972) Also known as: the landing page. Value prop in one line or the mouse moves. tap for truth" [ref=e433] [cursor=pointer]':
+          - generic [ref=e434]:
+            - generic [ref=e435]: CRO
+            - paragraph [ref=e436]: “I’m gonna make him an offer he can’t refuse.”
+            - paragraph [ref=e437]: — The Godfather (1972)
+            - paragraph [ref=e438]: "Also known as: the landing page. Value prop in one line or the mouse moves."
+            - generic [ref=e439]: tap for truth
+        - button "measurement “60% of the time, it works every time.” — Anchorman (2004) This is what agency case studies sound like without incrementality tests. tap for truth" [ref=e440] [cursor=pointer]:
+          - generic [ref=e441]:
+            - generic [ref=e442]: measurement
+            - paragraph [ref=e443]: “60% of the time, it works every time.”
+            - paragraph [ref=e444]: — Anchorman (2004)
+            - paragraph [ref=e445]: This is what agency case studies sound like without incrementality tests.
+            - generic [ref=e446]: tap for truth
+        - 'button "CAC “I am inevitable.” — Avengers: Endgame — said the CAC, climbing quietly for 6 weeks while you A/B tested button colors. tap for truth" [ref=e447] [cursor=pointer]':
+          - generic [ref=e448]:
+            - generic [ref=e449]: CAC
+            - paragraph [ref=e450]: “I am inevitable.”
+            - paragraph [ref=e451]: "— Avengers: Endgame"
+            - paragraph [ref=e452]: — said the CAC, climbing quietly for 6 weeks while you A/B tested button colors.
+            - generic [ref=e453]: tap for truth
+        - button "attribution “That’s what she said.” — The Office — Michael Scott What your CMO says to every attribution number over 3x. Treat accordingly. tap for truth" [ref=e454] [cursor=pointer]:
+          - generic [ref=e455]:
+            - generic [ref=e456]: attribution
+            - paragraph [ref=e457]: “That’s what she said.”
+            - paragraph [ref=e458]: — The Office — Michael Scott
+            - paragraph [ref=e459]: What your CMO says to every attribution number over 3x. Treat accordingly.
+            - generic [ref=e460]: tap for truth
+        - button "paid media “Money never sleeps, pal.” — Wall Street (1987) Neither does your auction. But your creative pipeline sleeps Fri–Sun. Fix that. tap for truth" [ref=e461] [cursor=pointer]:
+          - generic [ref=e462]:
+            - generic [ref=e463]: paid media
+            - paragraph [ref=e464]: “Money never sleeps, pal.”
+            - paragraph [ref=e465]: — Wall Street (1987)
+            - paragraph [ref=e466]: Neither does your auction. But your creative pipeline sleeps Fri–Sun. Fix that.
+            - generic [ref=e467]: tap for truth
+        - button "paid search “I drink your milkshake.” — There Will Be Blood (2007) Brand search cannibalization, narrated by Daniel Day-Lewis. tap for truth" [ref=e468] [cursor=pointer]:
+          - generic [ref=e469]:
+            - generic [ref=e470]: paid search
+            - paragraph [ref=e471]: “I drink your milkshake.”
+            - paragraph [ref=e472]: — There Will Be Blood (2007)
+            - paragraph [ref=e473]: Brand search cannibalization, narrated by Daniel Day-Lewis.
+            - generic [ref=e474]: tap for truth
+        - 'button "ops “L’enfer, c’est les autres.” / Hell is other people. — Sartre, via every Q4 planning meeting Specifically: other teams owning the landing page you depend on. tap for truth" [ref=e475] [cursor=pointer]':
+          - generic [ref=e476]:
+            - generic [ref=e477]: ops
+            - paragraph [ref=e478]: “L’enfer, c’est les autres.” / Hell is other people.
+            - paragraph [ref=e479]: — Sartre, via every Q4 planning meeting
+            - paragraph [ref=e480]: "Specifically: other teams owning the landing page you depend on."
+            - generic [ref=e481]: tap for truth
+        - button "privacy “You get nothing. Good day, sir.” — Willy Wonka (1971) — the iOS 14 update, to your retargeting audience, in 2021. tap for truth" [ref=e482] [cursor=pointer]:
+          - generic [ref=e483]:
+            - generic [ref=e484]: privacy
+            - paragraph [ref=e485]: “You get nothing. Good day, sir.”
+            - paragraph [ref=e486]: — Willy Wonka (1971)
+            - paragraph [ref=e487]: — the iOS 14 update, to your retargeting audience, in 2021.
+            - generic [ref=e488]: tap for truth
+        - button "agencies “Tell him to go and fuck himself.” — Succession — Logan Roy Healthy response to anyone promising guaranteed ROAS in a cold email. tap for truth" [ref=e489] [cursor=pointer]:
+          - generic [ref=e490]:
+            - generic [ref=e491]: agencies
+            - paragraph [ref=e492]: “Tell him to go and fuck himself.”
+            - paragraph [ref=e493]: — Succession — Logan Roy
+            - paragraph [ref=e494]: Healthy response to anyone promising guaranteed ROAS in a cold email.
+            - generic [ref=e495]: tap for truth
+        - button "blended MER “It’s always sunny… in the dashboard.” — Always Sunny, loosely Platform dashboards are mood lighting. Finance has the actual weather report. tap for truth" [ref=e496] [cursor=pointer]:
+          - generic [ref=e497]:
+            - generic [ref=e498]: blended MER
+            - paragraph [ref=e499]: “It’s always sunny… in the dashboard.”
+            - paragraph [ref=e500]: — Always Sunny, loosely
+            - paragraph [ref=e501]: Platform dashboards are mood lighting. Finance has the actual weather report.
+            - generic [ref=e502]: tap for truth
+        - 'button "creative decay “Winter is coming.” — Game of Thrones Translation: your creative has a 14-day half-life and you made four ads this month. tap for truth" [ref=e503] [cursor=pointer]':
+          - generic [ref=e504]:
+            - generic [ref=e505]: creative decay
+            - paragraph [ref=e506]: “Winter is coming.”
+            - paragraph [ref=e507]: — Game of Thrones
+            - paragraph [ref=e508]: "Translation: your creative has a 14-day half-life and you made four ads this month."
+            - generic [ref=e509]: tap for truth
+        - button "measurement “We used to make things in this country.” — The Wire — Frank Sobotka We used to do holdout tests, too. Then someone bought a new dashboard. tap for truth" [ref=e510] [cursor=pointer]:
+          - generic [ref=e511]:
+            - generic [ref=e512]: measurement
+            - paragraph [ref=e513]: “We used to make things in this country.”
+            - paragraph [ref=e514]: — The Wire — Frank Sobotka
+            - paragraph [ref=e515]: We used to do holdout tests, too. Then someone bought a new dashboard.
+            - generic [ref=e516]: tap for truth
+        - button "attribution “I am the one who knocks.” — Breaking Bad — Walter White Direct traffic, taking full credit for the brand spend it never paid for. tap for truth" [ref=e517] [cursor=pointer]:
+          - generic [ref=e518]:
+            - generic [ref=e519]: attribution
+            - paragraph [ref=e520]: “I am the one who knocks.”
+            - paragraph [ref=e521]: — Breaking Bad — Walter White
+            - paragraph [ref=e522]: Direct traffic, taking full credit for the brand spend it never paid for.
+            - generic [ref=e523]: tap for truth
+        - 'button "ops “Make it so.” — Star Trek: TNG — Picard What executives say about ideas that have not been scoped, staffed, or funded. tap for truth" [ref=e524] [cursor=pointer]':
+          - generic [ref=e525]:
+            - generic [ref=e526]: ops
+            - paragraph [ref=e527]: “Make it so.”
+            - paragraph [ref=e528]: "— Star Trek: TNG — Picard"
+            - paragraph [ref=e529]: What executives say about ideas that have not been scoped, staffed, or funded.
+            - generic [ref=e530]: tap for truth
+        - button "measurement “I don’t know what I don’t know.” — The Big Short (2015) The only honest sentence in a marketing QBR. Say it more. tap for truth" [ref=e531] [cursor=pointer]:
+          - generic [ref=e532]:
+            - generic [ref=e533]: measurement
+            - paragraph [ref=e534]: “I don’t know what I don’t know.”
+            - paragraph [ref=e535]: — The Big Short (2015)
+            - paragraph [ref=e536]: The only honest sentence in a marketing QBR. Say it more.
+            - generic [ref=e537]: tap for truth
+        - button "lifecycle “Believe.” — Ted Lasso Also the entire methodology behind MQL scoring. Discuss. tap for truth" [ref=e538] [cursor=pointer]:
+          - generic [ref=e539]:
+            - generic [ref=e540]: lifecycle
+            - paragraph [ref=e541]: “Believe.”
+            - paragraph [ref=e542]: — Ted Lasso
+            - paragraph [ref=e543]: Also the entire methodology behind MQL scoring. Discuss.
+            - generic [ref=e544]: tap for truth
+        - button "unit econ “Tabs vs spaces.” — Silicon Valley (HBO) CAC vs LTV. Both sides yelling, nobody’s looking at payback period. tap for truth" [ref=e545] [cursor=pointer]:
+          - generic [ref=e546]:
+            - generic [ref=e547]: unit econ
+            - paragraph [ref=e548]: “Tabs vs spaces.”
+            - paragraph [ref=e549]: — Silicon Valley (HBO)
+            - paragraph [ref=e550]: CAC vs LTV. Both sides yelling, nobody’s looking at payback period.
+            - generic [ref=e551]: tap for truth
+        - button "measurement “Funny how? I mean, funny like I’m a clown? I amuse you?” — Goodfellas (1990) Your CEO, when you say a campaign with no UTMs ‘felt like it worked.’ tap for truth" [ref=e552] [cursor=pointer]:
+          - generic [ref=e553]:
+            - generic [ref=e554]: measurement
+            - paragraph [ref=e555]: “Funny how? I mean, funny like I’m a clown? I amuse you?”
+            - paragraph [ref=e556]: — Goodfellas (1990)
+            - paragraph [ref=e557]: Your CEO, when you say a campaign with no UTMs ‘felt like it worked.’
+            - generic [ref=e558]: tap for truth
+        - 'button "buzzwords “Inconceivable!” / “You keep using that word…” — The Princess Bride (1987) Translation: ‘viral,’ ‘omnichannel,’ ‘full-funnel,’ used in the same sentence. tap for truth" [ref=e559] [cursor=pointer]':
+          - generic [ref=e560]:
+            - generic [ref=e561]: buzzwords
+            - paragraph [ref=e562]: “Inconceivable!” / “You keep using that word…”
+            - paragraph [ref=e563]: — The Princess Bride (1987)
+            - paragraph [ref=e564]: "Translation: ‘viral,’ ‘omnichannel,’ ‘full-funnel,’ used in the same sentence."
+            - generic [ref=e565]: tap for truth
+        - button "ops “Looks like somebody’s got a case of the Mondays.” — Office Space (1999) Said cheerfully on the morning your iOS attribution dashboard breaks again. tap for truth" [ref=e566] [cursor=pointer]:
+          - generic [ref=e567]:
+            - generic [ref=e568]: ops
+            - paragraph [ref=e569]: “Looks like somebody’s got a case of the Mondays.”
+            - paragraph [ref=e570]: — Office Space (1999)
+            - paragraph [ref=e571]: Said cheerfully on the morning your iOS attribution dashboard breaks again.
+            - generic [ref=e572]: tap for truth
+    - generic [ref=e573]:
+      - paragraph: "09"
+      - generic [ref=e574]:
+        - generic [ref=e575]:
+          - generic [ref=e576]:
+            - generic [ref=e577]: LAW · 09
+            - generic [ref=e578]: /
+            - generic [ref=e579]: stakeholder ≠ user
+          - heading "The CEO is not your buyer. Please act accordingly." [level=2] [ref=e580]
+          - generic [ref=e581]:
+            - paragraph [ref=e582]: “Make the logo bigger.” “Move it above the fold.” “Let’s try a video, but keep it under 30 seconds and also longer.” Every test that ever ran has died on the rocks of a senior person typing at 9:41pm.
+            - paragraph [ref=e583]: Decisions belong to whoever holds the data. Opinions, however senior, do not vote.
+        - generic [ref=e586]:
+          - generic [ref=e590]:
+            - generic [ref=e591]:
+              - generic [ref=e595]: "#growth-feedback"
+              - generic [ref=e596]: 3 unread
+            - list [ref=e597]:
+              - listitem [ref=e598]:
+                - generic [ref=e599]:
+                  - generic [ref=e600]:
+                    - generic [ref=e601]: boss
+                    - generic [ref=e602]: 9:41
+                  - paragraph [ref=e603]: can we make the logo bigger
+              - listitem [ref=e604]:
+                - generic [ref=e605]:
+                  - generic [ref=e606]:
+                    - generic [ref=e607]: you
+                    - generic [ref=e608]: 9:41
+                  - paragraph [ref=e609]: the CTR went down 38% last time we did
+              - listitem [ref=e610]:
+                - generic [ref=e611]:
+                  - generic [ref=e612]:
+                    - generic [ref=e613]: boss
+                    - generic [ref=e614]: 9:42
+                  - paragraph [ref=e615]: yeah but the CEO can’t see it
+              - listitem [ref=e616]:
+                - generic [ref=e617]:
+                  - generic [ref=e618]:
+                    - generic [ref=e619]: you
+                    - generic [ref=e620]: 9:42
+                  - paragraph [ref=e621]: the CEO is not the buyer
+              - listitem [ref=e622]:
+                - generic [ref=e623]:
+                  - generic [ref=e624]:
+                    - generic [ref=e625]: boss
+                    - generic [ref=e626]: 9:43
+                  - paragraph [ref=e627]: let’s align on this
+              - listitem [ref=e628]:
+                - generic [ref=e629]:
+                  - generic [ref=e630]:
+                    - generic [ref=e631]: you
+                    - generic [ref=e632]: 9:43
+                  - paragraph [ref=e633]: we are aligned. you are wrong.
+            - generic [ref=e634]:
+              - generic [ref=e635]: type a passive-aggressive reply…
+              - generic [ref=e636]: "|"
+          - paragraph [ref=e637]: this dm has been re-enacted in 437 unique companies
+    - generic [ref=e638]:
+      - paragraph: "10"
+      - generic [ref=e639]:
+        - generic [ref=e640]:
+          - generic [ref=e641]:
+            - generic [ref=e642]: LAW · 10
+            - generic [ref=e643]: /
+            - generic [ref=e644]: words ≠ work
+          - heading "If the slide reads like a bingo card, that’s because it is one." [level=2] [ref=e645]
+          - generic [ref=e646]:
+            - paragraph [ref=e647]: “We’ll synergize an AI-native, category-defining, intent-led, brand-led, agentic, full-funnel motion.” Cool. Who shipped what, by when, against which baseline?
+            - paragraph [ref=e648]: Every buzzword on the deck is one fewer mechanism in the plan. The inverse is also true and rarer.
+        - generic [ref=e651]:
+          - generic [ref=e654]:
+            - generic [ref=e655]:
+              - generic [ref=e656]:
+                - text: synergize
+                - generic [ref=e657]: ✕
+              - generic [ref=e658]: AI-native
+              - generic [ref=e659]: category creation
+              - generic [ref=e660]:
+                - text: pipeline gen
+                - generic [ref=e661]: ✕
+              - generic [ref=e662]: intent data
+              - generic [ref=e663]:
+                - text: PLG motion
+                - generic [ref=e664]: ✕
+              - generic [ref=e665]:
+                - text: 10x ROAS
+                - generic [ref=e666]: ✕
+              - generic [ref=e667]: FREE
+              - generic [ref=e668]:
+                - text: thought leader
+                - generic [ref=e669]: ✕
+              - generic [ref=e670]: growth loop
+              - generic [ref=e671]: north-star metric
+              - generic [ref=e672]:
+                - text: ICP refresh
+                - generic [ref=e673]: ✕
+              - generic [ref=e674]:
+                - text: vibe shift
+                - generic [ref=e675]: ✕
+              - generic [ref=e676]: first-party
+              - generic [ref=e677]: brand-led
+              - generic [ref=e678]:
+                - text: agentic
+                - generic [ref=e679]: ✕
+            - paragraph [ref=e680]: BINGO. now do the work.
+          - paragraph [ref=e681]: "rule of thumb: 3+ buzzwords per slide = nobody knows what we’re doing"
+    - generic [ref=e683]:
+      - generic [ref=e684]:
+        - generic [ref=e685]:
+          - paragraph [ref=e686]: stuff on the fridge · drag them around
+          - heading "the sticky-note appendix" [level=2] [ref=e687]
+        - paragraph [ref=e688]: yes, on mobile too
+      - generic [ref=e689]:
+        - generic [ref=e690]:
+          - text: ROAS is a feelings journal
+          - paragraph [ref=e691]: — me, to the CFO
+        - generic [ref=e693]:
+          - text: kill the 7 losing ads. today.
+          - paragraph [ref=e694]: — every account
+        - generic [ref=e696]:
+          - text: MMM ≠ magic MMM = regression + therapy
+          - paragraph [ref=e697]: — attribution lead, tired
+        - generic [ref=e699]:
+          - text: if it fits in one number it is lying to you
+          - paragraph [ref=e700]: — law 02, still
+        - generic [ref=e702]:
+          - text: nobody clicked the CTA because nobody understood the page.
+          - paragraph [ref=e703]: — CRO, week 1
+      - paragraph [ref=e705]: no state is saved. rearrange to your taste, reload when you’re over it.
+    - generic [ref=e706]:
+      - paragraph: "11"
+      - generic [ref=e707]:
+        - generic [ref=e708]:
+          - generic [ref=e709]:
+            - generic [ref=e710]: LAW · 11
+            - generic [ref=e711]: /
+            - generic [ref=e712]: the winner today is the loser by Q3
+          - heading "Every ad has a half-life. Plan for the funeral, not the honeymoon." [level=2] [ref=e713]
+          - generic [ref=e714]:
+            - paragraph [ref=e715]: The first two weeks are a sugar high. CPA is gorgeous. The boss says scale. By day 21 the audience is saturated, the hook is stale, and CPA has quietly tripled — but the spend is still set to “send it.”
+            - paragraph [ref=e716]: Always be making the next ad. If your creative pipeline is one person on Fridays, your ROAS is on a timer.
+        - generic [ref=e719]:
+          - generic [ref=e722]:
+            - img [ref=e723]:
+              - generic [ref=e725]: D0
+              - generic [ref=e727]: D7
+              - generic [ref=e729]: D14
+              - generic [ref=e731]: D21
+              - generic [ref=e733]: D28
+              - generic [ref=e736]: HONEYMOON
+              - generic [ref=e737]: CPA = chef’s kiss
+              - generic [ref=e738]: boss says SCALE
+              - generic [ref=e739]: it stopped working??
+              - generic [ref=e740]: CPA
+            - paragraph [ref=e741]: creative is yogurt. it expires.
+          - paragraph [ref=e742]: creative is yogurt · check the date · throw it out
+    - generic [ref=e743]:
+      - paragraph: "12"
+      - generic [ref=e744]:
+        - generic [ref=e745]:
+          - generic [ref=e746]:
+            - generic [ref=e747]: LAW · 12
+            - generic [ref=e748]: /
+            - generic [ref=e749]: 60 / 40, please go home
+          - heading "Brand vs. performance is a false binary sold by people who chose neither." [level=2] [ref=e750]
+          - generic [ref=e751]:
+            - paragraph [ref=e752]: Performance picks the fruit. Brand grows the tree. If you only do one, in three years you’re bidding against your own brand search and calling it efficiency.
+            - paragraph [ref=e753]: The split has been roughly 60 brand / 40 performance for two decades of evidence. Maybe just… do that. Then go for a walk.
+        - generic [ref=e756]:
+          - generic [ref=e760]:
+            - generic [ref=e761]:
+              - paragraph [ref=e762]: Q4 Planning · choose one
+              - paragraph [ref=e763]: cmo.exe v8.2
+            - generic [ref=e764]:
+              - button "Button A Build the brand no number this quarter" [ref=e765] [cursor=pointer]:
+                - generic [ref=e766]: Button A
+                - generic [ref=e767]: Build the brand
+                - generic [ref=e768]: no number this quarter
+              - button "Button B Hit the number no brand by Q3" [ref=e769] [cursor=pointer]:
+                - generic [ref=e770]: Button B
+                - generic [ref=e771]: Hit the number
+                - generic [ref=e772]: no brand by Q3
+            - generic [ref=e773]:
+              - generic [ref=e774]: 🥵
+              - paragraph [ref=e775]:
+                - text: The CMO, sweating, choosing
+                - text: — neither, badly —
+            - paragraph [ref=e776]: It’s a 60 / 40 split, Binet & Field said it twenty years ago, please read.
+          - paragraph [ref=e777]: Binet & Field, ‘The Long and the Short of It’, 2013, still right
+    - generic [ref=e780]:
+      - paragraph [ref=e781]: “I told you so” counter
+      - paragraph [ref=e782]: "0"
+      - paragraph [ref=e783]: times you were right
+      - button "+1 I told you so" [ref=e784] [cursor=pointer]
+    - generic [ref=e785]:
+      - generic [ref=e786]:
+        - generic [ref=e787]:
+          - paragraph [ref=e788]: that’s it. that’s the page.
+          - heading "no PDFs to download. no “5-step framework”. just the same twelve points, forever." [level=3] [ref=e789]:
+            - text: no PDFs to download.
+            - text: no “5-step framework”.
+            - text: just the same twelve points,
+            - text: forever.
+          - paragraph [ref=e790]: If something here was wrong, please yell. If something was right, please also yell, ideally on a platform with an algorithm.
+          - generic [ref=e791]:
+            - link "yell at me ↗" [ref=e792] [cursor=pointer]:
+              - /url: "#yell"
+            - link "↑ rewind to law 01" [ref=e793] [cursor=pointer]:
+              - /url: "#top"
+        - generic [ref=e794]:
+          - paragraph [ref=e795]: the table of contents
+          - list [ref=e796]:
+            - listitem [ref=e797]:
+              - link "01 · Iceberg of Attribution" [ref=e798] [cursor=pointer]:
+                - /url: "#law-01"
+            - listitem [ref=e799]:
+              - link "02 · Drake (CAC vs LTV)" [ref=e800] [cursor=pointer]:
+                - /url: "#law-02"
+            - listitem [ref=e801]:
+              - link "03 · Distracted CMO" [ref=e802] [cursor=pointer]:
+                - /url: "#law-03"
+            - listitem [ref=e803]:
+              - link "04 · Dunning–Kruger of Buyers" [ref=e804] [cursor=pointer]:
+                - /url: "#law-04"
+            - listitem [ref=e805]:
+              - link "05 · Power Law of Creative" [ref=e806] [cursor=pointer]:
+                - /url: "#law-05"
+            - listitem [ref=e807]:
+              - link "06 · Brain of Attribution" [ref=e808] [cursor=pointer]:
+                - /url: "#law-06"
+            - listitem [ref=e809]:
+              - link "07 · ROAS Receipt" [ref=e810] [cursor=pointer]:
+                - /url: "#law-07"
+            - listitem [ref=e811]:
+              - link "08 · Funnel = Colander" [ref=e812] [cursor=pointer]:
+                - /url: "#law-08"
+            - listitem [ref=e813]:
+              - link "09 · Slack DM Theorem" [ref=e814] [cursor=pointer]:
+                - /url: "#law-09"
+            - listitem [ref=e815]:
+              - link "10 · Buzzword Bingo" [ref=e816] [cursor=pointer]:
+                - /url: "#law-10"
+            - listitem [ref=e817]:
+              - link "11 · Creative Half-Life" [ref=e818] [cursor=pointer]:
+                - /url: "#law-11"
+            - listitem [ref=e819]:
+              - link "12 · Two Buttons (Brand vs Perf)" [ref=e820] [cursor=pointer]:
+                - /url: "#law-12"
+      - generic [ref=e822]:
+        - paragraph [ref=e823]: © 2026 · the laws of performance marketing
+        - paragraph [ref=e824]: built in spite of every dashboard i’ve ever seen
+        - paragraph [ref=e825]: "last updated: when something else broke"
+    - generic [ref=e826]:
+      - generic [ref=e827]: reading as
+      - button "CMO" [ref=e828] [cursor=pointer]: 🎩CMO
+      - button "marketer" [pressed] [ref=e829] [cursor=pointer]: 🛠️marketer
+      - button "founder" [ref=e830] [cursor=pointer]: 🔥founder
+      - button "agency" [ref=e831] [cursor=pointer]: 🧾agency

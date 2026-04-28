@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound.tsx";
 
 const ConversionPage = lazy(() => import("./pages/ConversionPage.tsx"));
 const StackPage = lazy(() => import("./pages/StackPage.tsx"));
+const BlogIndex = lazy(() => import("./pages/BlogIndex.tsx"));
+const BlogPost = lazy(() => import("./pages/BlogPost.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/conversion" element={<ConversionPage />} />
             <Route path="/stack" element={<StackPage />} />
+            <Route path="/blog" element={<BlogIndex />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
