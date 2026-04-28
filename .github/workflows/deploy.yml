@@ -37,13 +37,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy build to root
+        run: |
+          cp -r dist/* .
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
