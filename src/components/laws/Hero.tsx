@@ -7,12 +7,12 @@ const Hero = () => (
   >
     {/* Tiny topbar */}
     <div className="mb-10 flex items-center justify-between sm:mb-14">
-      <div className="flex items-center gap-2">
+      <a href="/" className="flex items-center gap-2">
         <span className="h-3 w-3 rounded-full border-2 border-ink bg-acid" />
         <span className="font-grotesk text-xs font-bold uppercase tracking-wider">
           The Laws of Performance Marketing
         </span>
-      </div>
+      </a>
       <span className="hidden font-mono text-[11px] ink-faint sm:inline">
         v.2026 · still mad
       </span>

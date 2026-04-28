@@ -13,6 +13,11 @@ const SiteFooter = () => {
     "11 · Creative Half-Life",
     "12 · Two Buttons (Brand vs Perf)",
   ];
+  const pages = [
+    { href: "/", label: "Home" },
+    { href: "/conversion", label: "Conversion Playbook" },
+    { href: "/stack", label: "Sales Stack Playbook" },
+  ];
   return (
     <footer id="yell" className="relative mt-16 border-t-2 border-ink bg-ink text-paper">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-12 md:gap-12 lg:px-12">
@@ -40,6 +45,19 @@ const SiteFooter = () => {
         </div>
 
         <div className="md:col-span-5">
+          <p className="mb-3 font-grotesk text-[11px] font-bold uppercase tracking-wider text-paper/60">
+            playbooks
+          </p>
+          <ul className="mb-6 grid grid-cols-1 gap-y-1.5 font-mono text-[12px] sm:text-[13px]">
+            {pages.map((p) => (
+              <li key={p.href}>
+                <a href={p.href} className="text-paper/85 transition-colors hover:text-acid">
+                  {p.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
           <p className="mb-3 font-grotesk text-[11px] font-bold uppercase tracking-wider text-paper/60">
             the table of contents
           </p>
