@@ -13,7 +13,3 @@ node_modules
 # Scratch
 *.local
 
-# Generated at deploy time by scripts/build-assets.mjs
-assets/og-image.png
-assets/apple-touch-icon.png
-assets/Ashok-Singh-CV.pdf
