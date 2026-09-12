@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics Playground — Ashok Singh</title>
+  <meta name="description" content="Interactive physics simulations by Ashok Singh — gravity wells, particle fields and orbital mechanics, built with JavaScript and Canvas." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0e12" />
+  <link rel="canonical" href="https://whoisashok.com/lab/" />
+  <meta property="og:title" content="Physics Playground · Ashok Singh" />
+  <meta property="og:description" content="Gravity wells, particle fields and orbital mechanics — because marketing is applied behavioral science." />
+  <meta property="og:image" content="https://whoisashok.com/assets/og-image.png" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" /></noscript>
+  <style>
+    :root {
+      --void: #0c0e12; --surface: #14171d; --card: #1f2430; --amber: #c9952a; --ink: #e8ecf2;
+      --muted: #8b9199; --border: rgba(232,236,242,0.09); --signal: #38bdf8; --growth: #4ade80; --insight: #a78bfa;
+      --display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+      --body: "Inter", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: dark; }
+    body { margin: 0; background: var(--void); color: var(--ink); font-family: var(--body); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 3vw, 32px); border-bottom: 1px solid var(--border); }
+    .back { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .back:hover { color: var(--amber); }
+    .mono { font-family: var(--display); font-weight: 700; color: var(--amber); letter-spacing: 0.08em; }
+    main { flex: 1; display: grid; grid-template-columns: 280px 1fr; gap: 0; min-height: 0; }
+    aside { padding: 24px clamp(16px, 3vw, 28px); border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 20px; }
+    h1 { margin: 0; font-family: var(--display); font-size: 24px; line-height: 1.15; }
+    .intro { margin: 0; color: var(--muted); font-size: 14px; }
+    .sims { display: flex; flex-direction: column; gap: 8px; }
+    .sim-btn { text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: border-color .2s, background-color .2s; }
+    .sim-btn strong { display: block; font-family: var(--display); font-size: 15px; }
+    .sim-btn span { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted); }
+    .sim-btn:hover { border-color: var(--amber); }
+    .sim-btn[aria-pressed="true"] { border-color: var(--amber); background: rgba(201,149,42,0.1); }
+    .controls { display: flex; flex-direction: column; gap: 12px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .controls label { display: flex; flex-direction: column; gap: 6px; }
+    .controls input[type="range"] { accent-color: var(--amber); width: 100%; }
+    .hint { margin-top: auto; font-family: var(--mono); font-size: 11px; color: #6b7280; line-height: 1.6; }
+    .stage { position: relative; min-height: 60vh; }
+    canvas { display: block; width: 100%; height: 100%; position: absolute; inset: 0; touch-action: none; }
+    .hud { position: absolute; left: 16px; bottom: 14px; font-family: var(--mono); font-size: 11px; color: #6b7280; pointer-events: none; }
+    footer { padding: 16px; text-align: center; font-family: var(--mono); font-size: 11px; color: #6b7280; border-top: 1px solid var(--border); }
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+      aside { border-right: 0; border-bottom: 1px solid var(--border); }
+      .stage { min-height: 70vh; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../">← whoisashok.com</a>
+    <a class="mono" href="../" aria-label="Ashok Singh — home">A·S</a>
+  </header>
+
+  <main>
+    <aside>
+      <div>
+        <h1>Physics Playground</h1>
+        <p class="intro">Code-driven simulations — because marketing is applied behavioral science. Or maybe I just think particles are cool.</p>
+      </div>
+
+      <div class="sims" role="group" aria-label="Choose a simulation">
+        <button class="sim-btn" type="button" data-sim="gravity" aria-pressed="true"><strong>Gravity Well</strong><span>Particles orbit a mass. Click to add wells; drag to move them.</span></button>
+        <button class="sim-btn" type="button" data-sim="field" aria-pressed="false"><strong>Particle Field</strong><span>A flow field of thousands of points. Your cursor bends the field.</span></button>
+        <button class="sim-btn" type="button" data-sim="nbody" aria-pressed="false"><strong>Orbital Mechanics</strong><span>N-body gravity. Everything pulls on everything.</span></button>
+      </div>
+
+      <div class="controls">
+        <label>strength <input id="ctl-strength" type="range" min="0.2" max="3" step="0.1" value="1" /></label>
+        <label>particles <input id="ctl-count" type="range" min="1" max="4" step="1" value="2" /></label>
+        <button class="sim-btn" type="button" id="ctl-reset"><strong>Reset</strong><span>Re-seed the current simulation</span></button>
+      </div>
+
+      <p class="hint">Move: hover / drag · Add: click · Keys: 1 2 3 switch · R reset · Space pause</p>
+    </aside>
+
+    <section class="stage" aria-label="Simulation">
+      <canvas id="sim"></canvas>
+      <div class="hud" id="hud"></div>
+    </section>
+  </main>
+
+  <footer>© 2026 Ashok Singh · Built with code, caffeine, and zero stock images.</footer>
+
+  <script type="module" src="playground.js"></script>
+</body>
+</html>

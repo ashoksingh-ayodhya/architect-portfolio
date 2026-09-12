@@ -29,23 +29,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Create 404 page for SPA routing
-        run: cp dist/index.html dist/404.html
-
-      - name: Copy build to root
-        run: cp -r dist/* .
+      # The OG image, touch icon and CV PDF are generated from their SVG/HTML
+      # sources at deploy time — the repo stays image-free.
+      - name: Generate code-built assets
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node scripts/build-assets.mjs
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # Static site — no bundler. The repo root (plus generated assets) is the deployable.
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

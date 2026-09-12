@@ -1,23 +1,633 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ashok Singh</title>
-    <meta name="description" content="Ashok Singh — a portfolio of opinions on performance marketing, mostly correct.">
-    <meta name="author" content="Ashok Singh" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ashok Singh — B2B Performance Marketing · Growth Systems</title>
+  <meta name="description" content="Performance marketing leader with 9+ years building full-funnel B2B lead generation systems. Google Ads, LinkedIn, Salesforce, SEO. From 16% to 48% lead workable rate. Based in India." />
+  <meta name="author" content="Ashok Singh" />
+  <meta name="theme-color" content="#0c0e12" />
+  <link rel="canonical" href="https://whoisashok.com/" />
 
-    <meta property="og:type" content="website" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://whoisashok.com/" />
+  <meta property="og:title" content="Ashok Singh · B2B Growth Systems" />
+  <meta property="og:description" content="I build systems that turn clicks into revenue. 9+ years in B2B performance marketing." />
+  <meta property="og:image" content="https://whoisashok.com/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ashok Singh · B2B Growth Systems" />
+  <meta name="twitter:description" content="I build systems that turn clicks into revenue. 9+ years in B2B performance marketing." />
+  <meta name="twitter:image" content="https://whoisashok.com/assets/og-image.png" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:title" content="Ashok Singh">
-    <meta name="twitter:title" content="Ashok Singh">
-    <meta property="og:description" content="Ashok Singh — a portfolio of opinions on performance marketing, mostly correct.">
-    <meta name="twitter:description" content="Ashok Singh — a portfolio of opinions on performance marketing, mostly correct.">
-  </head>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Fonts load without blocking render; text shows in the fallback stack immediately (font-display: swap). -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" /></noscript>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ashok Singh",
+    "jobTitle": "Performance Marketing Manager",
+    "url": "https://whoisashok.com",
+    "email": "mailto:awesomeashoksingh@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Delhi", "addressCountry": "IN" },
+    "sameAs": ["https://linkedin.com/in/digitalashok"],
+    "knowsAbout": ["B2B Marketing", "Performance Marketing", "Google Ads", "Salesforce", "Lead Generation", "SEO"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Section 1: System Boot Loader ===== -->
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <div class="loader__monogram">A · S</div>
+      <p class="loader__status"><span class="loader__type" data-text="INITIALIZING GROWTH ENGINE"></span><span class="loader__caret"></span></p>
+      <ul class="loader__channels">
+        <li class="loader__channel"><span>Google Ads</span><span class="loader__check">✓</span></li>
+        <li class="loader__channel loader__channel--desktop"><span>LinkedIn Ads</span><span class="loader__check">✓</span></li>
+        <li class="loader__channel"><span>Salesforce</span><span class="loader__check">✓</span></li>
+        <li class="loader__channel loader__channel--desktop"><span>SEO</span><span class="loader__check">✓</span></li>
+        <li class="loader__channel"><span>Analytics</span><span class="loader__check">✓</span></li>
+      </ul>
+      <div class="loader__progress">
+        <div class="loader__bar"><div class="loader__fill"></div></div>
+        <span class="loader__pct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom cursor (desktop only) -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"><span class="cursor__label"></span></div>
+  </div>
+
+  <!-- Funnel progress indicator (desktop only) -->
+  <aside class="funnel-progress" aria-hidden="true">
+    <div class="funnel-progress__track"><div class="funnel-progress__fill"></div></div>
+    <ol class="funnel-progress__labels">
+      <li data-stage="awareness">Awareness</li>
+      <li data-stage="interest">Interest</li>
+      <li data-stage="evaluation">Evaluation</li>
+      <li data-stage="decision">Decision</li>
+      <li data-stage="action">Action</li>
+    </ol>
+  </aside>
+
+  <!-- ===== Navigation ===== -->
+  <header class="nav" id="nav">
+    <a class="nav__monogram" href="#hero" aria-label="Ashok Singh — back to top">
+      <span>A</span><span class="nav__mono-expand">SHOK</span><span class="nav__mono-dot">·S</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#work" data-nav="work">Work</a>
+      <a href="#story" data-nav="story">Story</a>
+      <a href="#connect" data-nav="connect">Connect</a>
+      <a class="nav__cta" href="assets/Ashok-Singh-CV.pdf" download data-cursor="Download">Get CV ↓</a>
+    </nav>
+    <button class="nav__burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav aria-label="Mobile">
+      <a href="#work">Work</a>
+      <a href="#story">Story</a>
+      <a href="#connect">Connect</a>
+    </nav>
+    <a class="mobile-menu__cta" href="assets/Ashok-Singh-CV.pdf" download>Get CV ↓</a>
+  </div>
+
+  <main id="main">
+
+    <!-- ===== Section 2: Hero — The Claim ===== -->
+    <section id="hero" class="hero">
+      <canvas class="hero__canvas" id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero__content">
+        <h1 class="hero__title" id="hero-title">
+          <span class="hero__line">I BUILD SYSTEMS</span>
+          <span class="hero__line">THAT TURN CLICKS</span>
+          <span class="hero__line">INTO REVENUE<span class="hero__period">.</span></span>
+        </h1>
+        <p class="hero__subtitle">Performance Marketing <span class="hero__dot">·</span> B2B Growth Strategy <span class="hero__dot">·</span> Full-Funnel Systems</p>
+      </div>
+      <div class="hero__scroll" id="hero-scroll" aria-hidden="true">
+        <span class="hero__scroll-text">SCROLL TO EXPLORE</span>
+        <span class="hero__scroll-line"><span class="hero__scroll-ball"></span></span>
+      </div>
+    </section>
+
+    <!-- ===== Section 3: Proof Strip ===== -->
+    <section id="proof" class="proof" aria-label="Key results">
+      <div class="proof__grid">
+        <article class="proof__card">
+          <p class="proof__number">
+            <span class="proof__before"><span class="count" data-to="16">0</span>%</span>
+            <span class="proof__after"><span class="proof__arrow">→</span><span class="count" data-to="48">0</span>%</span>
+          </p>
+          <p class="proof__label">Lead workable rate — 3× lift in 2 years</p>
+        </article>
+        <article class="proof__card">
+          <p class="proof__number">
+            <span class="proof__before"><span class="count" data-to="37">0</span>%</span>
+            <span class="proof__after"><span class="proof__arrow">→</span><span class="count" data-to="52">0</span>%</span>
+          </p>
+          <p class="proof__label">Qualified-to-closed-won conversion</p>
+        </article>
+        <article class="proof__card">
+          <p class="proof__number"><span class="count" data-to="80">0</span>%</p>
+          <p class="proof__label">CRM workflows automated via Salesforce</p>
+        </article>
+        <article class="proof__card">
+          <p class="proof__number"><span class="count" data-to="20000">0</span>+</p>
+          <p class="proof__label">Client base — referral GTM launched &amp; live</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Section 4: The Growth Engine ===== -->
+    <section id="engine" class="engine">
+      <div class="engine__pin">
+        <div class="engine__head">
+          <h2 class="section-title">How I Build Growth Systems</h2>
+          <p class="engine__intro">Every B2B lead engine I've built follows the same architecture. Channels feed into a qualification system. The system scores, routes, and nurtures. What survives becomes pipeline. What converts feeds back into the system. The funnel below is the one I built at Edenred — scroll to watch it assemble.</p>
+        </div>
+
+        <ul class="engine__chips" aria-label="Channels">
+          <li>Google Ads</li><li>LinkedIn</li><li>Meta</li><li>SEO</li><li>Referral</li>
+        </ul>
+
+        <div class="funnel" id="funnel">
+          <svg class="funnel__svg" id="funnel-svg" viewBox="0 0 1000 660" role="img" aria-labelledby="funnel-title">
+            <title id="funnel-title">The Edenred B2B lead funnel: channels feed Awareness, Interest, Evaluation and Closed-won stages, with a referral loop feeding back to the top.</title>
+
+            <!-- Channels (desktop) -->
+            <g class="funnel__channels" id="funnel-channels">
+              <g class="funnel__channel">
+                <circle cx="168" cy="68" r="3" />
+                <text x="40" y="72">Google Ads</text>
+                <path class="funnel__connector" d="M178 68 C 236 68, 236 110, 294 110" />
+              </g>
+              <g class="funnel__channel">
+                <circle cx="168" cy="104" r="3" />
+                <text x="40" y="108">LinkedIn Ads</text>
+                <path class="funnel__connector" d="M178 104 C 236 104, 236 110, 294 110" />
+              </g>
+              <g class="funnel__channel">
+                <circle cx="168" cy="140" r="3" />
+                <text x="40" y="144">Meta Ads</text>
+                <path class="funnel__connector" d="M178 140 C 236 140, 236 110, 294 110" />
+              </g>
+              <g class="funnel__channel">
+                <circle cx="168" cy="176" r="3" />
+                <text x="40" y="180">SEO + Content</text>
+                <path class="funnel__connector" d="M178 176 C 236 176, 236 110, 294 110" />
+              </g>
+              <g class="funnel__channel">
+                <circle cx="168" cy="212" r="3" />
+                <text x="40" y="216">Referral</text>
+                <path class="funnel__connector" d="M178 212 C 236 212, 236 110, 294 110" />
+              </g>
+            </g>
+
+            <!-- Stage 1: Awareness -->
+            <g class="funnel__stage" id="stage-awareness">
+              <path class="funnel__shape" d="M280 50 H720 L690 170 H310 Z" />
+              <text class="funnel__stage-name" x="500" y="105">AWARENESS</text>
+              <text class="funnel__stage-sub" x="500" y="134">Impressions · Reach · Brand visibility</text>
+            </g>
+            <text class="funnel__rate" id="rate-1" x="500" y="191">workable rate 16% → 48%</text>
+
+            <!-- Stage 2: Interest -->
+            <g class="funnel__stage" id="stage-interest">
+              <path class="funnel__shape" d="M316 204 H684 L650 310 H350 Z" />
+              <text class="funnel__stage-name" x="500" y="252">INTEREST</text>
+              <text class="funnel__stage-sub" x="500" y="280">Clicks · Landing page visits · Form fills</text>
+            </g>
+            <text class="funnel__rate" id="rate-2" x="500" y="331">MQL → SQL · scored &amp; routed</text>
+
+            <!-- Stage 3: Evaluation -->
+            <g class="funnel__stage" id="stage-evaluation">
+              <path class="funnel__shape" d="M356 344 H644 L608 444 H392 Z" />
+              <text class="funnel__stage-name" x="500" y="390">EVALUATION</text>
+              <text class="funnel__stage-sub" x="500" y="418">MQLs · Lead scoring · Sales qualification</text>
+            </g>
+            <text class="funnel__rate" id="rate-3" x="500" y="465">qualified → won 37% → 52%</text>
+
+            <!-- Stage 4: Closed-won -->
+            <g class="funnel__stage" id="stage-won">
+              <path class="funnel__shape" d="M398 478 H602 L560 568 H440 Z" />
+              <text class="funnel__stage-name" x="500" y="520">CLOSED-WON</text>
+              <text class="funnel__stage-sub" x="500" y="548">SQLs → Pipeline → Revenue</text>
+            </g>
+
+            <!-- Survivor + closing label -->
+            <circle class="funnel__survivor" id="funnel-survivor" cx="500" cy="598" r="5" />
+            <text class="funnel__final" id="funnel-final" x="500" y="634">Closed-loop. Repeat.</text>
+
+            <!-- Feedback loop -->
+            <g class="funnel__loop" id="funnel-loop">
+              <path class="funnel__loop-path" d="M581 523 H745 V10 H22 V212 H34" />
+              <text class="funnel__loop-label" x="500" y="33">Referral loop · 46 leads/month · 65% qualification</text>
+            </g>
+          </svg>
+          <canvas class="funnel__particles" id="funnel-particles" aria-hidden="true"></canvas>
+
+          <div class="funnel__notes" id="funnel-notes">
+            <p class="funnel__note" data-stage="2">A/B tested landing pages · Unbounce · CTR optimization</p>
+            <p class="funnel__note" data-stage="3">Salesforce lead stages · Qualification SOPs</p>
+            <p class="funnel__note" data-stage="3">Multi-touch attribution · Customer.io nurture sequences</p>
+            <p class="funnel__note" data-stage="4">Sales–Marketing SLAs · Pipeline reviews · Closed-loop feedback</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Section 5: Case Studies ===== -->
+    <section id="work" class="work">
+      <div class="work__head">
+        <h2 class="section-title">Proof of Work</h2>
+        <p class="section-intro">Three systems. Three results. Each one built from scratch — no inherited playbooks, no agency hand-holding. Click any card to read the full story.</p>
+      </div>
+
+      <div class="work__track" id="work-track">
+        <div class="work__cards" id="work-cards">
+
+          <article class="case" data-case="edenred" tabindex="0" role="button" aria-haspopup="dialog" data-cursor="Explore →">
+            <p class="case__meta">EDENRED UAE · Performance Marketing Manager · 2024–2026</p>
+            <h3 class="case__problem">Built the full-funnel B2B lead engine for a 20,000-client payroll business.</h3>
+            <div class="case__viz">
+              <svg class="viz viz--line" viewBox="0 0 320 140" aria-hidden="true">
+                <g class="viz__grid">
+                  <line x1="24" y1="20" x2="312" y2="20" /><line x1="24" y1="55" x2="312" y2="55" />
+                  <line x1="24" y1="90" x2="312" y2="90" /><line x1="24" y1="125" x2="312" y2="125" />
+                </g>
+                <text class="viz__label" x="0" y="24">48%</text>
+                <text class="viz__label" x="0" y="129">16%</text>
+                <path class="viz__area" d="M24 125 C 70 122, 100 118, 130 108 S 190 80, 220 62 S 280 28, 312 20 V 125 Z" />
+                <path class="viz__line" d="M24 125 C 70 122, 100 118, 130 108 S 190 80, 220 62 S 280 28, 312 20" />
+                <circle class="viz__dot" cx="312" cy="20" r="4" />
+              </svg>
+            </div>
+            <div class="case__metrics">
+              <div><strong>3×</strong><span>workable rate lift</span></div>
+              <div><strong>52%</strong><span>qualified→won</span></div>
+              <div><strong>80%</strong><span>CRM automated</span></div>
+            </div>
+          </article>
+
+          <article class="case" data-case="referral" tabindex="0" role="button" aria-haspopup="dialog" data-cursor="Explore →">
+            <p class="case__meta">EDENRED UAE · Referral GTM · 2025–2026</p>
+            <h3 class="case__problem">Turned 20,000 existing clients into a lead generation channel from zero.</h3>
+            <div class="case__viz">
+              <svg class="viz viz--ring" viewBox="0 0 320 140" aria-hidden="true">
+                <circle class="viz__ring-track" cx="160" cy="70" r="52" />
+                <circle class="viz__ring-fill" cx="160" cy="70" r="52" data-pct="65" />
+                <text class="viz__ring-value" x="160" y="76"><tspan class="count" data-to="65">0</tspan>%</text>
+                <text class="viz__ring-caption" x="160" y="96">qualified</text>
+              </svg>
+            </div>
+            <div class="case__metrics">
+              <div><strong>46</strong><span>leads/month</span></div>
+              <div><strong>65%</strong><span>qualification rate</span></div>
+              <div><strong>20K</strong><span>client base activated</span></div>
+            </div>
+          </article>
+
+          <article class="case" data-case="nathan" tabindex="0" role="button" aria-haspopup="dialog" data-cursor="Explore →">
+            <p class="case__meta">NATHAN &amp; NATHAN + JAMS HR · 2019–2024</p>
+            <h3 class="case__problem">Owned AED 2M in annual paid media. Took an HR brand to #1 in its category.</h3>
+            <div class="case__viz">
+              <svg class="viz viz--bars" viewBox="0 0 320 140" aria-hidden="true">
+                <line class="viz__axis" x1="20" y1="120" x2="312" y2="120" />
+                <g class="viz__bar-group" transform="translate(30 0)">
+                  <rect class="viz__bar viz__bar--before" x="0" y="120" width="14" height="0" data-h="22" />
+                  <rect class="viz__bar viz__bar--after" x="16" y="120" width="14" height="0" data-h="100" />
+                  <text class="viz__bar-label" x="15" y="134">rank</text>
+                </g>
+                <g class="viz__bar-group" transform="translate(76 0)">
+                  <rect class="viz__bar viz__bar--before" x="0" y="120" width="14" height="0" data-h="35" />
+                  <rect class="viz__bar viz__bar--after" x="16" y="120" width="14" height="0" data-h="100" />
+                  <text class="viz__bar-label" x="15" y="134">rank</text>
+                </g>
+                <g class="viz__bar-group" transform="translate(122 0)">
+                  <rect class="viz__bar viz__bar--before" x="0" y="120" width="14" height="0" data-h="18" />
+                  <rect class="viz__bar viz__bar--after" x="16" y="120" width="14" height="0" data-h="100" />
+                  <text class="viz__bar-label" x="15" y="134">rank</text>
+                </g>
+                <g class="viz__bar-group" transform="translate(168 0)">
+                  <rect class="viz__bar viz__bar--before" x="0" y="120" width="14" height="0" data-h="44" />
+                  <rect class="viz__bar viz__bar--after" x="16" y="120" width="14" height="0" data-h="100" />
+                  <text class="viz__bar-label" x="15" y="134">rank</text>
+                </g>
+                <g class="viz__bar-group" transform="translate(214 0)">
+                  <rect class="viz__bar viz__bar--before" x="0" y="120" width="14" height="0" data-h="28" />
+                  <rect class="viz__bar viz__bar--after" x="16" y="120" width="14" height="0" data-h="100" />
+                  <text class="viz__bar-label" x="15" y="134">rank</text>
+                </g>
+                <g class="viz__bar-group" transform="translate(260 0)">
+                  <rect class="viz__bar viz__bar--before" x="0" y="120" width="14" height="0" data-h="12" />
+                  <rect class="viz__bar viz__bar--after" x="16" y="120" width="14" height="0" data-h="100" />
+                  <text class="viz__bar-label" x="15" y="134">rank</text>
+                </g>
+                <text class="viz__label" x="20" y="14">keyword rank · before vs #1</text>
+              </svg>
+            </div>
+            <div class="case__metrics">
+              <div><strong>AED 2M</strong><span>annual budget managed</span></div>
+              <div><strong>#1</strong><span>Alexa rank in category</span></div>
+              <div><strong>15+</strong><span>keywords at #1</span></div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Section 6: The Arsenal ===== -->
+    <section id="arsenal" class="arsenal">
+      <div class="arsenal__head">
+        <h2 class="section-title">The Arsenal</h2>
+        <p class="section-intro">Tools are only as good as the system they're part of. Hover on any node to see how it connects to the rest.</p>
+      </div>
+
+      <div class="arsenal__stage" id="arsenal-stage">
+        <canvas class="arsenal__canvas" id="arsenal-canvas" aria-hidden="true"></canvas>
+        <div class="arsenal__tooltip" id="arsenal-tooltip" hidden>
+          <strong class="arsenal__tooltip-name"></strong>
+          <span class="arsenal__tooltip-text"></span>
+        </div>
+        <ul class="arsenal__legend" aria-hidden="true">
+          <li><i style="--c:var(--signal)"></i>Paid Media</li>
+          <li><i style="--c:var(--growth)"></i>Analytics</li>
+          <li><i style="--c:var(--amber)"></i>CRM &amp; Automation</li>
+          <li><i style="--c:var(--insight)"></i>Technical</li>
+        </ul>
+      </div>
+
+      <div class="arsenal__list" id="arsenal-list">
+        <div class="arsenal__group" style="--c:var(--signal)">
+          <h3>Paid Media</h3>
+          <div class="arsenal__tags">
+            <button class="tag" type="button" aria-expanded="false" data-tool="Google Ads">Google Ads</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="LinkedIn Ads">LinkedIn Ads</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="Meta Ads">Meta Ads</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="DV360">DV360</button>
+          </div>
+          <p class="arsenal__expand" aria-live="polite"></p>
+        </div>
+        <div class="arsenal__group" style="--c:var(--growth)">
+          <h3>Analytics</h3>
+          <div class="arsenal__tags">
+            <button class="tag" type="button" aria-expanded="false" data-tool="GA4">GA4</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="Search Console">Search Console</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="Looker Studio">Looker Studio</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="GTM">GTM</button>
+          </div>
+          <p class="arsenal__expand" aria-live="polite"></p>
+        </div>
+        <div class="arsenal__group" style="--c:var(--amber)">
+          <h3>CRM &amp; Automation</h3>
+          <div class="arsenal__tags">
+            <button class="tag" type="button" aria-expanded="false" data-tool="Salesforce">Salesforce</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="Customer.io">Customer.io</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="CleverTap">CleverTap</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="OptinMonster">OptinMonster</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="Zapier">Zapier</button>
+          </div>
+          <p class="arsenal__expand" aria-live="polite"></p>
+        </div>
+        <div class="arsenal__group" style="--c:var(--insight)">
+          <h3>Technical</h3>
+          <div class="arsenal__tags">
+            <button class="tag" type="button" aria-expanded="false" data-tool="Unbounce">Unbounce</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="Python">Python</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="GCP">GCP</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="WordPress">WordPress</button>
+            <button class="tag" type="button" aria-expanded="false" data-tool="SEMrush">SEMrush</button>
+          </div>
+          <p class="arsenal__expand" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Section 7: Origin Story ===== -->
+    <section id="story" class="story">
+      <div class="story__head">
+        <h2 class="section-title">How I Got Here</h2>
+        <p class="section-intro">No degree. No agency training. No pedigree. Just a decision to learn everything the hard way — and the results to prove it worked.</p>
+      </div>
+
+      <div class="timeline" id="timeline">
+        <div class="timeline__line"><div class="timeline__line-fill" id="timeline-fill"></div></div>
+
+        <article class="milestone milestone--left">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">2016</p>
+            <h3 class="milestone__title">The Start</h3>
+            <p>Hindi-medium school in Uttar Pradesh. No university degree. Enrolled in a Diploma in Internet Marketing because the fee was something I could actually afford. Learned Google Ads, SEO, and analytics from scratch. Applied to everything. Got one yes.</p>
+          </div>
+        </article>
+
+        <article class="milestone milestone--right">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">2016–2018</p>
+            <h3 class="milestone__title">First Campaigns</h3>
+            <p>Joined Goldmine Developers as one of the founding members of their first digital marketing team. Managed PPC across 23 real estate projects on a ₹6.5 lakh monthly budget. No mentor. No playbook. Learned campaign architecture by building it and watching what broke.</p>
+          </div>
+        </article>
+
+        <article class="milestone milestone--left">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">2018–2019</p>
+            <h3 class="milestone__title">Scale &amp; Proof</h3>
+            <p>Moved to Hire Indians Infotech. Ran product listing, display, search, lead gen, and app-install campaigns on a ₹8 lakh monthly budget. Built remarketing flows with dynamic attributes via GTM. Took an eCommerce venture to 300% ROI improvement. Ranked #1 in SEO in the US and Canada for app-development keywords. This wasn't luck — it was pattern recognition kicking in.</p>
+          </div>
+        </article>
+
+        <article class="milestone milestone--right">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">2019</p>
+            <h3 class="milestone__title">Dubai</h3>
+            <p>Moved to the UAE. No visa sponsor lined up in advance. Figured it out on the ground. Landed at JAMS HR Solutions. Started competing with agency-trained, degree-holding marketers — and started winning.</p>
+          </div>
+        </article>
+
+        <article class="milestone milestone--left">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">2021–2024</p>
+            <h3 class="milestone__title">Budget Owner</h3>
+            <p>Nathan &amp; Nathan. AED 2 million annual budget. Full ownership of paid media and organic. Self-taught Salesforce because nobody else was going to do it. Reached #1 Alexa rank in the HR services category — ahead of every established competitor.</p>
+          </div>
+        </article>
+
+        <article class="milestone milestone--right">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">2024–2026</p>
+            <h3 class="milestone__title">System Builder</h3>
+            <p>Edenred UAE. Promoted to Performance Marketing Manager. Built the entire B2B lead generation engine from nothing — paid media, SEO, Salesforce automation, referral program, Sales–Marketing alignment. Tripled the workable rate. Launched a referral GTM across 20,000 clients. The chapter that turned five years of pattern recognition into a repeatable system.</p>
+          </div>
+        </article>
+
+        <article class="milestone milestone--left milestone--now">
+          <span class="milestone__node"></span>
+          <div class="milestone__card">
+            <p class="milestone__year">NOW</p>
+            <h3 class="milestone__title">Next</h3>
+            <p class="milestone__close">9 years. 5 companies. Zero degrees. The system works because I built it — and I'll build yours.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Section 8: The Lab ===== -->
+    <section id="lab" class="lab">
+      <div class="lab__head">
+        <h2 class="section-title">The Lab</h2>
+        <p class="section-intro">Things I built on weekends because nobody told me not to.</p>
+      </div>
+
+      <div class="lab__grid">
+        <article class="lab__card">
+          <p class="lab__meta">Job Search Engine · Python · Live</p>
+          <h3 class="lab__title">naukridhaba.in</h3>
+          <p class="lab__desc">A job aggregator I built from scratch. Scrapes listings from multiple sources, deduplicates, and serves them in a clean interface. Named it "Naukri Dhaba" — a roadside joint for jobs. Because finding work shouldn't require a premium subscription.</p>
+          <div class="terminal" aria-hidden="true">
+            <div class="terminal__bar"><span></span><span></span><span></span><em>scraper — naukridhaba</em></div>
+            <pre class="terminal__body" id="terminal-body"></pre>
+          </div>
+          <div class="lab__tags"><span>Python</span><span>scraping</span><span>web</span></div>
+          <a class="lab__link" href="https://naukridhaba.in" target="_blank" rel="noopener" data-cursor="Open →">→ Visit naukridhaba.in</a>
+        </article>
+
+        <article class="lab__card">
+          <p class="lab__meta">Interactive Simulations · Canvas · JS</p>
+          <h3 class="lab__title">Physics Playground</h3>
+          <p class="lab__desc">Code-driven physics simulations — gravity wells, particle systems, orbital mechanics. Built because marketing is applied behavioral science, and understanding how systems work at the fundamental level makes you better at building them at the business level. Or maybe I just think particles are cool.</p>
+          <canvas class="lab__sim" id="lab-sim" aria-hidden="true"></canvas>
+          <div class="lab__tags"><span>Canvas</span><span>JavaScript</span><span>physics</span></div>
+          <a class="lab__link" href="lab/" data-cursor="Open →">→ Launch playground</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Section 9: Signal (Contact) ===== -->
+    <section id="connect" class="connect">
+      <h2 class="section-title connect__title">Let's build something<span class="hero__period">.</span></h2>
+
+      <div class="connect__grid">
+        <div class="connect__details">
+          <div class="connect__row">
+            <span class="connect__value" id="email-text">awesomeashoksingh@gmail.com</span>
+            <button class="connect__action" id="copy-email" type="button">copy</button>
+          </div>
+          <div class="connect__row">
+            <span class="connect__value">linkedin.com/in/digitalashok</span>
+            <a class="connect__action" href="https://linkedin.com/in/digitalashok" target="_blank" rel="noopener" data-cursor="Visit →">→ open</a>
+          </div>
+          <p class="connect__location">Delhi, India</p>
+        </div>
+
+        <form class="form" id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+          <div class="form__field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" placeholder="Your name" autocomplete="name" required />
+            <span class="form__error" aria-live="polite"></span>
+          </div>
+          <div class="form__field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" placeholder="your@email.com" autocomplete="email" required />
+            <span class="form__error" aria-live="polite"></span>
+          </div>
+          <div class="form__field">
+            <label for="f-message">Message</label>
+            <textarea id="f-message" name="message" rows="5" placeholder="What's on your mind?" required></textarea>
+            <span class="form__error" aria-live="polite"></span>
+          </div>
+          <input type="text" name="_gotcha" class="form__honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="form__submit" id="form-submit" type="submit">Send →</button>
+          <p class="form__status" id="form-status" aria-live="polite"></p>
+        </form>
+      </div>
+      <canvas class="confetti" id="confetti-canvas" aria-hidden="true"></canvas>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Ashok Singh · Built with code, caffeine, and zero stock images.</p>
+  </footer>
+
+  <!-- Case study overlay -->
+  <div class="overlay" id="case-overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" hidden>
+    <div class="overlay__backdrop" data-close></div>
+    <div class="overlay__panel" id="overlay-panel" tabindex="-1">
+      <button class="overlay__close" type="button" aria-label="Close case study" data-close>✕</button>
+
+      <article class="case-detail" data-detail="edenred" hidden>
+        <p class="case-detail__label">CASE STUDY</p>
+        <h2 class="case-detail__title">Edenred UAE — Full-Funnel B2B Lead Engine</h2>
+        <h3>The Problem</h3>
+        <p>Edenred UAE sells WPS-compliant payroll solutions and salary cards to businesses across the UAE. The target: HR managers, finance directors, and CFOs at SMEs and enterprises. When I joined, the marketing function had channels running but no system connecting them. Leads came in with no scoring, no qualification SOP, and no attribution. The workable rate sat at 16% — meaning 84 out of every 100 leads were junk.</p>
+        <h3>What I Built</h3>
+        <p>I rebuilt the entire lead generation engine from the ground up.</p>
+        <p><strong>Channels:</strong> Restructured Google Ads (Search, PMax, Display), launched LinkedIn Ads for B2B targeting, ran Meta campaigns with MENA VPN segmentation, and built a DV360 programmatic layer. Managed SEO with 60+ articles targeting UAE payroll and WPS compliance keywords.</p>
+        <p><strong>Qualification:</strong> Defined lead stages in Salesforce — from raw lead to MQL to SQL to closed-won. Built scoring rules, created qualification SOPs for the telesales team, and established bi-weekly pipeline reviews with Sales.</p>
+        <p><strong>Automation:</strong> Automated 80% of CRM workflows in Salesforce. Built email nurture sequences in Customer.io, mobile engagement via CleverTap, and lead capture with OptinMonster. Created cross-platform dashboards in GA4, Google Ads, Search Console, and Looker Studio.</p>
+        <p><strong>Referral GTM:</strong> Launched a referral program across the entire 20,000-client base — email campaigns, portal integration, exit popups, email signature CTAs, and non-responder automation. Hit 46 leads/month at a 65% qualification rate.</p>
+        <h3>The Result</h3>
+        <p>Lead workable rate: 16% → 48% (3× lift in 2 years). Qualified-to-closed-won rate: 37% → 52%. 80% of CRM workflows fully automated. Referral channel producing 46 qualified leads per month. Promoted from Specialist to Performance Marketing Manager.</p>
+        <p class="case-detail__stack"><span>Stack:</span> Google Ads · LinkedIn · Meta · DV360 · Salesforce · GA4 · Customer.io · CleverTap · OptinMonster · Unbounce · Looker Studio</p>
+      </article>
+
+      <article class="case-detail" data-detail="referral" hidden>
+        <p class="case-detail__label">CASE STUDY</p>
+        <h2 class="case-detail__title">Referral GTM — Zero to 46 Leads/Month</h2>
+        <h3>The Problem</h3>
+        <p>Edenred had 20,000+ active payroll clients. Not one of them had ever been asked for a referral. The company had no referral infrastructure — no tracking, no incentive structure, no outreach. An entire channel sitting at zero.</p>
+        <h3>What I Built</h3>
+        <p>Designed and launched the full referral GTM in 8 weeks. Built the tracking layer with Google Tag Manager events firing on referral form submissions. Set up CleverTap for mobile push notifications to existing clients. Created OptinMonster exit-intent popups on the client portal. Added referral CTAs to every employee email signature across the company. Built a non-responder automation sequence — if a client didn't engage with the first ask, a re-engagement flow triggered at 7 and 21 days via Customer.io.</p>
+        <h3>The Result</h3>
+        <p>Went from zero referral leads to 46 per month within four months. 65% of referral leads qualified — the highest qualification rate of any channel, because referred leads come pre-validated by someone who already uses the product. The program became self-sustaining with minimal ongoing budget.</p>
+        <p class="case-detail__stack"><span>Stack:</span> CleverTap · OptinMonster · Customer.io · GTM · Salesforce</p>
+      </article>
+
+      <article class="case-detail" data-detail="nathan" hidden>
+        <p class="case-detail__label">CASE STUDY</p>
+        <h2 class="case-detail__title">Nathan &amp; Nathan / JAMS — Budget Ownership at Scale</h2>
+        <h3>The Problem</h3>
+        <p>Two UAE-based HR services companies running paid media without structured optimization. Budgets were being spent, but ROI attribution was thin, SEO was an afterthought, and campaign experiments were ad-hoc rather than systematic.</p>
+        <h3>What I Built</h3>
+        <p>At Nathan &amp; Nathan, I took ownership of an AED 2M annual budget across Google Ads and paid social (Facebook, Instagram, YouTube). Rebuilt campaign structures for optimal budget allocation. Implemented an SEO strategy alongside PPC — the two reinforced each other, with PPC data informing organic keyword priorities and organic rankings reducing CPC for branded terms.</p>
+        <p>At JAMS HR Solutions, I ran the full optimization cycle — PPC restructuring, display campaign management, and a systematic SEO push. Managed external media agencies and vendors. Ran conversion experiments continuously rather than as one-off tests.</p>
+        <h3>The Result</h3>
+        <p>Achieved #1 ranking on 15+ competitive keywords. Reached #1 Alexa rank in the HR services category — ahead of every competitor. Earlier in my career at Hire Indians, delivered a 300% ROI improvement for eCommerce operations and hit #1 SEO rank in the USA and Canada for competitive app-development keywords.</p>
+        <p class="case-detail__stack"><span>Stack:</span> Google Ads · Meta Ads · YouTube Ads · GA · SEMrush · Google Tag Manager</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="gamemode" id="gamemode" hidden><span id="gamemode-text">GAME MODE ACTIVATED</span></div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
 </html>

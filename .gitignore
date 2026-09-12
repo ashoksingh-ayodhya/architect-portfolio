@@ -1,28 +1,19 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
-# Temporary files
+# Local tooling
+node_modules
+*.log
 .playwright-mcp/
-whoisashok-*.png
+
+# Scratch
+*.local
+
+# Generated at deploy time by scripts/build-assets.mjs
+assets/og-image.png
+assets/apple-touch-icon.png
+assets/Ashok-Singh-CV.pdf
