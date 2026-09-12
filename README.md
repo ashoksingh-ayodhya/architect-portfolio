@@ -9,7 +9,7 @@ Built from the *Website Blueprint v1.0* and *Content Plan v1.0* (September 2026)
 - **HTML / CSS / JS** — no framework, no bundler, no build step.
 - **GSAP 3 + ScrollTrigger** — vendored in `assets/vendor/` (pinned) for the pinned funnel, horizontal case-study gallery, and reveals.
 - **Canvas 2D** — hero particle network, funnel lead particles, tool constellation, physics sim, confetti.
-- **Zero images.** Every visual is generated with code. The OG image, touch icon and CV PDF are produced from SVG/HTML sources by `scripts/build-assets.mjs` — at deploy time in CI, so no binaries live in the repo.
+- **Zero images.** Every visual is generated with code. The only binaries in the repo are the OG image, touch icon and CV PDF, which `scripts/build-assets.mjs` renders from SVG/HTML sources.
 - **Fonts** — Space Grotesk, Inter, JetBrains Mono via Google Fonts with `display=swap`.
 
 ## Structure
@@ -53,18 +53,18 @@ python3 -m http.server 8080
 
 ## Generated assets (OG image, touch icon, CV PDF)
 
-These are not committed. The deploy workflow generates them; to build them locally:
+`assets/og-image.png`, `assets/apple-touch-icon.png` and `assets/Ashok-Singh-CV.pdf` are committed. After editing `scripts/cv.html` (CV) or `assets/og-image.svg` (social card), regenerate and commit them:
 
 ```
 npm install --no-save playwright && npx playwright install chromium
 node scripts/build-assets.mjs
 ```
 
-Edit `scripts/cv.html` to update the CV, `assets/og-image.svg` for the social card.
-
 ## Deploy
 
-Pushes to `main` generate the assets above and publish the repo root to GitHub Pages via `.github/workflows/deploy.yml`.
+GitHub Pages publishes the `main` branch directly (Settings → Pages → "Deploy from a branch"), with `CNAME` pointing at whoisashok.com. Every push to `main` goes live; there is no build step.
+
+`.github/workflows/deploy.yml` is a manual alternative for the "GitHub Actions" Pages source: it regenerates the assets and publishes the repo root. Run it from the Actions tab only if Pages is switched to that source.
 
 ## Easter egg
 
